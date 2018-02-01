@@ -69,9 +69,7 @@ About 2 hours.
 
 <table>
   <tr>
-    <td>
-```
-# Some random stuff to check later
+    <td># Some random stuff to check later
 use-agent
 charset utf-8
 fixed-list-mode
@@ -105,14 +103,12 @@ weak-digest SHA1
 s2k-cipher-algo AES256
 s2k-digest-algo SHA512
 s2k-mode 3
-s2k-count 65011712
-```
-    </td>
+s2k-count 65011712</td>
   </tr>
 </table>
 
 
-**Table 1**: `~/.gnupg/gpg.conf`.
+**Table 1**: ~/.gnupg/gpg.conf.
 
 6. **Create temporary working directory for GPG.**
 
@@ -154,7 +150,7 @@ s2k-count 65011712
 
 10. **Check your list of secret keys.**
 
-    34. `gpg --export $KEYID | hokey lint`
+    34. gpg --export $KEYID | hokey lint
 
     35. "The output will display any problems with your key in red text. If everything is green, your key passes each of the tests. If it is red, your key has failed one of the tests."
 
@@ -164,63 +160,63 @@ s2k-count 65011712
 
 11. **Create a revocation certificate (in case master key is compromised).**
 
-    38. `gpg --output $GNUPGHOME/openpgp-revocs.d/$KEYID.rev --gen-revoke $KEYID`
+    38. gpg --output $GNUPGHOME/openpgp-revocs.d/$KEYID.rev --gen-revoke $KEYID
 
-    39. `less $GNUPGHOME/openpgp-revocs.d/$KEYID.rev`
+    39. less $GNUPGHOME/openpgp-revocs.d/$KEYID.rev
 
 12. **Export public key.**
 
-    40. `gpg --export --armor $KEYID > $GNUPGHOME/$KEYID.pub.asc`
+    40. gpg --export --armor $KEYID > $GNUPGHOME/$KEYID.pub.asc
 
-    41. `less $GNUPGHOME/$KEYID.pub.asc`
+    41. less $GNUPGHOME/$KEYID.pub.asc
 
 13. **Import public key.**
 
-    42. `gpg --import < $GNUPGHOME/$KEYID.pub.asc`
+    42. gpg --import < $GNUPGHOME/$KEYID.pub.asc
 
     43. Copy this public key elsewhere for future reference.
 
 14. **Export private master key.**
 
-    44. `gpg --export-secret-keys --armor $KEYID > $GNUPGHOME/$KEYID.priv.asc`
+    44. gpg --export-secret-keys --armor $KEYID > $GNUPGHOME/$KEYID.priv.asc
 
-    45. `less $GNUPGHOME/$KEYID.priv.asc`
+    45. less $GNUPGHOME/$KEYID.priv.asc
 
 15. **Export private subkeys.**
 
-    46. `gpg --export-secret-subkeys --armor $KEYID > $GNUPGHOME/$KEYID.sub_priv.asc`
+    46. gpg --export-secret-subkeys --armor $KEYID > $GNUPGHOME/$KEYID.sub_priv.asc
 
     47. The passphrase is the same as for the master key (see Step 8a).
 
-    48. `less $GNUPGHOME/$KEYID.sub_priv.asc`
+    48. less $GNUPGHOME/$KEYID.sub_priv.asc
 
 16. **Backup everything unto offline encrypted image.**
 
     49. Choose a good password.
 
-    50. `hdiutil create /tmp/encrypted-gpg-backup.dmg -encryption -volname "gpg-backup" -fs APFS -srcfolder $GNUPGHOME`
+    50. hdiutil create /tmp/encrypted-gpg-backup.dmg -encryption -volname "gpg-backup" -fs APFS -srcfolder $GNUPGHOME
 
     51. Move encrypted image unto offline storage.
 
     52. Commit password to memory and / or offline storage.
 
-    53. Securely delete `$GNUPGHOME` (which is not straightforward on SSDs).
+    53. Securely delete $GNUPGHOME (which is not straightforward on SSDs).
 
 17. **Delete private keys from memory.**
 
-    54. `gpg --delete-secret-key $KEYID`
+    54. gpg --delete-secret-key $KEYID
 
-    55. `gpg --list-secret-keys`
+    55. gpg --list-secret-keys
 
 18. **Restore private subkeys to memory.**
 
-    56. `gpg --import $GNUPGHOME/$KEYID.sub_priv.asc`
+    56. gpg --import $GNUPGHOME/$KEYID.sub_priv.asc
 
-    57. `gpg --list-secret-keys`
+    57. gpg --list-secret-keys
 
 19. **Move private subkeys onto Yubikey.**
 
-    58. `gpg --expert --edit-key $KEYID`
+    58. gpg --expert --edit-key $KEYID
 
     59. [https://blog.eleven-labs.com/en/openpgp-secret-keys-yubikey-part-2/?#export-the-keys-to-the-yubikey](https://blog.eleven-labs.com/en/openpgp-secret-keys-yubikey-part-2/#export-the-keys-to-the-yubikey)
 
@@ -230,15 +226,13 @@ s2k-count 65011712
 
     62. Make sure you put the right types of subkeys in the right slots!
 
-    63. `gpg --keyid-format LONG --list-secret-keys`
+    63. gpg --keyid-format LONG --list-secret-keys
 
-    64. `gpg --card-status`
+    64. gpg --card-status
 
 <table>
   <tr>
-    <td>
-```
-Reader ...........: Yubico Yubikey 4 OTP U2F CCID
+    <td>Reader ...........: Yubico Yubikey 4 OTP U2F CCID
 Application ID ...: [redacted]
 Version ..........: 2.1
 Manufacturer .....: Yubico
@@ -266,14 +260,12 @@ ssb>  rsa4096/97BFBA5F949E66BB  created: 2017-11-05  expires: 2018-11-05
 ssb>  rsa4096/B4AF1C9C73518187  created: 2017-11-05  expires: 2018-11-05
                                 card-no: [redacted]
 ssb>  rsa4096/65435A46D929EAB8  created: 2017-11-05  expires: 2018-11-05
-                                card-no: [redacted]
-```
-    </td>
+                                card-no: [redacted]</td>
   </tr>
 </table>
 
 
-**Table 2**: `gpg --card-status`.
+**Table 2**: gpg --card-status.
 
 20. **Set trust for the master key.**
 
@@ -287,54 +279,47 @@ ssb>  rsa4096/65435A46D929EAB8  created: 2017-11-05  expires: 2018-11-05
 
     68. [https://developers.yubico.com/yubikey-manager/](https://developers.yubico.com/yubikey-manager/)
 
-    69. `ykman openpgp touch aut on`
+    69. ykman openpgp touch aut on
 
-    70. `ykman openpgp touch enc on`
+    70. ykman openpgp touch enc on
 
-    71. `ykman openpgp touch sig on`
+    71. ykman openpgp touch sig on
 
 22. **Set up SSH agent.**
 
-    72. Configure `gpg-agent` as in Table 3.
+    72. Configure the gpg-agent as in Table 3.
 
     73. Add the lines in Table 4 to your bash profile.
 
 <table>
   <tr>
-    <td>
-```
-# https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
+    <td># https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
 # https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/authenticating-ssh-with-gpg.html
 enable-ssh-support
 pinentry-program /usr/local/bin/pinentry-mac
 default-cache-ttl 600
 max-cache-ttl 7200</td>
-```
   </tr>
 </table>
 
 
-**Table 3**: `~/.gnupg/gpg-agent.conf`.
+**Table 3**: ~/.gnupg/gpg-agent.conf.
 
 <table>
   <tr>
-    <td>
-```
-export "GPG_TTY=$(tty)"
-export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
-```
-    </td>
+    <td>export "GPG_TTY=$(tty)"
+export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"</td>
   </tr>
 </table>
 
 
-**Table 4**: `~/.bash_profile`.
+**Table 4**: ~/.bash_profile.
 
 23. **Test the keys.**
 
     74. Start a new bash shell.
 
-    75. `echo "$(uname -a)" | gpg --encrypt --sign --armor --default-key B9D5EC8FD089F227 --recipient B4AF1C9C73518187 | gpg --decrypt --armor`
+    75. echo "$(uname -a)" | gpg --encrypt --sign --armor --default-key B9D5EC8FD089F227 --recipient B4AF1C9C73518187 | gpg --decrypt --armor
 
     76. Use the pin from Step 4b.
 
@@ -344,17 +329,17 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
 
 24. **Kill running GPG agents and restart them.**
 
-    79. `gpgconf --kill all`
+    79. gpgconf --kill all
 
 25. **Upload SSH public key to GitHub.**
 
-    80. `ssh-add -L | grep -iF 'cardno' | pbcopy`
+    80. ssh-add -L | grep -iF 'cardno' | pbcopy
 
     81. [https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
 
 26. **Test GitHub SSH.**
 
-    82. `ssh -T -vvv git@github.com`
+    82. ssh -T -vvv git@github.com
 
     83. Use the PIN from Step 4b.
 
@@ -362,7 +347,7 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
 
 27. **Upload GPG public key to GitHub.**
 
-    85. `gpg --armor --export B9D5EC8FD089F227 | pbcopy`
+    85. gpg --armor --export B9D5EC8FD089F227 | pbcopy
 
     86. [https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/](https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/)
 
@@ -370,9 +355,9 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
 
     87. [https://git-scm.com/book/id/v2/Git-Tools-Signing-Your-Work](https://git-scm.com/book/id/v2/Git-Tools-Signing-Your-Work)
 
-    88. `git config --global user.signingkey B9D5EC8FD089F227`
+    88. git config --global user.signingkey B9D5EC8FD089F227
 
-    89. `git config --global commit.gpgsign true`
+    89. git config --global commit.gpgsign true
 
     90. [git config --global tag.forceSignAnnotated true](https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/git-signing/signing-tags.html)
 
@@ -396,15 +381,15 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
 
 31. **Optional: using Yubikey inside GNU/Linux running on VMware Fusion.**
 
-    97. Shut down your VM, find its .vmx file, edit the file to the [add the following line](https://www.symantec.com/connect/blogs/enabling-hid-devices-such-usb-keyboards-barcode-scanners-vmware), and then reboot it: `usb.generic.allowHID = "TRUE"`
+    97. Shut down your VM, find its .vmx file, edit the file to the [add the following line](https://www.symantec.com/connect/blogs/enabling-hid-devices-such-usb-keyboards-barcode-scanners-vmware), and then reboot it: usb.generic.allowHID = "TRUE"
 
     98. Connect your Yubikey to the VM once you have booted and logged in.
 
     99. Install libraries for smart card:
 
-        1. Ubuntu 17.10: `apt install scdaemon`
+        1. Ubuntu 17.10: apt install scdaemon
 
-        2. Fedora 27: `dnf install pcsc-lite pcsc-lite-ccid`
+        2. Fedora 27: dnf install pcsc-lite pcsc-lite-ccid
 
     100. Import your public key (see Step 13).
 
@@ -414,7 +399,7 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
 
     103. Test the keys (see Step 23).
 
-        3. On Fedora, make sure to replace `gpg` with `gpg2`.
+        3. On Fedora, make sure to replace gpg with gpg2.
 
     104. Use the absolutely terrible kludge in Table 5 to make SSH work.
 
@@ -422,23 +407,19 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
 
     106. Test Git signing (see Step 28).
 
-        4. On Fedora, make sure to replace `gpg` with `gpg2`: `git config --global gpg.program gpg2`
+        4. On Fedora, make sure to replace gpg with gpg2: git config --global gpg.program gpg2
 
 <table>
   <tr>
-    <td>
-```
-# gpg-ssh hack
+    <td># gpg-ssh hack
 gpg-connect-agent killagent /bye
 eval $(gpg-agent --daemon --enable-ssh-support --sh)
-ssh-add -l
-```
-    </td>
+ssh-add -l</td>
   </tr>
 </table>
 
 
-**Table 5**: Add these lines to `~/.bashrc`.
+**Table 5**: Add these lines to ~/.bashrc.
 
 # Docker Content Trust
 
@@ -448,45 +429,45 @@ ssh-add -l
 
     108. Install prerequisites:
 
-        5. `dnf install golang yubico-piv-tool`
+        5. dnf install golang yubico-piv-tool
 
     109. Set [GOPATH](https://golang.org/doc/code.html#GOPATH) (make sure to update PATH too), and spawn a new bash shell.
 
     110. Check out the Notary source code:
 
-        6. `go get github.com/theupdateframework/notary`
+        6. go get github.com/theupdateframework/notary
 
     111. Patch source code to [point to correct location of shared library on Fedora](https://github.com/theupdateframework/notary/pull/1286).
 
-        7. `cd ~/go/src/go get github.com/theupdateframework/notary`
+        7. cd ~/go/src/go get github.com/theupdateframework/notary
 
-        8. `git pull https://github.com/trishankatdatadog/notary.git trishank_kuppusamy/fedora-pkcs11`
+        8. git pull https://github.com/trishankatdatadog/notary.git trishank_kuppusamy/fedora-pkcs11
 
     112. [Build and install](https://github.com/theupdateframework/notary/pull/1285) the Notary client.
 
-        9. `go install -tags pkcs11 github.com/theupdateframework/notary/cmd/notary`
+        9. go install -tags pkcs11 github.com/theupdateframework/notary/cmd/notary
 
     113. Add the lines in Table 6 to your bash profile, and spawn a new bash shell.
 
     114. Try listing keys (there should be no signing keys as yet):
 
-        10. `dockernotary key list -D`
+        10. dockernotary key list -D
 
-        11. If you see the line `"DEBU[0000] Initialized PKCS11 library /usr/lib64/libykcs11.so.1 and started HSM session"`, then we are in business.
+        11. If you see the line "DEBU[0000] Initialized PKCS11 library /usr/lib64/libykcs11.so.1 and started HSM session", then we are in business.
 
-        12. Otherwise, if you see the line `"DEBU[0000] No yubikey found, using alternative key storage: found library /usr/lib64/libykcs11.so.1, but initialize error pkcs11: 0x6: CKR_FUNCTION_FAILED"`, then you probably need to `gpgconf --kill scdaemon` ([see this issue](https://github.com/theupdateframework/notary/issues/1006)), and try again.
+        12. Otherwise, if you see the line "DEBU[0000] No yubikey found, using alternative key storage: found library /usr/lib64/libykcs11.so.1, but initialize error pkcs11: 0x6: CKR_FUNCTION_FAILED", then you probably need to gpgconf --kill scdaemon ([see this issue](https://github.com/theupdateframework/notary/issues/1006)), and try again.
 
     115. Generate the root role key ([can be reused across multiple Docker repositories](https://github.com/theupdateframework/notary/blame/a41821feaf59a28c1d8f78799300d26f8bdf8b0d/docs/best_practices.md#L91-L95)), and export it to both Yubikey, and keep a copy on disk:
 
         13. Choose a strong passphrase.
 
-        14. `dockernotary key generate -D`
+        14. dockernotary key generate -D
 
         15. Commit passphrase to memory and / or offline storage.
 
         16. Try listing keys again, you should now see a copy of the same private key in two places (disk, and Yubikey).
 
-        17. Backup private key in `~/.docker/trust/private/KEYID.key` unto offline, encrypted, long-term storage.
+        17. Backup private key in ~/.docker/trust/private/KEYID.key unto offline, encrypted, long-term storage.
 
         18. [Securely delete](https://www.gnu.org/software/coreutils/manual/html_node/shred-invocation.html) this private key on disk.
 
@@ -494,31 +475,27 @@ ssh-add -l
 
     116. Link the yubikey library so that the prebuilt docker client can find it.
 
-        20. `sudo ln -s /usr/lib64/libykcs11.so.1 /usr/local/lib/libykcs11.so`
+        20. sudo ln -s /usr/lib64/libykcs11.so.1 /usr/local/lib/libykcs11.so
 
     117. Later, when you want Docker to use the root role key on your Yubikey:
 
-        21. When you push an image, you may have to kill `scdaemon` (in a separate shell) right after Docker pushes, but right before Docker uses the root role key on your Yubikey, and generates a new targets key for the repository.
+        21. When you push an image, you may have to kill scdaemon (in a separate shell) right after Docker pushes, but right before Docker uses the root role key on your Yubikey, and generates a new targets key for the repository.
 
-        22. Use `docker -D` to find out exactly when to do this.
+        22. Use docker -D to find out exactly when to do this.
 
         23. This is annoying, but it works.
 
 <table>
   <tr>
-    <td>
-```
-# docker notary stuff
+    <td># docker notary stuff
 alias dockernotary="notary -s https://notary.docker.io -d ~/.docker/trust"
 # always be using content trust
-export DOCKER_CONTENT_TRUST=1
-```
-    </td>
+export DOCKER_CONTENT_TRUST=1</td>
   </tr>
 </table>
 
 
-**Table 6**: Add these lines to `~/.bashrc`.
+**Table 6**: Add these lines to ~/.bashrc.
 
 # Why Disable OTP?
 
@@ -526,7 +503,7 @@ OTPs are vulnerable to replay attack. To first understand the attack scenario, o
 
 1. When a OTP is generated by the Yubikey, it outputs a 44 character value.
 
-    1. Ex: `cccjgjgkhcbbirdrfdnlnghhfgrtnnlgedjlftrbdeut`
+    1. Ex: **cccjgjgkhcbb**irdrfdnlnghhfgrtnnlgedjlftrbdeut
 
     2. The first 12 characters represent the public ID of the Yubikey and remain constant. The remaining 32 characters represent a unique token that includes **a counter**.
 
@@ -586,9 +563,9 @@ Attack Scenarios:
 
 * If you are blocked out of using GPG because you entered your PIN wrong too many times (3x by default), **don’t panic**: just [follow the instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md) here.
 
-* If you suddenly start getting `Permission denied (publickey)`, verify that `ssh-agent` is not running. If `ssh-agent` is running, kill the process. If the error persists, use the kludge in Table 5.
+* If you suddenly start getting Permission denied (publickey), verify that ssh-agent is not running. If ssh-agent is running, kill the process. If the error persists, use the kludge in Table 5.
 
-* If you are having issues failing to make connections, you still need to have `ssh-agent` running along with `gpg-agent`: `eval $(ssh-agent -s)`
+* If you are having issues failing to make connections, you still need to have ssh-agent running along with gpg-agent: `eval $(ssh-agent -s)`
 
 # Changelog
 
