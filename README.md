@@ -26,9 +26,7 @@ About 2 hours.
 
     1. Don’t worry even if it says it supports only 3 RSA 2048-bit subkeys. We found that we could actually install 3 RSA 4096-bit subkeys.
 
-    2. [[Consider using Ed25519 by default. GPG >= 2.1.0 supports it out-of-the-box.](https://www.google.com/url?q=https://www.gniibe.org/memo/software/gpg/keygen-25519.html&sa=D&ust=1516293904476000&usg=AFQjCNFfom7Juj5anIvf3hGAudUyEuh-7A) But probably best to go with what everyone supports (RSA).]
-
-    3. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey)
+    2. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey)
 
 4. **Change card PINs and metadata.**
 
