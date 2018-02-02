@@ -210,7 +210,7 @@ About 2 hours.
 
     3. If Yubikey complains about `"gpg: selecting openpgp failed: Operation not supported by device"`, just unplug and replug Yubikey, then try again.
 
-    4. Use the ADMIN pin from Step 4b.
+    4. Use the ADMIN PIN from Step 4iii.
 
     5. Make sure you put the right types of subkeys in the right slots!
 
@@ -262,7 +262,7 @@ About 2 hours.
 
 21. **Enable touch protection.**
 
-    1. Use the ADMIN pin from Step 4b.
+    1. Use the ADMIN PIN from Step 4iii.
 
     2. [https://developers.yubico.com/yubikey-manager/](https://developers.yubico.com/yubikey-manager/)
 
@@ -306,7 +306,7 @@ About 2 hours.
 
     2. `echo "$(uname -a)" | gpg --encrypt --sign --armor --default-key B9D5EC8FD089F227 --recipient B4AF1C9C73518187 | gpg --decrypt --armor`
 
-    3. Use the pin from Step 4b.
+    3. Use the USER PIN from Step 4iii.
 
     4. Make sure to touch your Yubikey (see Step 21).
 
@@ -326,7 +326,7 @@ About 2 hours.
 
     1. `ssh -T -vvv git@github.com`
 
-    2. Use the PIN from Step 4b.
+    2. Use the USER PIN from Step 4iii.
 
     3. Make sure to touch your Yubikey (see Step 21).
 
@@ -336,7 +336,7 @@ About 2 hours.
 
     2. [https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/](https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/)
 
-28. **Configure and t****est Git signing.**
+28. **Configure and test Git signing.**
 
     1. [https://git-scm.com/book/id/v2/Git-Tools-Signing-Your-Work](https://git-scm.com/book/id/v2/Git-Tools-Signing-Your-Work)
 
@@ -348,7 +348,7 @@ About 2 hours.
 
     5. [https://help.github.com/articles/signing-commits-using-gpg/](https://help.github.com/articles/signing-commits-using-gpg/)
 
-    6. Use the PIN from Step 4b.
+    6. Use the USER PIN from Step 4iii.
 
     7. Make sure to touch your Yubikey (see Step 21).
 
