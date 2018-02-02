@@ -38,9 +38,9 @@ About 2 hours.
 
     4. [https://developers.yubico.com/PGP/Card_edit.html](https://developers.yubico.com/PGP/Card_edit.html)
 
-    5. Optional: set Management key (but not PIN and PUK) via yubico-piv-tool ([https://developers.yubico.com/PIV/Guides/Device_setup.html](https://developers.yubico.com/PIV/Guides/Device_setup.html))
+    5. Optional: set management key (but not PIN and PUK) via yubico-piv-tool ([https://developers.yubico.com/PIV/Guides/Device_setup.html](https://developers.yubico.com/PIV/Guides/Device_setup.html))
 
-    6. Set the change and admin PINs.
+    6. Set the user and admin PINs.
 
     7. (Optional: You might want to also set the unblock and reset PINs.)
 
@@ -48,13 +48,13 @@ About 2 hours.
 
     9. Useful reset in case things go wrong: [https://developers.yubico.com/ykneo-openpgp/ResetApplet.html](https://developers.yubico.com/ykneo-openpgp/ResetApplet.html)
 
-    10. [Looks like anyone can reset your card if they have physical access, or can compromise your machine, which is undesirable. At least you can recover from your key backup later. Ask Yubico about this. In the meantime, I am told that standard industry practice is to use two Yubikeys, with one serving as backup in case the other fails.]
+    10. Looks like anyone can reset your card if they have physical access, or can compromise your machine, which is undesirable. At least you can recover from your key backup later. (Ask Yubico about this.) In the meantime, I am told that standard industry practice is to use two Yubikeys, with one serving as backup in case the other fails.
 
     11. Store these PINs in an offline safe.
 
 5. **Configure GPG.**
 
-    1. See Table 1. [How future-proof are these recommendations?]
+    1. See Table 1. (How future-proof are these recommendations?)
 
     2. [https://blog.eleven-labs.com/en/openpgp-almost-perfect-key-pair-part-1/#install-the-right-tools](https://blog.eleven-labs.com/en/openpgp-almost-perfect-key-pair-part-1/#install-the-right-tools)
 
@@ -118,11 +118,7 @@ About 2 hours.
 
     5. Commit passphrase to memory and / or offline storage.
 
-    6. [It might be much easier if we generate the keys on the Yubikey itself, and then export a backup. Upside: easier. Downside: key generation on hardware can be prone to bugs (see [the RoCA vulnerability](https://en.wikipedia.org/wiki/ROCA_vulnerability)).]
-
-    7. [Here's [how to generate keys on Yubikeys itself](https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-openpgp/#generateopenpgp). Either way, I STRONGLY recommend making an offline backup of your private keys (Steps 14-16).]
-
-    8. [We should make this (on-hardware generation) the default for its ease of use, unless you are importing existing keys.]
+    6. It might be much easier if we [generate the keys on the Yubikey itself](https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-openpgp/#generateopenpgp), and then export a backup. Upside: easier. Downside: key generation on hardware can be prone to bugs (see [the RoCA vulnerability](https://en.wikipedia.org/wiki/ROCA_vulnerability)). Either way, I STRONGLY recommend making an offline backup of your private keys (Steps 14-16).] We should make this the default for its ease of use, unless you are importing existing keys.
 
 8. **Cache the key ID (for convenience).**
 
