@@ -1,18 +1,27 @@
 # How to use Yubikey for gpg, git, ssh, Docker Content Trust, VMware Fusion, and more
 
+## Table of contents
+
+* [Summary](#summary)
+* [Estimated burden](#estimated-burden)
+* [Instructions](#instructions)
+* [VMware Fusion](#vmware-fusion)
+* [Docker Content Trust](#docker-content-trust)
+* [Why disable Yubikey OTP?](#why-disable-yubikey-otp)
+* [Troubleshooting](#troubleshooting)
+* [TODO](#todo)
+* [Acknowledgements](#acknowledgements)
+* [References](#references)
+
 ## Summary
 
 GPG is useful for authenticating yourself over SSH and / or GPG-signing your git commits / tags. However, without hardware like the [Yubikey](https://www.yubico.com/products/yubikey-hardware/), you would typically keep your GPG private subkeys in "plain view" on your machine, even if encrypted. That is, attackers who personally target [[1](https://www.kennethreitz.org/essays/on-cybersecurity-and-being-targeted), [2](https://bitcoingold.org/critical-warning-nov-26/), [3](https://panic.com/blog/stolen-source-code/), [4](https://www.fox-it.com/en/insights/blogs/blog/fox-hit-cyber-attack/)] you can compromise your machine can exfiltrate your (encrypted) private key, and your passphrase, in order to pretend to be you.
 
 Instead, this setup lets you store your private subkeys on your Yubikey. Actually, it gives you much stronger guarantees: you *cannot* authenticate over SSH and / or sign GPG commits / tags *without*: (1) your Yubikey plugged in and operational, (2) your Yubikey PIN, and (3) touching your Yubikey. So, even if there is malware trying to get you to sign, encrypt, or authenticate something, you would almost certainly notice, because your Yubikey will flash, asking for your attention. (There is the "[time of check to time of use](https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use)" issue, but that is out of our scope.)
 
-## Acknowledgements
-
-I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Jules Denardou (Datadog), Cara Marie (Datadog), Cody Lee (Datadog), and Santiago Torres-Arias (NYU) who helped me to test these instructions. Thanks to Justin Massey (Datadog) for contributing the section on disabling OTP.
-
 ## Estimated burden
 
-About 2 hours.
+About 2-3 hours.
 
 ## Instructions
 
@@ -24,13 +33,13 @@ About 2 hours.
 
 3. **Check the card status.**
 
-    1. Don’t worry even if it says it supports only 3 RSA 2048-bit subkeys. We found that we could actually install 3 RSA 4096-bit subkeys.
+    1. Don’t worry even if it says it supports only 3 RSA 2048-bit subkeys. We found that we could actually install 3 RSA 4096-bit subkeys (depending on the Yubikey model).
 
     2. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey)
 
 4. **Change card PINs and metadata.**
 
-    1. [Since we won’t be using it here, turn off OTP](https://github.com/liyanchang/yubikey-setup/tree/edd0b7fc6b5e588c8897961ce8f5f85aa868ff1d#turn-off-otp---aka-the-random-letters-when-you-accidentally-touch-it).  Disabling it is recommended: see the explanation in the [lower part](#bookmark=id.btrorhs0mayd) of this document.
+    1. [Since we won’t be using it here, turn off OTP](https://github.com/liyanchang/yubikey-setup/tree/edd0b7fc6b5e588c8897961ce8f5f85aa868ff1d#turn-off-otp---aka-the-random-letters-when-you-accidentally-touch-it).  Disabling it is recommended: see the explanation [here](#why-disable-yubikey-otp).
 
     2. [https://developers.yubico.com/PIV/Introduction/Admin_access.html](https://developers.yubico.com/PIV/Introduction/Admin_access.html)
 
@@ -276,7 +285,7 @@ About 2 hours.
 
     1. Configure `gpg-agent` as in Table 3.
 
-    2. Add the lines in Table 4 to your bash profile.
+    2. Add the lines in Table 4 to your `bash` profile.
 
 <blockquote>
 
@@ -302,7 +311,7 @@ About 2 hours.
 
 23. **Test the keys.**
 
-    1. Start a new bash shell.
+    1. Start a new `bash` shell.
 
     2. `echo "$(uname -a)" | gpg --encrypt --sign --armor --default-key B9D5EC8FD089F227 --recipient B4AF1C9C73518187 | gpg --decrypt --armor`
 
@@ -364,35 +373,31 @@ About 2 hours.
 
 ## VMware Fusion
 
-31. **Optional: using Yubikey inside GNU/Linux running on VMware Fusion.**
+Optional: using Yubikey inside GNU/Linux running on VMware Fusion.
 
-    1. Shut down your VM, find its .vmx file, edit the file to the [add the following line](https://www.symantec.com/connect/blogs/enabling-hid-devices-such-usb-keyboards-barcode-scanners-vmware), and then reboot it: `usb.generic.allowHID = "TRUE"`
+1. Shut down your VM, find its .vmx file, edit the file to the [add the following line](https://www.symantec.com/connect/blogs/enabling-hid-devices-such-usb-keyboards-barcode-scanners-vmware), and then reboot it: `usb.generic.allowHID = "TRUE"`
 
-    2. Connect your Yubikey to the VM once you have booted and logged in.
+2. Connect your Yubikey to the VM once you have booted and logged in.
 
-    3. Install libraries for smart card:
+3. Install libraries for smart card:
 
-        1. Ubuntu 17.10: `apt install scdaemon`
+    1. Ubuntu 17.10: `apt install scdaemon`
 
-        2. Fedora 27: `dnf install pcsc-lite pcsc-lite-ccid`
+    2. Fedora 27: `dnf install pcsc-lite pcsc-lite-ccid`
 
-    4. Import your public key (see Step 13).
+4. Import your public key (see Step 13).
 
-    5. Set ultimate trust for your key (see Step 20).
+5. Set ultimate trust for your key (see Step 20).
 
-    6. Configure GPG (see Step 22).
+6. Configure GPG (see Step 22).
 
-    7. Test the keys (see Step 23).
+7. Test the keys (see Step 23). On Fedora, make sure to replace `gpg` with `gpg2`.
 
-        1. On Fedora, make sure to replace `gpg` with `gpg2`.
+8. Use the absolutely terrible kludge in Table 5 to make SSH work.
 
-    8. Use the absolutely terrible kludge in Table 5 to make SSH work.
+9. Spawn a new shell, and test GitHub SSH (see Step 26).
 
-    9. Spawn a new shell, and test GitHub SSH (see Step 26).
-
-    10. Test Git signing (see Step 28).
-
-        1. On Fedora, make sure to replace `gpg` with `gpg2`: `git config --global gpg.program gpg2`
+10. Test Git signing (see Step 28). On Fedora, make sure to replace `gpg` with `gpg2`: `git config --global gpg.program gpg2`
 
 <blockquote>
 
@@ -407,67 +412,59 @@ About 2 hours.
 
 ## Docker Content Trust
 
-32. **Optional: using Yubikey to store the root role key for Docker Notary.**
+Optional: using Yubikey to store the root role key for Docker Notary.
 
-    1. Assumption: you are running all of the following under Fedora 27 (see Step 31).
+1. Assumption: you are running all of the following under [Fedora 27](#vmware-fusion).
 
-    2. Install prerequisites:
+2. Install prerequisites: `dnf install golang yubico-piv-tool`
 
-        1. `dnf install golang yubico-piv-tool`
+3. Set [GOPATH](https://golang.org/doc/code.html#GOPATH) (make sure to update PATH too), and spawn a new `bash` shell.
 
-    3. Set [GOPATH](https://golang.org/doc/code.html#GOPATH) (make sure to update PATH too), and spawn a new bash shell.
+4. Check out the Notary source code: `go get github.com/theupdateframework/notary`
 
-    4. Check out the Notary source code:
+5. Patch source code to [point to correct location of shared library on Fedora](https://github.com/theupdateframework/notary/pull/1286).
 
-        1. `go get github.com/theupdateframework/notary`
+    1. `cd ~/go/src/go get github.com/theupdateframework/notary`
 
-    5. Patch source code to [point to correct location of shared library on Fedora](https://github.com/theupdateframework/notary/pull/1286).
+    2. `git pull https://github.com/trishankatdatadog/notary.git trishank_kuppusamy/fedora-pkcs11`
 
-        1. `cd ~/go/src/go get github.com/theupdateframework/notary`
+6. [Build and install](https://github.com/theupdateframework/notary/pull/1285) the Notary client: `go install -tags pkcs11 github.com/theupdateframework/notary/cmd/notary`
 
-        2. `git pull https://github.com/trishankatdatadog/notary.git trishank_kuppusamy/fedora-pkcs11`
+7. Add the lines in Table 6 to your `bash` profile, and spawn a new shell.
 
-    6. [Build and install](https://github.com/theupdateframework/notary/pull/1285) the Notary client.
+8. Try listing keys (there should be no signing keys as yet):
 
-        1. `go install -tags pkcs11 github.com/theupdateframework/notary/cmd/notary`
+    1. `dockernotary key list -D`
 
-    7. Add the lines in Table 6 to your bash profile, and spawn a new bash shell.
+    2. If you see the line `"DEBU[0000] Initialized PKCS11 library /usr/lib64/libykcs11.so.1 and started HSM session"`, then we are in business.
 
-    8. Try listing keys (there should be no signing keys as yet):
+    3. Otherwise, if you see the line `"DEBU[0000] No yubikey found, using alternative key storage: found library /usr/lib64/libykcs11.so.1, but initialize error pkcs11: 0x6: CKR_FUNCTION_FAILED"`, then you probably need to `gpgconf --kill scdaemon` ([see this issue](https://github.com/theupdateframework/notary/issues/1006)), and try again.
 
-        1. `dockernotary key list -D`
+9. Generate the root role key ([can be reused across multiple Docker repositories](https://github.com/theupdateframework/notary/blame/a41821feaf59a28c1d8f78799300d26f8bdf8b0d/docs/best_practices.md#L91-L95)), and export it to both Yubikey, and keep a copy on disk:
 
-        2. If you see the line `"DEBU[0000] Initialized PKCS11 library /usr/lib64/libykcs11.so.1 and started HSM session"`, then we are in business.
+    1. Choose a strong passphrase.
 
-        3. Otherwise, if you see the line `"DEBU[0000] No yubikey found, using alternative key storage: found library /usr/lib64/libykcs11.so.1, but initialize error pkcs11: 0x6: CKR_FUNCTION_FAILED"`, then you probably need to `gpgconf --kill scdaemon` ([see this issue](https://github.com/theupdateframework/notary/issues/1006)), and try again.
+    2. `dockernotary key generate -D`
 
-    9. Generate the root role key ([can be reused across multiple Docker repositories](https://github.com/theupdateframework/notary/blame/a41821feaf59a28c1d8f78799300d26f8bdf8b0d/docs/best_practices.md#L91-L95)), and export it to both Yubikey, and keep a copy on disk:
+    3. Commit passphrase to memory and / or offline storage.
 
-        1. Choose a strong passphrase.
+    4. Try listing keys again, you should now see a copy of the same private key in two places (disk, and Yubikey).
 
-        2. `dockernotary key generate -D`
+    5. Backup private key in `~/.docker/trust/private/KEYID.key` unto offline, encrypted, long-term storage.
 
-        3. Commit passphrase to memory and / or offline storage.
+    6. [Securely delete](https://www.gnu.org/software/coreutils/manual/html_node/shred-invocation.html) this private key on disk.
 
-        4. Try listing keys again, you should now see a copy of the same private key in two places (disk, and Yubikey).
+    7. Now if you list the keys again, you should see the private key only on Yubikey.
 
-        5. Backup private key in `~/.docker/trust/private/KEYID.key` unto offline, encrypted, long-term storage.
+10. Link the yubikey library so that the prebuilt docker client can find it: `sudo ln -s /usr/lib64/libykcs11.so.1 /usr/local/lib/libykcs11.so`
 
-        6. [Securely delete](https://www.gnu.org/software/coreutils/manual/html_node/shred-invocation.html) this private key on disk.
+11. Later, when you want Docker to use the root role key on your Yubikey:
 
-        7. Now if you list the keys again, you should see the private key only on Yubikey.
+    1. When you push an image, you may have to kill `scdaemon` (in a separate shell) right after Docker pushes, but right before Docker uses the root role key on your Yubikey, and generates a new targets key for the repository.
 
-    10. Link the yubikey library so that the prebuilt docker client can find it.
+    2. Use `docker -D` to find out exactly when to do this.
 
-        1. `sudo ln -s /usr/lib64/libykcs11.so.1 /usr/local/lib/libykcs11.so`
-
-    11. Later, when you want Docker to use the root role key on your Yubikey:
-
-        1. When you push an image, you may have to kill `scdaemon` (in a separate shell) right after Docker pushes, but right before Docker uses the root role key on your Yubikey, and generates a new targets key for the repository.
-
-        2. Use `docker -D` to find out exactly when to do this.
-
-        3. This is annoying, but it works.
+    3. This is annoying, but it works.
 
 <blockquote>
 
@@ -526,9 +523,17 @@ Attack Scenarios:
 
     2. A malicious user sees the OTP and can use this OTP token on **ALL** associated IdPs until a newer token has been used to increment the counter in the IdPs database.
 
+## Troubleshooting
+
+* If you are blocked out of using GPG because you entered your PIN wrong too many times (3x by default), **don’t panic**: just [follow the instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md) here.
+
+* If you suddenly start getting `Permission denied (publickey)`, verify that `ssh-agent` is not running. If `ssh-agent` is running, kill the process. If the error persists, use the kludge in Table 5.
+
+* If you are having issues failing to make connections, you still need to have `ssh-agent` running along with `gpg-agent`: `eval $(ssh-agent -s)`
+
 ## TODO
 
-1. Automate, automate, automate as much as possible (e.g., using bash and expect scripts).
+1. Automate, automate, automate as much as possible (e.g., using `bash` and `expect` scripts).
 
 2. Instructions for revoking and / or replacing keys.
 
@@ -542,13 +547,9 @@ Attack Scenarios:
 
 7. [Setup PAM authentication](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: can get locked out of laptop).
 
-## Troubleshooting
+## Acknowledgements
 
-* If you are blocked out of using GPG because you entered your PIN wrong too many times (3x by default), **don’t panic**: just [follow the instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md) here.
-
-* If you suddenly start getting `Permission denied (publickey)`, verify that `ssh-agent` is not running. If `ssh-agent` is running, kill the process. If the error persists, use the kludge in Table 5.
-
-* If you are having issues failing to make connections, you still need to have `ssh-agent` running along with `gpg-agent`: `eval $(ssh-agent -s)`
+I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Jules Denardou (Datadog), Cara Marie (Datadog), Cody Lee (Datadog), and Santiago Torres-Arias (NYU) who helped me to test these instructions. Thanks to Justin Massey (Datadog) for contributing the [section on disabling Yubikey OTP](#why-disable-yubikey-otp).
 
 ## References
 
