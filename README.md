@@ -130,7 +130,7 @@ About 2 hours.
 
     2. Create a [subkey](https://blog.eleven-labs.com/en/openpgp-almost-perfect-key-pair-part-1/#creating-subkeys) for only each of the following capabilities: Sign, Encrypt, Authenticate.
 
-    3. The passphrase is the same as for the master key (see Step 8a).
+    3. The passphrase is the same as for the master key (see Step 7i).
 
     4. Make sure it expires (perhaps in 1 year).
 
