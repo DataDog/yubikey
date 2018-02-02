@@ -149,9 +149,9 @@ About 2-3 hours.
 
     1. `gpg --export $KEYID | hokey lint`
 
-    2. `"The output will display any problems with your key in red text. If everything is green, your key passes each of the tests. If it is red, your key has failed one of the tests."`
+    2. > The output will display any problems with your key in red text. If everything is green, your key passes each of the tests. If it is red, your key has failed one of the tests.
 
-    3. `"hokey may warn (orange text) about cross certification for the authentication key. GPG's Signing Subkey Cross-Certification documentation has more detail on cross certification, and gpg v2.2.1 notes "subkey does not sign and so does not need to be cross-certified"."`
+    3. > hokey may warn (orange text) about cross certification for the authentication key. GPG's Signing Subkey Cross-Certification documentation has more detail on cross certification, and gpg v2.2.1 notes "subkey does not sign and so does not need to be cross-certified".
 
     4. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#check-your-work](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#check-your-work)
 
