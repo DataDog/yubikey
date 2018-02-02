@@ -1,9 +1,5 @@
 # How to store private keys on a Yubikey
 
-**Author**: Trishank K Kuppusamy
-
-**Date**: Nov 2 2017
-
 ## Summary
 
 GPG is useful for authenticating yourself over SSH and / or GPG-signing your git commits / tags. However, without hardware like the [Yubikey](https://www.yubico.com/products/yubikey-hardware/), you would typically keep your GPG private subkeys in "plain view" on your machine, even if encrypted. That is, attackers who personally target [[1](https://www.kennethreitz.org/essays/on-cybersecurity-and-being-targeted), [2](https://bitcoingold.org/critical-warning-nov-26/), [3](https://panic.com/blog/stolen-source-code/), [4](https://www.fox-it.com/en/insights/blogs/blog/fox-hit-cyber-attack/)] you can compromise your machine can exfiltrate your (encrypted) private key, and your passphrase, in order to pretend to be you.
@@ -12,7 +8,7 @@ Instead, this setup lets you store your private subkeys on your Yubikey. Actuall
 
 ## Acknowledgements
 
-I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Jules Denardou, Cara Marie, Cody Lee, and Santiago Torres-Arias who helped me to test these instructions. Thanks to Justin Massey for contributing the section on disabling OTP.
+I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Jules Denardou (Datadog), Cara Marie (Datadog), Cody Lee (Datadog), and Santiago Torres-Arias (NYU) who helped me to test these instructions. Thanks to Justin Massey (Datadog) for contributing the section on disabling OTP.
 
 ## Estimated burden
 
