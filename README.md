@@ -66,46 +66,45 @@ About 2 hours.
 
     3. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#create-configuration](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#create-configuration)
 
-<table>
-  <tr>
-    <td># Some random stuff to check later
-use-agent
-charset utf-8
-fixed-list-mode
+<blockquote>
 
-# Avoid information leaked
-no-emit-version
-no-comments
-export-options export-minimal
+    # Some random stuff to check later
+    use-agent
+    charset utf-8
+    fixed-list-mode
 
-# Displays the long format of the ID of the keys and their fingerprints
-keyid-format 0xlong
-with-fingerprint
+    # Avoid information leaked
+    no-emit-version
+    no-comments
+    export-options export-minimal
 
-# Displays the validity of the keys
-list-options show-uid-validity
-verify-options show-uid-validity
+    # Displays the long format of the ID of the keys and their fingerprints
+    keyid-format 0xlong
+    with-fingerprint
 
-# Limits the algorithms used
-personal-cipher-preferences AES256
-personal-digest-preferences SHA512
-default-preference-list SHA512 SHA384 SHA256 RIPEMD160 AES256 TWOFISH BLOWFISH ZLIB BZIP2 ZIP Uncompressed
+    # Displays the validity of the keys
+    list-options show-uid-validity
+    verify-options show-uid-validity
 
-cipher-algo AES256
-digest-algo SHA512
-cert-digest-algo SHA512
-compress-algo ZLIB
+    # Limits the algorithms used
+    personal-cipher-preferences AES256
+    personal-digest-preferences SHA512
+    default-preference-list SHA512 SHA384 SHA256 RIPEMD160 AES256 TWOFISH BLOWFISH ZLIB BZIP2 ZIP Uncompressed
 
-disable-cipher-algo 3DES
-weak-digest SHA1
+    cipher-algo AES256
+    digest-algo SHA512
+    cert-digest-algo SHA512
+    compress-algo ZLIB
 
-s2k-cipher-algo AES256
-s2k-digest-algo SHA512
-s2k-mode 3
-s2k-count 65011712</td>
-  </tr>
-</table>
+    disable-cipher-algo 3DES
+    weak-digest SHA1
 
+    s2k-cipher-algo AES256
+    s2k-digest-algo SHA512
+    s2k-mode 3
+    s2k-count 65011712
+
+</blockquote>
 
 **Table 1**: `~/.gnupg/gpg.conf`.
 
@@ -229,40 +228,39 @@ s2k-count 65011712</td>
 
     7. `gpg --card-status`
 
-<table>
-  <tr>
-    <td>Reader ...........: Yubico Yubikey 4 OTP U2F CCID
-Application ID ...: [redacted]
-Version ..........: 2.1
-Manufacturer .....: Yubico
-Serial number ....: [redacted]
-Name of cardholder: Trishank Karthik Kuppusamy
-Language prefs ...: en
-Sex ..............: male
-URL of public key : [not set]
-Login data .......: [redacted]
-Signature PIN ....: forced
-Key attributes ...: rsa4096 rsa4096 rsa4096
-Max. PIN lengths .: 127 127 127
-PIN retry counter : 3 3 3
-Signature counter : 0
-Signature key ....: 6E7A C369 F3FD 6B74 D89F  3EA5 B4AF 1C9C 7351 8187
-      created ....: 2017-11-05 21:47:07
-Encryption key....: 4DFE E3D7 AF94 C6B4 DB96  CF0B 97BF BA5F 949E 66BB
-      created ....: 2017-11-05 21:46:19
-Authentication key: 02CB F034 EED6 99A6 6EB8  686A 6543 5A46 D929 EAB8
-      created ....: 2017-11-05 21:47:43
-General key info..: sub  rsa4096/B4AF1C9C73518187 2017-11-05 Trishank Karthik Kuppusamy [redacted]
-sec#  rsa4096/B9D5EC8FD089F227  created: 2017-11-05  expires: 2021-11-04
-ssb>  rsa4096/97BFBA5F949E66BB  created: 2017-11-05  expires: 2018-11-05
-                                card-no: [redacted]
-ssb>  rsa4096/B4AF1C9C73518187  created: 2017-11-05  expires: 2018-11-05
-                                card-no: [redacted]
-ssb>  rsa4096/65435A46D929EAB8  created: 2017-11-05  expires: 2018-11-05
-                                card-no: [redacted]</td>
-  </tr>
-</table>
+<blockquote>
 
+    Reader ...........: Yubico Yubikey 4 OTP U2F CCID
+    Application ID ...: [redacted]
+    Version ..........: 2.1
+    Manufacturer .....: Yubico
+    Serial number ....: [redacted]
+    Name of cardholder: Trishank Karthik Kuppusamy
+    Language prefs ...: en
+    Sex ..............: male
+    URL of public key : [not set]
+    Login data .......: [redacted]
+    Signature PIN ....: forced
+    Key attributes ...: rsa4096 rsa4096 rsa4096
+    Max. PIN lengths .: 127 127 127
+    PIN retry counter : 3 3 3
+    Signature counter : 0
+    Signature key ....: 6E7A C369 F3FD 6B74 D89F  3EA5 B4AF 1C9C 7351 8187
+          created ....: 2017-11-05 21:47:07
+    Encryption key....: 4DFE E3D7 AF94 C6B4 DB96  CF0B 97BF BA5F 949E 66BB
+          created ....: 2017-11-05 21:46:19
+    Authentication key: 02CB F034 EED6 99A6 6EB8  686A 6543 5A46 D929 EAB8
+          created ....: 2017-11-05 21:47:43
+    General key info..: sub  rsa4096/B4AF1C9C73518187 2017-11-05 Trishank Karthik Kuppusamy [redacted]
+    sec#  rsa4096/B9D5EC8FD089F227  created: 2017-11-05  expires: 2021-11-04
+    ssb>  rsa4096/97BFBA5F949E66BB  created: 2017-11-05  expires: 2018-11-05
+                                    card-no: [redacted]
+    ssb>  rsa4096/B4AF1C9C73518187  created: 2017-11-05  expires: 2018-11-05
+                                    card-no: [redacted]
+    ssb>  rsa4096/65435A46D929EAB8  created: 2017-11-05  expires: 2018-11-05
+                                    card-no: [redacted]
+
+</blockquote>
 
 **Table 2**: `gpg --card-status`.
 
@@ -290,27 +288,25 @@ ssb>  rsa4096/65435A46D929EAB8  created: 2017-11-05  expires: 2018-11-05
 
     2. Add the lines in Table 4 to your bash profile.
 
-<table>
-  <tr>
-    <td># https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
-# https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/authenticating-ssh-with-gpg.html
-enable-ssh-support
-pinentry-program /usr/local/bin/pinentry-mac
-default-cache-ttl 600
-max-cache-ttl 7200</td>
-  </tr>
-</table>
+<blockquote>
 
+    # https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
+    # https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/authenticating-ssh-with-gpg.html
+    enable-ssh-support
+    pinentry-program /usr/local/bin/pinentry-mac
+    default-cache-ttl 600
+    max-cache-ttl 7200
+
+</blockquote>
 
 **Table 3**: `~/.gnupg/gpg-agent.conf`.
 
-<table>
-  <tr>
-    <td>export "GPG_TTY=$(tty)"
-export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"</td>
-  </tr>
-</table>
+<blockquote>
 
+    export "GPG_TTY=$(tty)"
+    export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
+
+</blockquote>
 
 **Table 4**: `~/.bash_profile`.
 
@@ -408,15 +404,14 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"</td>
 
         1. On Fedora, make sure to replace `gpg` with `gpg2`: `git config --global gpg.program gpg2`
 
-<table>
-  <tr>
-    <td># gpg-ssh hack
-gpg-connect-agent killagent /bye
-eval $(gpg-agent --daemon --enable-ssh-support --sh)
-ssh-add -l</td>
-  </tr>
-</table>
+<blockquote>
 
+    # gpg-ssh hack
+    gpg-connect-agent killagent /bye
+    eval $(gpg-agent --daemon --enable-ssh-support --sh)
+    ssh-add -l
+
+</blockquote>
 
 **Table 5**: Add these lines to `~/.bashrc`.
 
@@ -484,15 +479,14 @@ ssh-add -l</td>
 
         3. This is annoying, but it works.
 
-<table>
-  <tr>
-    <td># docker notary stuff
-alias dockernotary="notary -s https://notary.docker.io -d ~/.docker/trust"
-# always be using content trust
-export DOCKER_CONTENT_TRUST=1</td>
-  </tr>
-</table>
+<blockquote>
 
+    # docker notary stuff
+    alias dockernotary="notary -s https://notary.docker.io -d ~/.docker/trust"
+    # always be using content trust
+    export DOCKER_CONTENT_TRUST=1
+
+</blockquote>
 
 **Table 6**: Add these lines to `~/.bashrc`.
 
