@@ -285,7 +285,9 @@ About 2-3 hours.
 
     1. Configure `gpg-agent` as in Table 3.
 
-    2. Add the lines in Table 4 to your `bash` profile.
+    2. Add the lines in Table 4a to your `bash` profile.
+
+    3. Add the lines in Table 4b to the bottom of your `bashrc` or `zshrc`.
 
 <blockquote>
 
@@ -307,7 +309,39 @@ About 2-3 hours.
 
 </blockquote>
 
-**Table 4**: `~/.bash_profile`.
+**Table 4a**: `~/.bash_profile`.
+
+<blockquote>
+
+    export SSH_ENV="${HOME}/.ssh/environment"
+
+    start_ssh_agent() {
+        echo "Initialising new SSH agent..."
+        ssh-agent -s | sed 's/^echo/#echo/' > ${SSH_ENV}
+        echo succeeded
+        chmod 600 ${SSH_ENV}
+        . ${SSH_ENV} > /dev/null
+        ssh-add -k;
+    }
+
+    # Source SSH settings, if applicable
+    load_ssh_session() {
+        if [ -f "${SSH_ENV}" ]; then
+            . ${SSH_ENV} > /dev/null
+            #ps ${SSH_AGENT_PID} doesn't work under cywgin
+            ps aux ${SSH_AGENT_PID} | grep 'ssh-agent -s$' > /dev/null || {
+                start_ssh_agent;
+            }
+        else
+            start_ssh_agent;
+        fi
+    }
+
+    load_ssh_session
+
+</blockquote>
+
+**Table 4b**: `~/.bashrc`.
 
 23. **Test the keys.**
 
