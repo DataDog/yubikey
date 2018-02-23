@@ -25,6 +25,264 @@ About 2-3 hours.
 
 ## Instructions
 
+You have 2 ways of setting up you Yubikey: either generate the gpg key directly
+onto the yubikey or generating one locally and pushing it to the key after.
+Unless you already have a GPG key that you want to use their is no reason to do
+the later.
+
+### Using the yubikey to generate you key
+
+1. **Install Homebrew.**
+
+2. **Install GPG and other preliminaries.**
+
+    1. `brew install gnupg hopenpgp-tools pinentry-mac ykman yubico-piv-tool`
+
+3. **Check the card status.**
+
+    1. Don’t worry even if it says it supports only 3 RSA 2048-bit subkeys. We found that we could actually install 3 RSA 4096-bit subkeys (depending on the Yubikey model).
+
+    2. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#insert-yubikey)
+
+4. **Change card PINs and metadata.**
+
+    1. [Since we won’t be using it here, turn off OTP](https://github.com/liyanchang/yubikey-setup/tree/edd0b7fc6b5e588c8897961ce8f5f85aa868ff1d#turn-off-otp---aka-the-random-letters-when-you-accidentally-touch-it).  Disabling it is recommended: see the explanation [here](#why-disable-yubikey-otp).
+
+    2. [https://developers.yubico.com/PIV/Introduction/Admin_access.html](https://developers.yubico.com/PIV/Introduction/Admin_access.html)
+
+    3. [https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/editing-metadata.html](https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/editing-metadata.html)
+
+    4. [https://developers.yubico.com/PGP/Card_edit.html](https://developers.yubico.com/PGP/Card_edit.html)
+
+    5. Optional: set management key (but not PIN and PUK) via yubico-piv-tool ([https://developers.yubico.com/PIV/Guides/Device_setup.html](https://developers.yubico.com/PIV/Guides/Device_setup.html))
+
+    6. Set the user and admin PINs.
+
+    7. Optional: You might want to also set the unblock and reset PINs.
+
+    8. [You might want to force asking for the PIN every time you sign](https://www.andreagrandi.it/tag/yubikey.html). See the `forcesig` option in `gpg`.
+
+    9. Useful reset in case things go wrong: [https://developers.yubico.com/ykneo-openpgp/ResetApplet.html](https://developers.yubico.com/ykneo-openpgp/ResetApplet.html)
+
+    10. Looks like anyone can reset your card if they have physical access, or can compromise your machine, which is undesirable. At least you can recover from your key backup later. (Ask Yubico about this.) In the meantime, I am told that standard industry practice is to use two Yubikeys, with one serving as backup in case the other fails.
+
+    11. Store these PINs in an offline safe.
+
+5. **Configure GPG.**
+
+    1. See Table 1. (How future-proof are these recommendations?)
+
+    2. [https://blog.eleven-labs.com/en/openpgp-almost-perfect-key-pair-part-1/#install-the-right-tools](https://blog.eleven-labs.com/en/openpgp-almost-perfect-key-pair-part-1/#install-the-right-tools)
+
+    3. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#create-configuration](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#create-configuration)
+
+<blockquote>
+
+    # Some random stuff to check later
+    use-agent
+    charset utf-8
+    fixed-list-mode
+
+    # Avoid information leaked
+    no-emit-version
+    no-comments
+    export-options export-minimal
+
+    # Displays the long format of the ID of the keys and their fingerprints
+    keyid-format 0xlong
+    with-fingerprint
+
+    # Displays the validity of the keys
+    list-options show-uid-validity
+    verify-options show-uid-validity
+
+    # Limits the algorithms used
+    personal-cipher-preferences AES256
+    personal-digest-preferences SHA512
+    default-preference-list SHA512 SHA384 SHA256 RIPEMD160 AES256 TWOFISH BLOWFISH ZLIB BZIP2 ZIP Uncompressed
+
+    cipher-algo AES256
+    digest-algo SHA512
+    cert-digest-algo SHA512
+    compress-algo ZLIB
+
+    disable-cipher-algo 3DES
+    weak-digest SHA1
+
+    s2k-cipher-algo AES256
+    s2k-digest-algo SHA512
+    s2k-mode 3
+    s2k-count 65011712
+
+</blockquote>
+
+**Table 1**: `~/.gnupg/gpg.conf`.
+
+6. Generate Keys
+
+   _Note:_ If you have a YubiKey 4, you should use 4096 as your key length. NEO
+   owners should use 2048 as that is the maximum supported.
+
+   ```bash
+   > gpg2 --card-edit
+
+   [truncated...]
+
+   gpg/card> admin
+   Admin commands are allowed
+
+   gpg/card> generate
+   Make off-card backup of encryption key? (Y/n) n
+
+   [PIN Entry pops up, enter 123456, which is the default pin]
+
+   What keysize do you want for the Signature key? (2048) 4096 [YubiKey NEO max is 2048]
+   [PIN Entry pops up, enter 12345678, which is the default admin pin]
+   The card will now be re-configured to generate a key of 4096 bits
+
+   What keysize do you want for the Encryption key? (2048) 4096 [YubiKey NEO max is 2048]
+   [PIN Entry pops up, enter 12345678, which is the default admin pin]
+   The card will now be re-configured to generate a key of 4096 bits
+
+   What keysize do you want for the Authentication key? (2048) 4096 [YubiKey NEO max is 2048]
+   [PIN Entry pops up, enter 12345678, which is the default admin pin]
+   The card will now be re-configured to generate a key of 4096 bits
+
+   Please specify how long the key should be valid.
+            0 = key does not expire
+         <n>  = key expires in n days
+         <n>w = key expires in n weeks
+         <n>m = key expires in n months
+         <n>y = key expires in n years
+   Key is valid for? (0)
+   Key does not expire at all
+   Is this correct? (y/N) Y
+
+   GnuPG needs to construct a user ID to identify your key.
+
+   Real name: <YOUR_NAME_HERE>
+   Email address: <YOUR_EMAIL_HERE>
+   Comment:
+   You selected this USER-ID:
+       "YOUR_NAME_HERE <YOUR_EMAIL_HERE>"
+
+   Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? O
+   ```
+
+   Once the GPG key has been generated it will prompt
+
+   ```bash
+   We need to generate a lot of random bytes. It is a good idea to perform
+   some other action (type on the keyboard, move the mouse, utilize the
+   disks) during the prime generation; this gives the random number
+   generator a better chance to gain enough entropy.
+   gpg: Note: backup of card key saved to '/Users/maxime.mouial/.gnupg/sk_1A6303EB53291063.gpg'
+   gpg: ~/.gnupg/trustdb.gpg: trustdb created
+   gpg: key <KEYID> marked as ultimately trusted
+   gpg: directory '~/.gnupg/openpgp-revocs.d' created
+   gpg: revocation certificate stored as '~/.gnupg/openpgp-revocs.d/<hash>.rev'
+   public and secret key created and signed.
+   ```
+
+7. (Optional) Other GPG Setup
+
+   While you're here:
+   ```bash
+   gpg/card> name
+   Cardholder's surname: [Your last name]
+   Cardholder's given name: [Your first name]
+   [Enter your admin PIN]
+
+   gpg/card> sex
+   Sex ((M)ale, (F)emale or space): [Your gender]
+
+   gpg/card> lang
+   Language preferences: [Your two letter language code, example: en)
+   ```
+
+   You can see the configuration by typing `list` on the `gpg/card>` prompt.
+
+   https://www.yubico.com/support/knowledge-base/categories/articles/use-yubikey-openpgp/
+
+
+8. **Export public key.**
+
+    You need to save you public key.
+
+    1. `gpg --export --armor $KEYID > ~/$KEYID.pub.asc`
+
+    You can unplug the Yubikey.
+
+9. **Backup everything unto offline encrypted image.**
+
+    1. Choose a good password.
+
+    2. `hdiutil create /tmp/encrypted-gpg-backup.dmg -encryption -volname "gpg-backup" -fs APFS -srcfolder $GNUPGHOME`
+
+    3. Move encrypted image unto offline storage.
+
+    4. Commit password to memory and / or offline storage.
+
+    5. Securely delete `$GNUPGHOME` (which is not straightforward on SSDs).
+
+10. **Delete private keys from memory.**
+
+    1. `gpg --delete-secret-key $KEYID`
+
+    2. `gpg --list-secret-keys`
+
+11._**Delete your revocation certificate.**
+
+    1._` Since you have safely backup everything you can just remove everything within .gnupg. Be sure to use "shred" (or gshred on mac) on every file`
+
+    2._`brew install gshred`
+
+    3._`gshred \`find .gnupg -type f\``
+
+    4._`rm -rf .gnupg/*`
+
+12. **Kill running GPG agents and restart them.**
+
+    1. `gpgconf --kill all`
+
+13. **Import public key.**
+
+    1. `gpg --import $KEYID.pub.asc`
+
+    2. Copy this public key elsewhere for future reference.
+
+20. **Set trust for the master key.**
+
+    1. It looks like we have to import our public key here again for whatever reason (see Step 13). It also looks like this step needs to be done after reboot for permanent effect.
+
+    2. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#trust-master-key](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#trust-master-key)
+
+21. **Enable touch protection (not available for the Yubikey Neo).**
+
+    1. Use the ADMIN PIN from Step 4iii.
+
+    2. [https://developers.yubico.com/yubikey-manager/](https://developers.yubico.com/yubikey-manager/)
+
+    3. `ykman openpgp touch aut on`
+
+    4. `ykman openpgp touch enc on`
+
+    5. `ykman openpgp touch sig on`
+
+22. **Test the keys.**
+
+    1. Start a new `bash` shell.
+
+    2. `echo "$(uname -a)" | gpg --encrypt --sign --armor --default-key B9D5EC8FD089F227 --recipient B4AF1C9C73518187 | gpg --decrypt --armor`
+
+    3. Use the USER PIN from Step 4iii.
+
+    4. Make sure to touch your Yubikey (see Step 21).
+
+    5. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#verifying-signature](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#verifying-signature)
+
+### Generating the GPG key locally
+
 1. **Install Homebrew.**
 
 2. **Install GPG and other preliminaries.**
@@ -281,7 +539,21 @@ About 2-3 hours.
 
     5. `ykman openpgp touch sig on`
 
-22. **Set up SSH agent.**
+22. **Test the keys.**
+
+    1. Start a new `bash` shell.
+
+    2. `echo "$(uname -a)" | gpg --encrypt --sign --armor --default-key B9D5EC8FD089F227 --recipient B4AF1C9C73518187 | gpg --decrypt --armor`
+
+    3. Use the USER PIN from Step 4iii.
+
+    4. Make sure to touch your Yubikey (see Step 21).
+
+    5. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#verifying-signature](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#verifying-signature)
+
+## SSH
+
+1. **Set up SSH agent.**
 
     1. Configure `gpg-agent` as in Table 3.
 
@@ -343,29 +615,17 @@ About 2-3 hours.
 
 **Table 4b**: `~/.bashrc`.
 
-23. **Test the keys.**
-
-    1. Start a new `bash` shell.
-
-    2. `echo "$(uname -a)" | gpg --encrypt --sign --armor --default-key B9D5EC8FD089F227 --recipient B4AF1C9C73518187 | gpg --decrypt --armor`
-
-    3. Use the USER PIN from Step 4iii.
-
-    4. Make sure to touch your Yubikey (see Step 21).
-
-    5. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#verifying-signature](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#verifying-signature)
-
-24. **Kill running GPG agents and restart them.**
+2. **Kill running GPG agents and restart them.**
 
     1. `gpgconf --kill all`
 
-25. **Upload SSH public key to GitHub.**
+3. **Upload SSH public key to GitHub.**
 
     1. `ssh-add -L | grep -iF 'cardno' | pbcopy`
 
     2. [https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/)
 
-26. **Test GitHub SSH.**
+4. **Test GitHub SSH.**
 
     1. `ssh -T -vvv git@github.com`
 
@@ -373,13 +633,13 @@ About 2-3 hours.
 
     3. Make sure to touch your Yubikey (see Step 21).
 
-27. **Upload GPG public key to GitHub.**
+5. **Upload GPG public key to GitHub.**
 
     1. `gpg --armor --export B9D5EC8FD089F227 | pbcopy`
 
     2. [https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/](https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/)
 
-28. **Configure and test Git signing.**
+6. **Configure and test Git signing.**
 
     1. [https://git-scm.com/book/id/v2/Git-Tools-Signing-Your-Work](https://git-scm.com/book/id/v2/Git-Tools-Signing-Your-Work)
 
@@ -395,7 +655,7 @@ About 2-3 hours.
 
     7. Make sure to touch your Yubikey (see Step 21).
 
-29. **Optional: configure U2F for GitHub and Google.**
+7. **Optional: configure U2F for GitHub and Google.**
 
     1. [https://help.github.com/articles/configuring-two-factor-authentication-via-fido-u2f/](https://help.github.com/articles/configuring-two-factor-authentication-via-fido-u2f/)
 
@@ -403,7 +663,7 @@ About 2-3 hours.
 
     3. Why is this optional? Because an evil maid attack gives you access to U2F-enabled services. Should not be required for people who travel with Yubikey in laptop. In any case, it's a race between the user and the attacker anyway.
 
-30. **Reboot.**
+8. **Reboot.**
 
 ## VMware Fusion
 
