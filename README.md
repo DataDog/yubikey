@@ -401,7 +401,11 @@ About 2-3 hours.
 
     3. Why is this optional? Because an evil maid attack gives you access to U2F-enabled services. Should not be required for people who travel with Yubikey in laptop. In any case, it's a race between the user and the attacker anyway.
 
-30. **Reboot.**
+30. **Optional: verify public key on Keybase.**
+
+    1. You can now do this using the command-line option, with only `curl` and `gpg`, and without installing any Keybase app, or uploading an encrypted copy of your private key. For example, see [my profile](https://keybase.io/trishankdatadog).
+
+31. **Reboot.**
 
 ## VMware Fusion
 
@@ -571,13 +575,11 @@ Attack Scenarios:
 
 3. [Solving the PGP Revocation Problem with OpenTimestamps for Git Commits](https://petertodd.org/2016/opentimestamps-git-integration).
 
-4. Upload public key to Keybase.
+4. Procedures for recovering from key compromise / theft / loss.
 
-5. Procedures for recovering from key compromise / theft / loss.
+5. [Setup NFC 2FA](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: would not work out-of-the-box on iPhones as yet).
 
-6. [Setup NFC 2FA](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: would not work out-of-the-box on iPhones as yet).
-
-7. [Setup PAM authentication](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: can get locked out of laptop).
+6. [Setup PAM authentication](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: can get locked out of laptop).
 
 ## Acknowledgements
 
