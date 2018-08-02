@@ -51,7 +51,7 @@ expect {
     expect eof
   }
 
-  "Set mode of YubiKey to FIDO+CCID? \[y/N\]: " {
+  ": " {
     send -- "y\r"
     expect -exact "Mode set! You must remove and re-insert your YubiKey for this change to take effect."
     expect eof
