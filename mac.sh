@@ -1,12 +1,29 @@
 #!/bin/bash
 
+# TODO:
+# 1. Generate PUK and PIN for the user.
+# 2. Get real name, and email address, up front, and feed them to expect.
+
 # Stop on error.
 set -e
 
 # install required tools
 echo "Installing required tools..."
-brew install expect gnupg ykman
+brew install --force expect gnupg pinentry-mac ykman
 echo ""
+
+# setup pinentry-mac
+cat << EOF > ~/.gnupg/gpg-agent.conf
+# https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
+# https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/authenticating-ssh-with-gpg.html
+enable-ssh-support
+pinentry-program /usr/local/bin/pinentry-mac
+default-cache-ttl 600
+max-cache-ttl 7200
+EOF
+
+# in my experience, you have to kill all GPG daemons to get things working
+gpgconf --kill all
 
 echo "Yubikey status:"
 gpg --card-status
