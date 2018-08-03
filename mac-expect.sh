@@ -18,7 +18,7 @@
 # character to toggle this mode off and on.
 
 set force_conservative 0  ;# set to 1 to force conservative mode even if
-			  ;# script wasn't run conservatively originally
+			  ;# script was not run conservatively originally
 if {$force_conservative} {
 	set send_slow {1 .1}
 	proc send {ignore arg} {
@@ -44,7 +44,12 @@ if {$force_conservative} {
 set timeout -1
 match_max 100000
 
+# https://stackoverflow.com/a/17060172
+set realname [lindex $argv 0];
+set email    [lindex $argv 1];
+
 # Turn off OTP.
+send_user "Turning off Yubikey OTP: https://github.com/trishankatdatadog/yubikey#why-disable-yubikey-otp\n"
 spawn ykman mode "FIDO+CCID"
 expect {
   "Mode is already FIDO+CCID, nothing to do..." {
@@ -58,8 +63,9 @@ expect {
   }
 }
 
-# Set up PUK, PIN, and then generate keys on card.
+# Set up PIN, PUK, and then generate keys on card.
 
+send_user "Now generating your GPG keys on the Yubikey itself.\n"
 spawn gpg --card-edit
 expect -exact "gpg/card> "
 
@@ -70,10 +76,10 @@ expect -exact "gpg/card> "
 send -- "passwd\r"
 
 expect -exact "Your selection? "
-send -- "3\r"
+send -- "1\r"
 
 expect -exact "Your selection? "
-send -- "1\r"
+send -- "3\r"
 
 expect -exact "Your selection? "
 send -- "q\r"
@@ -91,17 +97,10 @@ expect -exact "Is this correct? (y/N) "
 send -- "y\r"
 
 expect -exact "Real name: "
-# https://stackoverflow.com/a/683386
-stty echo
-expect_user -re "(.*)\n"
-set real_name $expect_out(1,string)
-send -- "$real_name\r"
+send -- "$realname\r"
 
 expect -exact "Email address: "
-stty echo
-expect_user -re "(.*)\n"
-set email_address $expect_out(1,string)
-send -- "$email_address\r"
+send -- "$email\r"
 
 expect -exact "Comment: "
 send -- "\r"
@@ -116,6 +115,7 @@ expect eof
 
 # Turn on touch for signature.
 
+send_user "Now requiring you to touch your Yubikey to sign any message.\n"
 spawn ykman openpgp touch sig on
 expect -exact "Set touch policy of SIGN key to ON? \[y/N\]: "
 send -- "y\r"
