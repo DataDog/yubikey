@@ -33,7 +33,7 @@ echo "The default PIN code is 123456."
 echo "The new, random PIN code we have generated for you is: $PIN"
 echo "Please save this new PIN immediately in your password manager."
 read -p "Have you done this? "
-echo "Great. Now remember, the first time you are asked for the PIN, please enter: 123456"
+echo "Great. Now, remember, the first time you are asked for the PIN, please enter: 123456"
 echo "After that, you will be asked to set a new PIN. Enter: $PIN"
 echo ""
 
@@ -45,7 +45,7 @@ echo "The default PUK code is 12345678."
 echo "The new, random PUK code we have generated for you is: $PUK"
 echo "Please save this new PUK immediately in your password manager."
 read -p "Have you done this? "
-echo "Great. Now remember, the first time you are asked for the Admin PIN, please enter: 12345678"
+echo "Great. Now, remember, the first time you are asked for the Admin PIN, please enter: 12345678"
 echo "After that, you will be asked to set a new Admin PIN. Enter: $PUK"
 echo ""
 
@@ -80,8 +80,15 @@ gpgconf --kill all
 ./mac-expect.sh "$realname" "$email"
 echo ""
 
+# Tell git to use this GPG key.
+echo "Setting git to use this GPG key globally."
+keyid=$(gpg --list-keys --with-colons $email | awk -F: '/^pub:/ { print $5 }')
+git config --global user.signingkey $keyid
+echo ""
+
 echo "Yubikey status:"
 gpg --card-status
+echo ""
 
 echo "GPG public key export:"
 gpg --armor --export $email

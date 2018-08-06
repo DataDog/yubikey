@@ -109,6 +109,11 @@ expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
 send -- "O\r"
 
 expect -exact "gpg/card> "
+# NOTE: Require PIN every time a message is signed. This adds another layer of
+# protection if the Yubikey alone has been lost or stolen.
+send -- "forcesig\r"
+
+expect -exact "gpg/card> "
 send -- "quit\r"
 
 expect eof
