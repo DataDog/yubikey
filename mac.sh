@@ -10,12 +10,12 @@ echo ""
 # Get some information from the user.
 
 # 1. Real name.
-echo "What is your real name?"
+echo "What is the real name you use on GitHub?"
 read -p "Real name: " realname
 echo ""
 
 # 2. Email address.
-echo "What is your email address?"
+echo "What is an email address you have registered with GitHub?"
 read -p "Email: " email
 echo ""
 
