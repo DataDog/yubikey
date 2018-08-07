@@ -96,7 +96,7 @@ gpg --armor --export $keyid | pbcopy
 echo ""
 
 echo "A copy of this public key has also been copied to your clipboard."
-echo "You may now add it to GitHub: https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/"
+echo "You may now add it to GitHub: https://help.github.com/articles/signing-commits-with-gpg/"
 echo ""
 echo "There is NO off-card backup of your private / secret keys."
 echo "So if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."

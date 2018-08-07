@@ -128,7 +128,7 @@ send -- "\r"
 expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
 send -- "O\r"
 
-send_user "Now generating keys on card, please wait...\n"
+send_user "\nNow generating keys on card, please wait...\n"
 
 expect -exact "gpg/card> "
 # NOTE: Require PIN every time a message is signed. This adds another layer of
