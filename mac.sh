@@ -82,7 +82,7 @@ echo ""
 
 # Tell git to use this GPG key.
 echo "Setting git to use this GPG key globally."
-keyid=$(gpg --list-keys --with-colons $email | awk -F: '/^pub:/ { print $5 }')
+keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
 git config --global user.signingkey $keyid
 echo ""
 
@@ -91,10 +91,10 @@ gpg --card-status
 echo ""
 
 echo "GPG public key export:"
-gpg --armor --export $email
+gpg --armor --export $keyid
+gpg --armor --export $keyid | pbcopy
 echo ""
 
-gpg --armor --export $email | pbcopy
 echo "A copy of this public key has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://help.github.com/articles/adding-a-new-gpg-key-to-your-github-account/"
 echo ""
@@ -106,5 +106,4 @@ echo "You will need to touch your Yubikey in order to sign any message with this
 echo "Your new PIN is: $PIN"
 echo "Your new Admin PIN, aka PUK is: $PUK"
 echo "Good luck."
-echo ""
 
