@@ -55,6 +55,7 @@ brew install --force expect gnupg pinentry-mac ykman
 echo ""
 
 # setup pinentry-mac
+mkdir -p ~/.gnupg
 cat << EOF > ~/.gnupg/gpg-agent.conf
 # https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
 pinentry-program /usr/local/bin/pinentry-mac
