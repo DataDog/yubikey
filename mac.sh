@@ -26,7 +26,7 @@ echo "See https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_K
 echo ""
 
 # 1. PIN
-PIN=$(python -S -c "import random; print random.SystemRandom().randrange(10**7,10**8)")
+PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 echo "The first number is the PIN."
 echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
 echo "The default PIN code is 123456."
@@ -38,7 +38,7 @@ echo "After that, you will be asked to set a new PIN. Enter: $PIN"
 echo ""
 
 # 2. PUK
-PUK=$(python -S -c "import random; print random.SystemRandom().randrange(10**7,10**8)")
+PUK=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 echo "The second number is the Admin PIN, aka PUK."
 echo "The PUK can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
 echo "The default PUK code is 12345678."
@@ -106,4 +106,3 @@ echo "You will need to touch your Yubikey in order to sign any message with this
 echo "Your new PIN is: $PIN"
 echo "Your new Admin PIN, aka PUK is: $PUK"
 echo "Good luck."
-
