@@ -7,6 +7,13 @@ echo "Welcome! This program will automatically generate GPG keys on your Yubikey
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo ""
 
+# Check for ROCA.
+DEVICE_TYPE=$(ykman info | grep 'Device type:' | cut -f2 d:)
+FIRMWARE_VERSION=$(ykman info | grep 'Firmware version:' | cut -f2 d:)
+echo "Checking whether Yubikey suffers from ROCA vulnerability..."
+./roca-check.py "$DEVICE_TYPE" "$FIRMWARE_VERSION"
+echo ""
+
 # Get some information from the user.
 
 # 1. Real name.
