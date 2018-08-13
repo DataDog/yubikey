@@ -17,13 +17,17 @@ echo ""
 # Get some information from the user.
 
 # 1. Real name.
+realname=$(git config user.name)
 echo "What is the real name you use on GitHub?"
-read -p "Real name: " realname
+read -p "Real name ($realname): " input
+realname=${input:-$realname}
 echo ""
 
 # 2. Email address.
+email=$(git config user.email)
 echo "What is an email address you have registered with GitHub?"
-read -p "Email: " email
+read -p "Email ($email): " input
+email=${input:-$email}
 echo ""
 
 # Generate some information for the user.
