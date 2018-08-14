@@ -7,9 +7,14 @@ echo "Welcome! This program will automatically generate GPG keys on your Yubikey
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo ""
 
+# install required tools
+echo "Installing required tools..."
+brew install --force expect gnupg pinentry-mac ykman
+echo ""
+
 # Check for ROCA.
-DEVICE_TYPE=$(ykman info | grep 'Device type:' | cut -f2 d:)
-FIRMWARE_VERSION=$(ykman info | grep 'Firmware version:' | cut -f2 d:)
+DEVICE_TYPE=$(ykman info | grep 'Device type:' | cut -f2 -d:)
+FIRMWARE_VERSION=$(ykman info | grep 'Firmware version:' | cut -f2 -d:)
 echo "Checking whether Yubikey suffers from ROCA vulnerability..."
 ./roca-check.py "$DEVICE_TYPE" "$FIRMWARE_VERSION"
 echo ""
@@ -19,14 +24,14 @@ echo ""
 # 1. Real name.
 realname=$(git config user.name)
 echo "What is the real name you use on GitHub?"
-read -p "Real name ($realname): " input
+read -p "Real name (press Enter to accept '$realname'): " input
 realname=${input:-$realname}
 echo ""
 
 # 2. Email address.
 email=$(git config user.email)
 echo "What is an email address you have registered with GitHub?"
-read -p "Email ($email): " input
+read -p "Email (press Enter to accept '$email'): " input
 email=${input:-$email}
 echo ""
 
@@ -58,11 +63,6 @@ echo "Please save this new PUK immediately in your password manager."
 read -p "Have you done this? "
 echo "Great. Now, remember, the first time you are asked for the Admin PIN, please enter: 12345678"
 echo "After that, you will be asked to set a new Admin PIN. Enter: $PUK"
-echo ""
-
-# install required tools
-echo "Installing required tools..."
-brew install --force expect gnupg pinentry-mac ykman
 echo ""
 
 # setup pinentry-mac
