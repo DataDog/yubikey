@@ -9,6 +9,8 @@ echo ""
 
 # install required tools
 echo "Installing required tools..."
+brew update
+brew upgrade --force
 brew install --force expect gnupg pinentry-mac ykman
 echo ""
 
@@ -104,10 +106,12 @@ echo ""
 
 echo "GPG public key export:"
 gpg --armor --export $keyid
+gpg --armor --export $keyid > $keyid.pub
 gpg --armor --export $keyid | pbcopy
 echo ""
 
-echo "A copy of this public key has also been copied to your clipboard."
+echo "A copy of this public key has been written to $keyid.pub."
+echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://help.github.com/articles/signing-commits-with-gpg/"
 echo ""
 echo "There is NO off-card backup of your private / secret keys."
