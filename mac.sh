@@ -11,7 +11,7 @@ echo ""
 echo "Installing required tools..."
 brew update
 brew upgrade --force
-brew install --force expect git gnupg pinentry-mac ykman
+brew install --force expect gnupg pinentry-mac ykman
 echo ""
 
 # Check for ROCA.
@@ -23,11 +23,8 @@ echo ""
 
 # Get some information from the user.
 
-# Use the Homebrew git.
-GIT=/usr/local/bin/git
-
 # 1. Real name.
-realname=$($GIT config --global --default '' --get user.name)
+realname=$(git config --global --default hello --get user.name)
 echo "What is the real name you use on GitHub?"
 read -p "Real name (press Enter to accept '$realname'): " input
 
@@ -40,8 +37,8 @@ then
   else
     realname=$input
     echo "Using given input: $realname"
-    echo "Setting your git-config global user.name too..."
-    $GIT config --global user.name $realname
+    echo "Setting your git.config user.name too..."
+    git config --global user.name $realname
   fi
 else
   if [[ -z $input ]]
@@ -56,7 +53,7 @@ fi
 echo ""
 
 # 2. Email address.
-email=$($GIT config --global --default '' --get user.email)
+email=$(git config user.email --default '')
 echo "What is an email address you have registered with GitHub?"
 read -p "Email (press Enter to accept '$email'): " input
 
@@ -69,8 +66,8 @@ then
   else
     email=$input
     echo "Using given input: $email"
-    echo "Setting your git-config global user.email too..."
-    $GIT config --global user.email $email
+    echo "Setting your git.config user.email too..."
+    git config --global user.email $email
   fi
 else
   if [[ -z $input ]]
@@ -94,8 +91,12 @@ echo ""
 PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 echo "The first number is the PIN."
 echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
-echo "The default PIN code is 123456."
-echo "The new, random PIN code we have generated for you is: $PIN"
+echo ""
+echo "***********************************************************"
+echo "Default PIN code: 123456"
+echo "New PIN code: $PIN"
+echo "************************************************************"
+echo ""
 echo "Please save this new PIN immediately in your password manager."
 read -p "Have you done this? "
 echo "Great. Now, remember, the first time you are asked for the PIN, please enter: 123456"
@@ -106,8 +107,12 @@ echo ""
 PUK=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 echo "The second number is the Admin PIN, aka PUK."
 echo "The PUK can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
-echo "The default PUK code is 12345678."
-echo "The new, random PUK code we have generated for you is: $PUK"
+echo ""
+echo "***********************************************************"
+echo "Default PUK code: 12345678"
+echo "New PUK code: $PUK"
+echo "************************************************************"
+echo ""
 echo "Please save this new PUK immediately in your password manager."
 read -p "Have you done this? "
 echo "Great. Now, remember, the first time you are asked for the Admin PIN, please enter: 12345678"
@@ -144,7 +149,7 @@ echo ""
 # Tell git to use this GPG key.
 echo "Setting git to use this GPG key globally."
 keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
-$GIT config --global user.signingkey $keyid
+git config --global user.signingkey $keyid
 echo ""
 
 echo "Yubikey status:"
@@ -157,10 +162,11 @@ gpg --armor --export $keyid > $keyid.pub
 gpg --armor --export $keyid | pbcopy
 echo ""
 
-echo "A copy of this public key has been written to $keyid.pub."
+echo "A copy of this public key has been written to ./$keyid.pub."
 echo "It has also been copied to your clipboard."
-echo "You may now add it to GitHub: https://help.github.com/articles/signing-commits-with-gpg/"
-echo ""
+echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
+echo "Opening Chrome ..."
+open -a "/Applications/Google Chrome.app"/ "https://github.com/settings/gpg/new"
 echo "There is NO off-card backup of your private / secret keys."
 echo "So if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo ""
@@ -168,4 +174,5 @@ echo "Otherwise, remember that your keys will not expire until 4 years from now.
 echo "You will need to touch your Yubikey in order to sign any message with this GPG key."
 echo "Your new PIN is: $PIN"
 echo "Your new Admin PIN, aka PUK is: $PUK"
+echo "How to sign commits : https://help.github.com/articles/signing-commits-using-gpg/"
 echo "Good luck."
