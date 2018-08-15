@@ -24,7 +24,7 @@ echo ""
 # Get some information from the user.
 
 # 1. Real name.
-realname=$(git config --global --default hello --get user.name)
+realname=$(git config --global --default '' --get user.name)
 echo "What is the real name you use on GitHub?"
 read -p "Real name (press Enter to accept '$realname'): " input
 
@@ -53,7 +53,7 @@ fi
 echo ""
 
 # 2. Email address.
-email=$(git config --global --default hello --get user.email)
+email=$(git config --global --default '' --get user.email)
 echo "What is an email address you have registered with GitHub?"
 read -p "Email (press Enter to accept '$email'): " input
 
