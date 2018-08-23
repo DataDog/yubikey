@@ -3,7 +3,7 @@
 ## Table of contents
 
 * [Summary](#summary)
-* [Estimated burden](#estimated-burden)
+* [Estimated burden and prerequisites](##estimated-burden-and-prerequisites)
 * [GPG](#gpg)
 * [SSH](#ssh)
 * [U2F](#u2f)
