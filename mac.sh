@@ -24,17 +24,61 @@ echo ""
 # Get some information from the user.
 
 # 1. Real name.
-realname=$(git config user.name)
+realname=$(git config --global --default hello --get user.name)
 echo "What is the real name you use on GitHub?"
 read -p "Real name (press Enter to accept '$realname'): " input
-realname=${input:-$realname}
+
+if [[ -z $realname ]]
+then
+  if [[ -z $input ]]
+  then
+    echo "No name found!"
+    exit 1
+  else
+    realname=$input
+    echo "Using given input: $realname"
+    echo "Setting your git.config user.name too..."
+    git config --global user.name $realname
+  fi
+else
+  if [[ -z $input ]]
+  then
+    echo "Using given user.name: $realname"
+  else
+    realname=$input
+    echo "Using given input: $realname"
+  fi
+fi
+
 echo ""
 
 # 2. Email address.
-email=$(git config user.email)
+email=$(git config user.email --default '')
 echo "What is an email address you have registered with GitHub?"
 read -p "Email (press Enter to accept '$email'): " input
-email=${input:-$email}
+
+if [[ -z $email ]]
+then
+  if [[ -z $input ]]
+  then
+    echo "No email found!"
+    exit 1
+  else
+    email=$input
+    echo "Using given input: $email"
+    echo "Setting your git.config user.email too..."
+    git config --global user.email $email
+  fi
+else
+  if [[ -z $input ]]
+  then
+    echo "Using given user.email: $email"
+  else
+    email=$input
+    echo "Using given input: $email"
+  fi
+fi
+
 echo ""
 
 # Generate some information for the user.
