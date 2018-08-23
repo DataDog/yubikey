@@ -90,28 +90,8 @@ send -- "generate\r"
 expect -exact "Make off-card backup of encryption key? (Y/n) "
 send -- "n\r"
 
-# NOTE: We branch here, because there are two conditions.
-expect {
-  # In the first condition, we do not get asked for the # of bits.
-  "Key is valid for? (0) " {
-    send -- "4y\r"
-  }
-
-  # In the second case, we do, in which case we default to 4096. The Yubikey 4
-  # series should be able to support this even though it claims not to.
-  "What keysize do you want for the Signature key? (2048) " {
-    send -- "4096\r"
-
-    expect -exact "What keysize do you want for the Encryption key? (2048) "
-    send -- "4096\r"
-
-    expect -exact "What keysize do you want for the Authentication key? (2048) "
-    send -- "4096\r"
-
-    expect -exact "Key is valid for? (0) "
-    send -- "4y\r"
-  }
-}
+expect -exact "Key is valid for? (0) "
+send -- "10y\r"
 
 expect -exact "Is this correct? (y/N) "
 send -- "y\r"
