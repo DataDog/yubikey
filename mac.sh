@@ -23,8 +23,11 @@ echo ""
 
 # Get some information from the user.
 
+# Use the Homebrew git.
+GIT=/usr/local/bin/git
+
 # 1. Real name.
-realname=$(git config --global --default '' --get user.name)
+realname=$($GIT config --global --default '' --get user.name)
 echo "What is the real name you use on GitHub?"
 read -p "Real name (press Enter to accept '$realname'): " input
 
@@ -37,8 +40,8 @@ then
   else
     realname=$input
     echo "Using given input: $realname"
-    echo "Setting your git.config user.name too..."
-    git config --global user.name $realname
+    echo "Setting your git-config global user.name too..."
+    $GIT config --global user.name $realname
   fi
 else
   if [[ -z $input ]]
@@ -53,7 +56,7 @@ fi
 echo ""
 
 # 2. Email address.
-email=$(git config --global --default '' --get user.email)
+email=$($GIT config --global --default '' --get user.email)
 echo "What is an email address you have registered with GitHub?"
 read -p "Email (press Enter to accept '$email'): " input
 
@@ -66,8 +69,8 @@ then
   else
     email=$input
     echo "Using given input: $email"
-    echo "Setting your git.config user.email too..."
-    git config --global user.email $email
+    echo "Setting your git-config global user.email too..."
+    $GIT config --global user.email $email
   fi
 else
   if [[ -z $input ]]
@@ -141,7 +144,7 @@ echo ""
 # Tell git to use this GPG key.
 echo "Setting git to use this GPG key globally."
 keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
-git config --global user.signingkey $keyid
+$GIT config --global user.signingkey $keyid
 echo ""
 
 echo "Yubikey status:"
