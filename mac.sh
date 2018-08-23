@@ -11,7 +11,9 @@ echo ""
 echo "Installing required tools..."
 brew update
 brew upgrade --force
-brew install --force expect gnupg pinentry-mac ykman
+brew install --force expect git gnupg pinentry-mac ykman
+# Force reload of brew
+bash
 echo ""
 
 # Check for ROCA.
@@ -53,7 +55,7 @@ fi
 echo ""
 
 # 2. Email address.
-email=$(git config user.email --default '')
+email=$(git config --global --default hello --get user.email)
 echo "What is an email address you have registered with GitHub?"
 read -p "Email (press Enter to accept '$email'): " input
 
