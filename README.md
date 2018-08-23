@@ -25,7 +25,7 @@ Instead, this setup lets you store your private subkeys on your Yubikey. Actuall
 
 <s>About 2-3 hours.</s>
 
-Automated GPG setup with Yubikey should now take a few minutes.
+Automated GPG setup with Yubikey should now take _a few minutes_.
 
 ## GPG
 
