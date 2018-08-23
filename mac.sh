@@ -12,8 +12,6 @@ echo "Installing required tools..."
 brew update
 brew upgrade --force
 brew install --force expect git gnupg pinentry-mac ykman
-# Force reload of brew
-bash
 echo ""
 
 # Check for ROCA.
