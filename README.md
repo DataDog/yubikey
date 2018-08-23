@@ -169,17 +169,15 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
 ## TODO
 
-1. Automate, automate, automate as much as possible (e.g., using `bash` and `expect` scripts).
+1. Instructions for revoking and / or replacing keys.
 
-2. Instructions for revoking and / or replacing keys.
+2. [Solving the PGP Revocation Problem with OpenTimestamps for Git Commits](https://petertodd.org/2016/opentimestamps-git-integration).
 
-3. [Solving the PGP Revocation Problem with OpenTimestamps for Git Commits](https://petertodd.org/2016/opentimestamps-git-integration).
+3. Procedures for recovering from key compromise / theft / loss.
 
-4. Procedures for recovering from key compromise / theft / loss.
+4. [Setup NFC 2FA](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: would not work out-of-the-box on iPhones as yet).
 
-5. [Setup NFC 2FA](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: would not work out-of-the-box on iPhones as yet).
-
-6. [Setup PAM authentication](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: can get locked out of laptop).
+5. [Setup PAM authentication](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: can get locked out of laptop).
 
 ## Acknowledgements
 
