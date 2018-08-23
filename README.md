@@ -4,7 +4,10 @@
 
 * [Summary](#summary)
 * [Estimated burden](#estimated-burden)
-* [Instructions](#instructions)
+* [GPG](#gpg)
+* [SSH](#ssh)
+* [U2F](#u2f)
+* [Keybase](#keybase)
 * [VMware Fusion](#vmware-fusion)
 * [Docker Content Trust](#docker-content-trust)
 * [Why disable Yubikey OTP?](#why-disable-yubikey-otp)
