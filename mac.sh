@@ -142,9 +142,13 @@ gpgconf --kill all
 echo ""
 
 # Tell git to use this GPG key.
+# Also, turn on signing commits and tags by default.
 echo "Setting git to use this GPG key globally."
+echo "Also, turning on signing of all commits and tags by default."
 keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
 $GIT config --global user.signingkey $keyid
+$GIT config --global commit.gpgsign true
+$GIT config --global tag.forceSignAnnotated true
 echo ""
 
 echo "Yubikey status:"
