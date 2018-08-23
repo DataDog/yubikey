@@ -117,10 +117,12 @@ echo ""
 # setup pinentry-mac
 mkdir -p ~/.gnupg
 cat << EOF > ~/.gnupg/gpg-agent.conf
+# https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
 # https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
 pinentry-program /usr/local/bin/pinentry-mac
-default-cache-ttl 600
-max-cache-ttl 7200
+# For usability while balancing security, cache PIN for at most a day.
+default-cache-ttl 86400
+max-cache-ttl 86400
 EOF
 
 # restart GPG daemons to pick up pinentry-mac
