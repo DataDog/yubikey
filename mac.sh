@@ -84,6 +84,13 @@ fi
 
 echo ""
 
+# 3. Comment.
+comment="GPG on Yubikey for Datadog"
+echo "What is a comment you would like to use to distinguish this key?"
+read -p "Comment (press Enter to accept '$comment'): " input
+comment=${input:-$comment}
+echo ""
+
 # Generate some information for the user.
 
 echo "There are two important random numbers for the Yubikey you MUST keep safely."
@@ -118,7 +125,6 @@ echo ""
 mkdir -p ~/.gnupg
 cat << EOF > ~/.gnupg/gpg-agent.conf
 # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
-# https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e#update-configuration
 pinentry-program /usr/local/bin/pinentry-mac
 # For usability while balancing security, cache PIN for at most a day.
 default-cache-ttl 86400
@@ -128,6 +134,7 @@ EOF
 # restart GPG daemons to pick up pinentry-mac
 gpgconf --kill all
 
+# show card information to user so they can be sure they are wiping right key
 echo "Yubikey status:"
 gpg --card-status
 echo ""
@@ -140,7 +147,7 @@ echo ""
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
 gpgconf --kill all
-./mac-expect.sh "$realname" "$email"
+./expect.sh "$realname" "$email" "$comment"
 echo ""
 
 # Tell git to use this GPG key.
@@ -153,17 +160,9 @@ $GIT config --global commit.gpgsign true
 $GIT config --global tag.forceSignAnnotated true
 echo ""
 
-echo "Yubikey status:"
-gpg --card-status
-echo ""
-
-echo "GPG public key export:"
-gpg --armor --export $keyid
+echo "Exporting GPG public key to $keyid.pub."
 gpg --armor --export $keyid > $keyid.pub
 gpg --armor --export $keyid | pbcopy
-echo ""
-
-echo "A copy of this public key has been written to $keyid.pub."
 echo "It has also been copied to your clipboard."
 echo "Please save a copy in your password manager."
 read -p "Have you done this? "
@@ -172,8 +171,19 @@ echo ""
 echo "There is NO off-card backup of your private / secret keys."
 echo "So if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo ""
-echo "Otherwise, remember that your keys will not expire until 4 years from now."
-echo "You will need to touch your Yubikey in order to sign any message with this GPG key."
-echo "Your new PIN is: $PIN"
-echo "Your new Admin PIN, aka PUK is: $PUK"
+
+fingerprint=$(gpg --card-status | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
+cat ~/.gnupg/openpgp-revocs.d/$fingerprint.rev | pbcopy
+echo "Your revocation certificate is at ~/.gnupg/openpgp-revocs.d/$fingerprint.rev"
+echo "It has been copied to your clipboard."
+echo "Please save a copy in your password manager before we delete it off disk."
+read -p "Have you done this? "
+rm ~/.gnupg/openpgp-revocs.d/$fingerprint.rev
+echo "Great. Deleted this revocation certificate from disk."
+echo ""
+
+echo "Finally, remember that your keys will not expire until 10 years from now."
+echo "You will need to enter your PIN (once a day), and touch your Yubikey everytime in order to sign any message with this GPG key."
+echo "Your PIN is: $PIN"
+echo "Your Admin PIN, aka PUK is: $PUK"
 echo "Good luck."

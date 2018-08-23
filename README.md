@@ -21,17 +21,19 @@ GPG is useful for authenticating yourself over SSH and / or GPG-signing your git
 
 Instead, this setup lets you store your private subkeys on your Yubikey. Actually, it gives you much stronger guarantees: you *cannot* authenticate over SSH and / or sign GPG commits / tags *without*: (1) your Yubikey plugged in and operational, (2) your Yubikey PIN, and (3) touching your Yubikey. So, even if there is malware trying to get you to sign, encrypt, or authenticate something, you would almost certainly notice, because your Yubikey will flash, asking for your attention. (There is the "[time of check to time of use](https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use)" issue, but that is out of our scope.)
 
-## Estimated burden
+## Estimated burden and prerequisites
 
-<s>About 2-3 hours.</s>
+<s>About 2-3 hours.</s> Automated GPG setup with Yubikey should now take _a few minutes_.
 
-Automated GPG setup with Yubikey should now take _a few minutes_.
+You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a [Yubikey 4](https://www.yubico.com/product/yubikey-4-series/).
 
 ## GPG
 
 ```bash
 $ ./mac.sh
 ```
+
+*Please read and follow all of the instructions carefully.*
 
 ## SSH
 

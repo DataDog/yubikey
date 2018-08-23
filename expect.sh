@@ -47,6 +47,7 @@ match_max 100000
 # https://stackoverflow.com/a/17060172
 set realname [lindex $argv 0];
 set email    [lindex $argv 1];
+set comment  [lindex $argv 2];
 
 # Turn off OTP.
 send_user "Turning off Yubikey OTP: https://github.com/trishankatdatadog/yubikey#why-disable-yubikey-otp\n"
@@ -67,12 +68,13 @@ expect {
 
 send_user "Now generating your GPG keys on the Yubikey itself.\n"
 spawn gpg --card-edit
-expect -exact "gpg/card> "
 
-send -- "admin\r"
 expect -exact "gpg/card> "
+send -- "admin\r"
 
 # https://developers.yubico.com/PGP/Card_edit.html
+
+expect -exact "gpg/card> "
 send -- "passwd\r"
 
 expect -exact "Your selection? "
@@ -83,6 +85,37 @@ send -- "3\r"
 
 expect -exact "Your selection? "
 send -- "q\r"
+
+# Set desired key attributes.
+
+expect -exact "gpg/card> "
+send -- "key-attr\r"
+
+# Signature key.
+expect -exact "Your selection? "
+# RSA
+send -- "1\r"
+
+expect "What keysize do you want? (*) "
+send -- "4096\r"
+
+# Encryption key.
+expect -exact "Your selection? "
+# RSA
+send -- "1\r"
+
+expect "What keysize do you want? (*) "
+send -- "4096\r"
+
+# Authentication key.
+expect -exact "Your selection? "
+# RSA
+send -- "1\r"
+
+expect "What keysize do you want? (*) "
+send -- "4096\r"
+
+# Time to generate.
 
 expect -exact "gpg/card> "
 send -- "generate\r"
@@ -103,12 +136,12 @@ expect -exact "Email address: "
 send -- "$email\r"
 
 expect -exact "Comment: "
-send -- "\r"
+send -- "$comment\r"
 
 expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
 send -- "O\r"
 
-send_user "\nNow generating keys on card, please wait...\n"
+send_user "\nNow generating keys on card, lights will be flashing, this will take a few minutes, please wait...\n"
 
 expect -exact "gpg/card> "
 # NOTE: Require PIN every time a message is signed. This adds another layer of
