@@ -169,3 +169,19 @@ send -- "$puk\r"
 expect -exact "Touch policy successfully set."
 expect eof
 
+# Turn on touch for authentication.
+
+send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
+spawn ykman openpgp touch aut on
+expect -exact "Set touch policy of AUTHENTICATE key to ON? \[y/N\]: "
+send -- "y\r"
+
+expect -exact "Enter admin PIN: "
+stty -echo
+expect_user -re "(.*)\n"
+set puk $expect_out(1,string)
+send -- "$puk\r"
+
+expect -exact "Touch policy successfully set."
+expect eof
+

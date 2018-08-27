@@ -4,8 +4,7 @@
 
 * [Summary](#summary)
 * [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
-* [GPG](#gpg)
-* [SSH](#ssh)
+* [GPG, git, and ssh](#gpg-git-and-ssh)
 * [U2F](#u2f)
 * [Keybase](#keybase)
 * [VMware Fusion](#vmware-fusion)
@@ -27,17 +26,13 @@ Instead, this setup lets you store your private subkeys on your Yubikey. Actuall
 
 You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a [Yubikey 4](https://www.yubico.com/product/yubikey-4-series/).
 
-## GPG
+## GPG, git, and SSH
 
 ```bash
 $ ./mac.sh
 ```
 
 *Please read and follow all of the instructions carefully.*
-
-## SSH
-
-TODO
 
 ## U2F
 
@@ -173,17 +168,13 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
 1. Instructions for revoking and / or replacing keys.
 
-2. [Solving the PGP Revocation Problem with OpenTimestamps for Git Commits](https://petertodd.org/2016/opentimestamps-git-integration).
+2. Procedures for recovering from key compromise / theft / loss.
 
-3. Procedures for recovering from key compromise / theft / loss.
-
-4. [Setup NFC 2FA](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: would not work out-of-the-box on iPhones as yet).
-
-5. [Setup PAM authentication](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/) (downside: can get locked out of laptop).
+3. [Solving the PGP Revocation Problem with OpenTimestamps for Git Commits](https://petertodd.org/2016/opentimestamps-git-integration).
 
 ## Acknowledgements
 
-I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Jules Denardou (Datadog), Cara Marie (Datadog), Cody Lee (Datadog), and Santiago Torres-Arias (NYU) who helped me to test these instructions. Thanks to Justin Massey (Datadog) for contributing the [section on disabling Yubikey OTP](#why-disable-yubikey-otp).
+I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Jules Denardou (Datadog), Cara Marie (Datadog), Cody Lee (Datadog), and Santiago Torres-Arias (NYU) who helped me to test these instructions. Thanks to Justin Massey (Datadog) for contributing the section on disabling Yubikey OTP.
 
 ## References
 

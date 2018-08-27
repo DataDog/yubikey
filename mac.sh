@@ -105,7 +105,7 @@ echo ""
 echo "***********************************************************"
 echo "Default PIN code: 123456"
 echo "New PIN code: $PIN"
-echo "************************************************************"
+echo "***********************************************************"
 echo ""
 echo "Please save this new PIN immediately in your password manager."
 read -p "Have you done this? "
@@ -121,7 +121,7 @@ echo ""
 echo "***********************************************************"
 echo "Default Admin PIN code: 12345678"
 echo "New Admin PIN code: $PUK"
-echo "************************************************************"
+echo "***********************************************************"
 echo ""
 echo "Please save this new Admin PIN immediately in your password manager."
 read -p "Have you done this? "
@@ -134,10 +134,15 @@ mkdir -p ~/.gnupg
 cat << EOF > ~/.gnupg/gpg-agent.conf
 # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
 pinentry-program /usr/local/bin/pinentry-mac
+enable-ssh-support
 # For usability while balancing security, cache PIN for at most a day.
 default-cache-ttl 86400
 max-cache-ttl 86400
 EOF
+
+# enable SSH
+echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
+echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
 
 # restart GPG daemons to pick up pinentry-mac
 gpgconf --kill all
@@ -168,17 +173,29 @@ $GIT config --global commit.gpgsign true
 $GIT config --global tag.forceSignAnnotated true
 echo ""
 
-echo "Exporting GPG public key to $keyid.pub."
-gpg --armor --export $keyid > $keyid.pub
+echo "Exporting your GPG public key to $keyid.gpg.pub."
+gpg --armor --export $keyid > $keyid.gpg.pub
 gpg --armor --export $keyid | pbcopy
 echo "It has also been copied to your clipboard."
-echo "Please save a copy in your password manager."
-read -p "Have you done this? "
-echo "Great. You may now add it to GitHub: https://github.com/settings/gpg/new"
+echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
 echo "Opening Chrome ..."
 open -a "/Applications/Google Chrome.app"/ "https://github.com/settings/gpg/new"
+echo "Please save a copy in your password manager."
+read -p "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
 echo "So if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
+echo ""
+
+echo "Exporting your SSH public key to $keyid.ssh.pub."
+ssh-add -L | grep -iF 'cardno' > $keyid.ssh.pub
+ssh-add -L | grep -iF 'cardno' | pbcopy
+echo "It has also been copied to your clipboard."
+echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
+echo "Opening Chrome ..."
+open -a "/Applications/Google Chrome.app"/ "https://github.com/settings/ssh/new"
+echo "Please save a copy in your password manager."
+read -p "Have you done this? "
+echo "Great."
 echo ""
 
 fingerprint=$(gpg --card-status | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
