@@ -144,11 +144,6 @@ send -- "O\r"
 send_user "\nNow generating keys on card, lights will be flashing, this will take a few minutes, please wait...\n"
 
 expect -exact "gpg/card> "
-# NOTE: Require PIN every time a message is signed. This adds another layer of
-# protection if the Yubikey alone has been lost or stolen.
-send -- "forcesig\r"
-
-expect -exact "gpg/card> "
 send -- "quit\r"
 
 expect eof
