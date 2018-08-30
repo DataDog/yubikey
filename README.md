@@ -42,8 +42,6 @@ Optional: configure U2F for GitHub and Google.
 
 2. [https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/)
 
-3. Why is this optional? Because an evil maid attack gives you access to U2F-enabled services. Should not be required for people who travel with Yubikey in laptop. In any case, it's a race between the user and the attacker anyway.
-
 ## Keybase
 
 Optional: verify public key on Keybase.
@@ -174,26 +172,14 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
 ## Acknowledgements
 
-I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Jules Denardou (Datadog), Cara Marie (Datadog), Cody Lee (Datadog), and Santiago Torres-Arias (NYU) who helped me to test these instructions. Thanks to Justin Massey (Datadog) for contributing the section on disabling Yubikey OTP.
+I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Ayaz Badouraly, Arthur Bellal, Forrest Buff, Alex Charrier, Jules Denardou, Ivan DiLernia, Hippolyte Henry, David Huie, Yann Mahé, Cara Marie, Rishabh Moudgil, Maxime Mouial, Nicholas Muesch, Julien Muetton, Cody Lee, Ofek Lev, Thomas Renault, Pratik Guha Sarkar, and Santiago Torres-Arias (NYU), all of whom who were at Datadog (unless specified otherwise), and who helped me to test these instructions. Thanks to Justin Massey for contributing the section on disabling Yubikey OTP.
 
 ## References
 
-1. [https://blog.eleven-labs.com/en/openpgp-almost-perfect-key-pair-part-1/](https://blog.eleven-labs.com/en/openpgp-almost-perfect-key-pair-part-1/)
+1. [https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/](https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/)
 
-2. [https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e](https://github.com/drduh/YubiKey-Guide/tree/ed1c2fdfa6300bdd6143d7e1877749f2f2fcab8e)
+2. [https://mikegerwitz.com/papers/git-horror-story](https://mikegerwitz.com/papers/git-horror-story)
 
-3. [https://medium.com/@ahawkins/securing-my-digital-life-gpg-yubikey-ssh-on-macos-5f115cb01266](https://medium.com/@ahawkins/securing-my-digital-life-gpg-yubikey-ssh-on-macos-5f115cb01266)
+3. [http://karl.kornel.us/2017/10/welp-there-go-my-git-signatures/](http://karl.kornel.us/2017/10/welp-there-go-my-git-signatures/)
 
-4. [https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/](https://ocramius.github.io/blog/yubikey-for-ssh-gpg-git-and-local-login/)
-
-5. [https://blog.eleven-labs.com/en/openpgp-secret-keys-yubikey-part-2/](https://blog.eleven-labs.com/en/openpgp-secret-keys-yubikey-part-2/)
-
-6. [https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/](https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/)
-
-7. [https://mikegerwitz.com/papers/git-horror-story](https://mikegerwitz.com/papers/git-horror-story)
-
-8. [http://karl.kornel.us/2017/10/welp-there-go-my-git-signatures/](http://karl.kornel.us/2017/10/welp-there-go-my-git-signatures/)
-
-9. [https://petertodd.org/2016/opentimestamps-git-integration](https://petertodd.org/2016/opentimestamps-git-integration)
-
-10. [https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2014-May/005877.html](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2014-May/005877.html)
+4. [https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2014-May/005877.html](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2014-May/005877.html)
