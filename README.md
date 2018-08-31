@@ -199,8 +199,6 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
 2. Procedures for recovering from key compromise / theft / loss.
 
-3. [Solving the PGP Revocation Problem with OpenTimestamps for Git Commits](https://petertodd.org/2016/opentimestamps-git-integration).
-
 ## Acknowledgements
 
 I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Ayaz Badouraly, Arthur Bellal, Forrest Buff, Alex Charrier, Jules Denardou, Ivan DiLernia, Hippolyte Henry, David Huie, Cody Lee, Ofek Lev, Yann Mahé, Cara Marie, Justin Massey, Rishabh Moudgil, Maxime Mouial, Nicholas Muesch, Julien Muetton, Massimiliano Pippi, Thomas Renault, Pratik Guha Sarkar, and Santiago Torres-Arias (NYU), all of whom who were at Datadog (unless specified otherwise), and who helped me to test these instructions.
