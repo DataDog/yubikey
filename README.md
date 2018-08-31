@@ -1,11 +1,10 @@
-# How to use Yubikey for gpg, git, ssh, Docker Content Trust, VMware Fusion, and more
+# Yubikey at Datadog 
 
 Table of contents
 
 - [Summary](#summary)
 - [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
-- [GPG and SSH](#gpg-and-ssh)
-- [Git setup](#git-setup)
+- [GPG, git, and SSH](#gpg-git-and-ssh)
 - [U2F](#u2f)
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
@@ -23,60 +22,64 @@ Instead, this setup lets you store your private subkeys on your Yubikey. Actuall
 
 ## Estimated burden and prerequisites
 
-<s>About 2-3 hours.</s> Automated GPG setup with Yubikey should now take _a few minutes_.
+<s>About 2-3 hours.</s> 15 minutes could save you 15% or more on cybersecurity insurance.
 
 You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a [Yubikey 4](https://www.yubico.com/product/yubikey-4-series/).
 
-## GPG and SSH
+## GPG, git, and SSH
+
+**Please read and follow all of the instructions carefully.**
 
 ```bash
 $ ./mac.sh
 ```
 
-*Please read and follow all of the instructions carefully.*
-
-## Git setup
+### Signing for different git repositories with different keys 
 
 The script can setup your Git installation so that all your commits and tags will be
 signed by default with the key contained in the Yubikey. If you don't want the
 script to alter your existing configuration, just say no when prompted.
 
-In case you want to sign tags and commits with different keys, (let's say your
-personal one for Open Source projects, the one in the Yubikey for Datadog
-proprietary code), one possible solution is to setup git aliases. First of all,
-be sure automatic signing is on:
+In case you want to sign for different repositories with different keys, there
+are a few options. Perhaps the simplest is to let the script assign the Yubikey
+to all git repositories, and then use `git config --local` to override
+`user.signingkey` for different repositories.
+
+Alternatively, let us say you use your personal key for Open Source projects,
+the one in the Yubikey for Datadog proprietary code, one possible solution is
+to setup git aliases. First of all, be sure automatic signing is on:
 
 ```sh
 git config --global commit.gpgsign true
 git config --global tag.forceSignAnnotated true
 ```
 
-Then you can tell git to use a specific key by default, depending on which one is
-the one you use the most:
+Then you can tell git to use a specific key by default, depending on which one
+is the one you use the most:
 
 ```sh
 git config --global user.signingkey <id_of_the_key_you_want_to_use_by_default>
 ```
 
-You can alias the `commit` command to override the default key and use another one
-to sign that specific commit:
+You can alias the `commit` command to override the default key and use another
+one to sign that specific commit:
 
 ```sh
 git config --global alias.dd-commit '-c user.signingkey=<id_of_the_yubikey_key> commit'
 git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag'
 ```
 
-With this setup, every time you do `git commit` or `git tag`, the default key will be used
-while `git dd-commit` and `git dd-tag` will use the one in the Yubikey and you will
-be prompted for PIN and/or touch.
+With this setup, every time you do `git commit` or `git tag`, the default key
+will be used while `git dd-commit` and `git dd-tag` will use the one in the
+Yubikey.
 
 ## U2F
 
-Optional: configure U2F for GitHub and Google.
+**STRONGLY recommended:** configure U2F for GitHub and Google.
 
-1. [https://help.github.com/articles/configuring-two-factor-authentication-via-fido-u2f/](https://help.github.com/articles/configuring-two-factor-authentication-via-fido-u2f/)
+1. [GitHub](https://help.github.com/articles/configuring-two-factor-authentication/#configuring-two-factor-authentication-using-fido-u2f)
 
-2. [https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/)
+2. [Google](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/)
 
 ## Keybase
 
@@ -188,11 +191,7 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
 ## Troubleshooting
 
-* If you are blocked out of using GPG because you entered your PIN wrong too many times (3x by default), **don’t panic**: just [follow the instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md) here.
-
-* If you suddenly start getting `Permission denied (publickey)`, verify that `ssh-agent` is not running. If `ssh-agent` is running, kill the process. If the error persists, use the kludge in Table 5.
-
-* If you are having issues failing to make connections, you still need to have `ssh-agent` running along with `gpg-agent`: `eval $(ssh-agent -s)`
+* If you are blocked out of using GPG because you entered your PIN wrong too many times (3x by default), **don’t panic**: just [follow the instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md) here. Make sure you enter your **Admin PIN** correctly within 3x, otherwise your current keys are blocked, and you must reset your Yubikey to use new keys.
 
 ## TODO
 
@@ -204,7 +203,7 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
 ## Acknowledgements
 
-I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Ayaz Badouraly, Arthur Bellal, Forrest Buff, Alex Charrier, Jules Denardou, Ivan DiLernia, Hippolyte Henry, David Huie, Yann Mahé, Cara Marie, Rishabh Moudgil, Maxime Mouial, Nicholas Muesch, Julien Muetton, Cody Lee, Ofek Lev, Thomas Renault, Pratik Guha Sarkar, and Santiago Torres-Arias (NYU), all of whom who were at Datadog (unless specified otherwise), and who helped me to test these instructions. Thanks to Justin Massey for contributing the section on disabling Yubikey OTP.
+I developed this guide while working at [Datadog](https://www.datadoghq.com/), in order to use it in various product security efforts. Thanks to Ayaz Badouraly, Arthur Bellal, Forrest Buff, Alex Charrier, Jules Denardou, Ivan DiLernia, Hippolyte Henry, David Huie, Cody Lee, Ofek Lev, Yann Mahé, Cara Marie, Justin Massey, Rishabh Moudgil, Maxime Mouial, Nicholas Muesch, Julien Muetton, Massimiliano Pippi, Thomas Renault, Pratik Guha Sarkar, and Santiago Torres-Arias (NYU), all of whom who were at Datadog (unless specified otherwise), and who helped me to test these instructions.
 
 ## References
 

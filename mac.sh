@@ -162,8 +162,9 @@ gpgconf --kill all
 ./expect.sh "$realname" "$email" "$comment"
 echo ""
 
-read -p "Do you want to setup Git so that it'll sign all commits and tags with this key? [y/n] " -n 1 -r
-echo    # move to new line
+# Ask user whether all git commits and tags should be signed.
+read -p "Do you want to set up git so that all commits and tags will be signed with this key (STRONGLY recommended)? [y/n] " -n 1 -r
+echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   echo "Setting git to use this GPG key globally."
@@ -177,6 +178,7 @@ then
   echo ""
 fi
 
+# Export GPG public key.
 echo "Exporting your GPG public key to $keyid.gpg.pub."
 gpg --armor --export $keyid > $keyid.gpg.pub
 gpg --armor --export $keyid | pbcopy
@@ -190,6 +192,7 @@ echo "There is NO off-card backup of your private / secret keys."
 echo "So if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo ""
 
+# Export SSH key derived from GPG authentication subkey.
 echo "Exporting your SSH public key to $keyid.ssh.pub."
 ssh-add -L | grep -iF 'cardno' > $keyid.ssh.pub
 ssh-add -L | grep -iF 'cardno' | pbcopy
@@ -202,6 +205,7 @@ read -p "Have you done this? "
 echo "Great."
 echo ""
 
+# Ask user to save revocation certificate before deleting it.
 fingerprint=$(gpg --card-status | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
 cat ~/.gnupg/openpgp-revocs.d/$fingerprint.rev | pbcopy
 echo "Your revocation certificate is at ~/.gnupg/openpgp-revocs.d/$fingerprint.rev"
@@ -212,6 +216,7 @@ rm ~/.gnupg/openpgp-revocs.d/$fingerprint.rev
 echo "Great. Deleted this revocation certificate from disk."
 echo ""
 
+# Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
 echo "You will need to enter your PIN (once a day), and touch your Yubikey everytime in order to sign any message with this GPG key."
 echo ""
@@ -220,4 +225,4 @@ echo "Your PIN is: $PIN"
 echo "Your Admin PIN, aka PUK is: $PUK"
 echo "************************************************************"
 echo ""
-echo "Good luck."
+echo "Enjoy using your Yubikey at Datadog!"
