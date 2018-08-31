@@ -1,18 +1,19 @@
 # How to use Yubikey for gpg, git, ssh, Docker Content Trust, VMware Fusion, and more
 
-## Table of contents
+Table of contents
 
-* [Summary](#summary)
-* [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
-* [GPG, git, and ssh](#gpg-git-and-ssh)
-* [U2F](#u2f)
-* [Keybase](#keybase)
-* [VMware Fusion](#vmware-fusion)
-* [Docker Content Trust](#docker-content-trust)
-* [Troubleshooting](#troubleshooting)
-* [TODO](#todo)
-* [Acknowledgements](#acknowledgements)
-* [References](#references)
+- [Summary](#summary)
+- [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
+- [GPG and SSH](#gpg-and-ssh)
+- [Git setup](#git-setup)
+- [U2F](#u2f)
+- [Keybase](#keybase)
+- [VMware Fusion](#vmware-fusion)
+- [Docker Content Trust](#docker-content-trust)
+- [Troubleshooting](#troubleshooting)
+- [TODO](#todo)
+- [Acknowledgements](#acknowledgements)
+- [References](#references)
 
 ## Summary
 
@@ -26,13 +27,48 @@ Instead, this setup lets you store your private subkeys on your Yubikey. Actuall
 
 You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a [Yubikey 4](https://www.yubico.com/product/yubikey-4-series/).
 
-## GPG, git, and SSH
+## GPG and SSH
 
 ```bash
 $ ./mac.sh
 ```
 
 *Please read and follow all of the instructions carefully.*
+
+## Git setup
+
+The script can setup your Git installation so that all your commits and tags will be
+signed by default with the key contained in the Yubikey. If you don't want the
+script to alter your existing configuration, just say no when prompted.
+
+In case you want to sign tags and commits with different keys, (let's say your
+personal one for Open Source projects, the one in the Yubikey for Datadog
+proprietary code), one possible solution is to setup git aliases. First of all,
+be sure automatic signing is on:
+
+```sh
+git config --global commit.gpgsign true
+git config --global tag.forceSignAnnotated true
+```
+
+Then you can tell git to use a specific key by default, depending on which one is
+the one you use the most:
+
+```sh
+git config --global user.signingkey <id_of_the_key_you_want_to_use_by_default>
+```
+
+You can alias the `commit` command to override the default key and use another one
+to sign that specific commit:
+
+```sh
+git config --global alias.dd-commit '-c user.signingkey=<id_of_the_yubikey_key> commit'
+git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag'
+```
+
+With this setup, every time you do `git commit` or `git tag`, the default key will be used
+while `git dd-commit` and `git dd-tag` will use the one in the Yubikey and you will
+be prompted for PIN and/or touch.
 
 ## U2F
 
@@ -76,14 +112,12 @@ Optional: using Yubikey inside GNU/Linux running on VMware Fusion.
 
 10. Test Git signing (see Step 28). On Fedora, make sure to replace `gpg` with `gpg2`: `git config --global gpg.program gpg2`
 
-<blockquote>
-
+```sh
     # gpg-ssh hack
     gpg-connect-agent killagent /bye
     eval $(gpg-agent --daemon --enable-ssh-support --sh)
     ssh-add -l
-
-</blockquote>
+```
 
 **Table 5**: Add these lines to `~/.bashrc`.
 
@@ -143,14 +177,12 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
     3. This is annoying, but it works.
 
-<blockquote>
-
+```sh
     # docker notary stuff
     alias dockernotary="notary -s https://notary.docker.io -d ~/.docker/trust"
     # always be using content trust
     export DOCKER_CONTENT_TRUST=1
-
-</blockquote>
+```
 
 **Table 6**: Add these lines to `~/.bashrc`.
 

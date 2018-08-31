@@ -8,9 +8,8 @@ echo "If you ever run into problems, just press Ctrl-C, and rerun this program a
 echo ""
 
 # install required tools
-echo "Installing required tools..."
-brew update
-brew upgrade --force
+echo "Installing required tools, please try a full upgrade with 'brew upgrade --force'"
+echo "of the problematic packages if something goes wrong, then try again."
 brew install --force expect git gnupg pinentry-mac ykman
 echo ""
 
@@ -163,15 +162,20 @@ gpgconf --kill all
 ./expect.sh "$realname" "$email" "$comment"
 echo ""
 
-# Tell git to use this GPG key.
-# Also, turn on signing commits and tags by default.
-echo "Setting git to use this GPG key globally."
-echo "Also, turning on signing of all commits and tags by default."
-keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
-$GIT config --global user.signingkey $keyid
-$GIT config --global commit.gpgsign true
-$GIT config --global tag.forceSignAnnotated true
-echo ""
+read -p "Do you want to setup Git so that it'll sign all commits and tags with this key? [y/n] " -n 1 -r
+echo    # move to new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  echo "Setting git to use this GPG key globally."
+  echo "Also, turning on signing of all commits and tags by default."
+  keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
+  # Tell git to use this GPG key.
+  $GIT config --global user.signingkey $keyid
+  # Also, turn on signing commits and tags by default.
+  $GIT config --global commit.gpgsign true
+  $GIT config --global tag.forceSignAnnotated true
+  echo ""
+fi
 
 echo "Exporting your GPG public key to $keyid.gpg.pub."
 gpg --armor --export $keyid > $keyid.gpg.pub
