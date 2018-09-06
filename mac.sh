@@ -160,6 +160,12 @@ echo ""
 # but right before, kill all GPG daemons to make sure things work reliably
 gpgconf --kill all
 ./expect.sh "$realname" "$email" "$comment"
+# NOTE: After we are done setting up Yubikey, kill existing SSH and GPG agents,
+# and start GPG agent manually (with SSH support added above) to maximize odds
+# of picking up SSH key.
+killall ssh-agent
+gpgconf --kill all
+gpg-agent --daemon
 echo ""
 
 # Ask user whether all git commits and tags should be signed.
