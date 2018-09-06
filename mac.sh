@@ -163,13 +163,13 @@ gpgconf --kill all
 echo ""
 
 # Ask user whether all git commits and tags should be signed.
+keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
 read -p "Do you want to set up git so that all commits and tags will be signed with this key (STRONGLY recommended)? [y/n] " -n 1 -r
 echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   echo "Setting git to use this GPG key globally."
   echo "Also, turning on signing of all commits and tags by default."
-  keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
   # Tell git to use this GPG key.
   $GIT config --global user.signingkey $keyid
   # Also, turn on signing commits and tags by default.
