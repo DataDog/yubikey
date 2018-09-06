@@ -190,8 +190,8 @@ gpg --armor --export $keyid > $keyid.gpg.pub
 gpg --armor --export $keyid | pbcopy
 echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
-echo "Opening Chrome ..."
-open -a "/Applications/Google Chrome.app"/ "https://github.com/settings/gpg/new"
+echo "Opening GitHub..."
+open "https://github.com/settings/gpg/new"
 echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
@@ -204,8 +204,8 @@ ssh-add -L | grep -iF 'cardno' > $keyid.ssh.pub
 ssh-add -L | grep -iF 'cardno' | pbcopy
 echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
-echo "Opening Chrome ..."
-open -a "/Applications/Google Chrome.app"/ "https://github.com/settings/ssh/new"
+echo "Opening GitHub..."
+open "https://github.com/settings/ssh/new"
 echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "Great."
