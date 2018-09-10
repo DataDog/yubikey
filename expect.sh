@@ -50,7 +50,7 @@ set email    [lindex $argv 1];
 set comment  [lindex $argv 2];
 
 # Turn off OTP.
-send_user "Turning off Yubikey OTP: https://github.com/trishankatdatadog/yubikey#why-disable-yubikey-otp\n"
+send_user "Turning off Yubikey OTP:\n"
 spawn ykman mode "FIDO+CCID"
 expect {
   "Mode is already FIDO+CCID, nothing to do..." {

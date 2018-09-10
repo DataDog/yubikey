@@ -3,6 +3,14 @@
 # Stop on error.
 set -e
 
+# Use Homebrew formulae.
+HOMEBREW=/usr/local/bin
+GIT=$HOMEBREW/git
+GPG=$HOMEBREW/gpg
+GPG_AGENT=$HOMEBREW/gpg-agent
+GPGCONF=$HOMEBREW/gpgconf
+YKMAN=$HOMEBREW/ykman
+
 echo "Welcome! This program will automatically generate GPG keys on your Yubikey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo ""
@@ -14,16 +22,13 @@ brew install --force expect git gnupg pinentry-mac ykman
 echo ""
 
 # Check for ROCA.
-DEVICE_TYPE=$(ykman info | grep 'Device type:' | cut -f2 -d:)
-FIRMWARE_VERSION=$(ykman info | grep 'Firmware version:' | cut -f2 -d:)
+DEVICE_TYPE=$($YKMAN info | grep 'Device type:' | cut -f2 -d:)
+FIRMWARE_VERSION=$($YKMAN info | grep 'Firmware version:' | cut -f2 -d:)
 echo "Checking whether Yubikey suffers from ROCA vulnerability..."
 ./roca-check.py "$DEVICE_TYPE" "$FIRMWARE_VERSION"
 echo ""
 
 # Get some information from the user.
-
-# Use the Homebrew git.
-GIT=/usr/local/bin/git
 
 # 1. Real name.
 realname=$($GIT config --global --default '' --get user.name)
@@ -144,32 +149,32 @@ echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
 echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
 
 # restart GPG daemons to pick up pinentry-mac
-gpgconf --kill all
+$GPGCONF --kill all
 
 # show card information to user so they can be sure they are wiping right key
 echo "Yubikey status:"
-gpg --card-status
+$GPG --card-status
 echo ""
 
 # reset yubikey openPGP applet
 echo "RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
-ykman openpgp reset
+$YKMAN openpgp reset
 echo ""
 
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
-gpgconf --kill all
+$GPGCONF --kill all
 ./expect.sh "$realname" "$email" "$comment"
 # NOTE: After we are done setting up Yubikey, kill existing SSH and GPG agents,
 # and start GPG agent manually (with SSH support added above) to maximize odds
 # of picking up SSH key.
 killall ssh-agent
-gpgconf --kill all
-gpg-agent --daemon
+$GPGCONF --kill all
+$GPG_AGENT --daemon
 echo ""
 
 # Ask user whether all git commits and tags should be signed.
-keyid=$(gpg --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
+keyid=$($GPG --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
 read -p "Do you want to set up git so that all commits and tags will be signed with this key (STRONGLY recommended)? [y/n] " -n 1 -r
 echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
@@ -186,8 +191,8 @@ fi
 
 # Export GPG public key.
 echo "Exporting your GPG public key to $keyid.gpg.pub."
-gpg --armor --export $keyid > $keyid.gpg.pub
-gpg --armor --export $keyid | pbcopy
+$GPG --armor --export $keyid > $keyid.gpg.pub
+$GPG --armor --export $keyid | pbcopy
 echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
 echo "Opening GitHub..."
@@ -212,7 +217,7 @@ echo "Great."
 echo ""
 
 # Ask user to save revocation certificate before deleting it.
-fingerprint=$(gpg --card-status | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
+fingerprint=$($GPG --card-status | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
 cat ~/.gnupg/openpgp-revocs.d/$fingerprint.rev | pbcopy
 echo "Your revocation certificate is at ~/.gnupg/openpgp-revocs.d/$fingerprint.rev"
 echo "It has been copied to your clipboard."
