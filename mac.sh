@@ -168,7 +168,7 @@ $GPGCONF --kill all
 # NOTE: After we are done setting up Yubikey, kill existing SSH and GPG agents,
 # and start GPG agent manually (with SSH support added above) to maximize odds
 # of picking up SSH key.
-killall ssh-agent
+killall ssh-agent || echo "ssh-agent was not running."
 $GPGCONF --kill all
 $GPG_AGENT --daemon
 echo ""
