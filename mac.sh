@@ -145,7 +145,7 @@ max-cache-ttl 86400
 EOF
 
 # enable SSH
-read -p "Would you like the gpg agent to be added to your bash and zsh profiles? [y/n] " -n 1 -r
+read -p "Would you like to SSH using your Yubikey? [y/n] " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   if [[ $(cat ~/.bash_profile) =~ "gpg-agent.ssh" ]]; then
     echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
