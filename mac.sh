@@ -145,7 +145,7 @@ max-cache-ttl 86400
 EOF
 
 # enable SSH
-read -p "Would you like to SSH using your Yubikey? [y/n] " -n 1 -r
+read -p "Would you like to SSH using your Yubikey? [y/n] "
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   if [[ $(cat ~/.bash_profile) =~ "gpg-agent.ssh" ]]; then
     echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
@@ -154,6 +154,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
   fi
 fi
+echo ""
 
 # restart GPG daemons to pick up pinentry-mac
 $GPGCONF --kill all
@@ -182,7 +183,7 @@ echo ""
 
 # Ask user whether all git commits and tags should be signed.
 keyid=$($GPG --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
-read -p "Do you want to set up git so that all commits and tags will be signed with this key (STRONGLY recommended)? [y/n] " -n 1 -r
+read -p "Do you want to set up git so that all commits and tags will be signed with this key (STRONGLY recommended)? [y/n] "
 echo ""
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
@@ -232,6 +233,8 @@ echo "Please save a copy in your password manager before we delete it off disk."
 read -p "Have you done this? "
 rm ~/.gnupg/openpgp-revocs.d/$fingerprint.rev
 echo "Great. Deleted this revocation certificate from disk."
+# NOTE: EMPTY clipboard after this.
+pbcopy < /dev/null
 echo ""
 
 # Final reminders.
