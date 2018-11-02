@@ -145,8 +145,15 @@ max-cache-ttl 86400
 EOF
 
 # enable SSH
-echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
-echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
+read -p "Would you like to SSH using your Yubikey? [y/n] " -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  if [[ $(cat ~/.bash_profile) =~ "gpg-agent.ssh" ]]; then
+    echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
+  fi
+  if [[ $(cat ~/.zshrc) =~ "gpg-agent.ssh" ]]; then
+    echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
+  fi
+fi
 
 # restart GPG daemons to pick up pinentry-mac
 $GPGCONF --kill all
