@@ -57,7 +57,7 @@ expect {
     expect eof
   }
 
-  "Current connection mode is: FIDO+CCID*" {
+  "Current connection mode is: FIDO+CCID\r*" {
     expect eof
   }
 
