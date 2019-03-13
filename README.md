@@ -44,7 +44,7 @@ but that is out of our scope.)
 insurance.
 
 You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
-[Yubikey 4](https://www.yubico.com/product/yubikey-4-series/).
+[Yubikey](https://www.yubico.com/products/yubikey-hardware/).
 
 ## GPG, git, and SSH
 
