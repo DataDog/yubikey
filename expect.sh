@@ -57,13 +57,11 @@ expect {
     expect eof
   }
 
-  "Current connection mode is: FIDO+CCID\r*" {
-    expect eof
-  }
-
   ": " {
     send -- "y\r"
-    expect -exact "Mode set! You must remove and re-insert your YubiKey for this change to take effect."
+    # FIXME: The following line is required on Yubikey 4, but I'm not sure how
+    # to fix this right now.
+    #expect -exact "Mode set! You must remove and re-insert your YubiKey for this change to take effect."
     expect eof
   }
 }
