@@ -153,6 +153,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   if [[ $(cat ~/.zshrc) =~ "gpg-agent.ssh" ]]; then
     echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
   fi
+  if [[ $(cat ~/.profile) =~ "gpg-agent.ssh" ]]; then
+    echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.profile
+  fi
 fi
 echo ""
 
