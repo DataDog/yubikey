@@ -6,7 +6,7 @@ Table of contents
 - [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
 - [GPG and git](#gpg-and-git)
 - [U2F](#u2f)
-- [SSH][#ssh]
+- [SSH](#ssh)
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
