@@ -109,7 +109,7 @@ and
 **NOT recommended** unless you plan to use your GPG authentication subkey as
 your only SSH authentication key.
 
-You **must** have first set up [GPG and git](#gpg-and-git]. Then, please read
+You **must** have first set up [GPG and git](#gpg-and-git). Then, please read
 and follow all of the instructions carefully.
 
 ```bash
