@@ -1,11 +1,12 @@
-# Yubikey at Datadog 
+# YubiKey at Datadog
 
 Table of contents
 
 - [Summary](#summary)
 - [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
-- [GPG, git, and SSH](#gpg-git-and-ssh)
+- [GPG and git](#gpg-and-git)
 - [U2F](#u2f)
+- [SSH][#ssh]
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
@@ -18,7 +19,7 @@ Table of contents
 
 GPG is useful for authenticating yourself over SSH and / or GPG-signing your
 git commits / tags. However, without hardware like the
-[Yubikey](https://www.yubico.com/products/yubikey-hardware/), you would
+[YubiKey](https://www.yubico.com/products/yubikey-hardware/), you would
 typically keep your GPG private subkeys in "plain view" on your machine, even
 if encrypted. That is, attackers who personally target
 [[1](https://www.kennethreitz.org/essays/on-cybersecurity-and-being-targeted),
@@ -28,12 +29,12 @@ if encrypted. That is, attackers who personally target
 can compromise your machine can exfiltrate your (encrypted) private key, and
 your passphrase, in order to pretend to be you.
 
-Instead, this setup lets you store your private subkeys on your Yubikey.
+Instead, this setup lets you store your private subkeys on your YubiKey.
 Actually, it gives you much stronger guarantees: you *cannot* authenticate over
-SSH and / or sign GPG commits / tags *without*: (1) your Yubikey plugged in and
-operational, (2) your Yubikey PIN, and (3) touching your Yubikey. So, even if
+SSH and / or sign GPG commits / tags *without*: (1) your YubiKey plugged in and
+operational, (2) your YubiKey PIN, and (3) touching your YubiKey. So, even if
 there is malware trying to get you to sign, encrypt, or authenticate something,
-you would almost certainly notice, because your Yubikey will flash, asking for
+you would almost certainly notice, because your YubiKey will flash, asking for
 your attention. (There is the "[time of check to time of
 use](https://en.wikipedia.org/wiki/Time_of_check_to_time_of_use)" issue,
 but that is out of our scope.)
@@ -44,31 +45,31 @@ but that is out of our scope.)
 insurance.
 
 You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
-[Yubikey](https://www.yubico.com/products/yubikey-hardware/).
+[YubiKey 5](https://www.yubico.com/products/yubikey-hardware/).
 
-## GPG, git, and SSH
+## GPG and git
 
 **Please read and follow all of the instructions carefully.**
 
 ```bash
-$ ./mac.sh
+$ ./gpg-and-git.sh
 ```
 
-### Signing for different git repositories with different keys 
+### Signing for different git repositories with different keys
 
 The script can setup your Git installation so that all your commits and tags
-will be signed by default with the key contained in the Yubikey. We
+will be signed by default with the key contained in the YubiKey. We
 **strongly** recommend that you turn on this option. If you have done so,
 please stop reading here.
 
 Otherwise, one reason for declining this option may be that you wish to sign
 for different repositories with different keys. There are a few ways to handle
-this. Perhaps the simplest is to let the script assign the Yubikey to all git
+this. Perhaps the simplest is to let the script assign the YubiKey to all git
 repositories, and then use `git config --local` to override `user.signingkey`
 for different repositories.
 
 Alternatively, let us say you use your personal key for open source projects,
-and the one in the Yubikey for Datadog proprietary code. One possible
+and the one in the YubiKey for Datadog proprietary code. One possible
 solution is to setup git aliases. First, make sure signing is turned on
 globally:
 
@@ -94,7 +95,7 @@ git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag
 
 With this setup, every time you do `git commit` or `git tag`, the default key
 will be used while `git dd-commit` and `git dd-tag` will use the one in the
-Yubikey.
+YubiKey.
 
 ## U2F
 
@@ -102,6 +103,18 @@ Yubikey.
 [GitHub](https://help.github.com/articles/configuring-two-factor-authentication/#configuring-two-factor-authentication-using-fido-u2f)
 and
 [Google](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/).
+
+## SSH
+
+**NOT recommended** unless you plan to use your GPG authentication subkey as
+your only SSH authentication key.
+
+You **must** have first set up [GPG and git](#gpg-and-git]. Then, please read
+and follow all of the instructions carefully.
+
+```bash
+$ ./ssh.sh
+```
 
 ## Keybase
 
@@ -112,14 +125,14 @@ see this [profile](https://keybase.io/trishankdatadog).
 
 ## VMware Fusion
 
-Optional: using Yubikey inside GNU/Linux running on VMware Fusion.
+Optional: using YubiKey inside GNU/Linux running on VMware Fusion.
 
 1. Shut down your VM, find its .vmx file, edit the file to the [add the
    following
    line](https://www.symantec.com/connect/blogs/enabling-hid-devices-such-usb-keyboards-barcode-scanners-vmware),
    and then reboot it: `usb.generic.allowHID = "TRUE"`
 
-2. Connect your Yubikey to the VM once you have booted and logged in.
+2. Connect your YubiKey to the VM once you have booted and logged in.
 
 3. Install libraries for smart card:
 
@@ -154,7 +167,7 @@ Optional: using Yubikey inside GNU/Linux running on VMware Fusion.
 
 ## Docker Content Trust
 
-Optional: using Yubikey to store the root role key for Docker Notary.
+Optional: using YubiKey to store the root role key for Docker Notary.
 
 1. Assumption: you are running all of the following under [Fedora
    27](#vmware-fusion).
@@ -197,7 +210,7 @@ Optional: using Yubikey to store the root role key for Docker Notary.
 
 9. Generate the root role key ([can be reused across multiple Docker
    repositories](https://github.com/theupdateframework/notary/blame/a41821feaf59a28c1d8f78799300d26f8bdf8b0d/docs/best_practices.md#L91-L95)),
-and export it to both Yubikey, and keep a copy on disk:
+and export it to both YubiKey, and keep a copy on disk:
 
     1. Choose a strong passphrase.
 
@@ -206,7 +219,7 @@ and export it to both Yubikey, and keep a copy on disk:
     3. Commit passphrase to memory and / or offline storage.
 
     4. Try listing keys again, you should now see a copy of the same private
-       key in two places (disk, and Yubikey).
+       key in two places (disk, and YubiKey).
 
     5. Backup private key in `~/.docker/trust/private/KEYID.key` unto offline,
        encrypted, long-term storage.
@@ -216,16 +229,16 @@ and export it to both Yubikey, and keep a copy on disk:
        this private key on disk.
 
     7. Now if you list the keys again, you should see the private key only on
-       Yubikey.
+       YubiKey.
 
 10. Link the yubikey library so that the prebuilt docker client can find it:
     `sudo ln -s /usr/lib64/libykcs11.so.1 /usr/local/lib/libykcs11.so`
 
-11. Later, when you want Docker to use the root role key on your Yubikey:
+11. Later, when you want Docker to use the root role key on your YubiKey:
 
     1. When you push an image, you may have to kill `scdaemon` (in a separate
        shell) right after Docker pushes, but right before Docker uses the root
-    role key on your Yubikey, and generates a new targets key for the
+    role key on your YubiKey, and generates a new targets key for the
     repository.
 
     2. Use `docker -D` to find out exactly when to do this.
@@ -247,7 +260,7 @@ and export it to both Yubikey, and keep a copy on disk:
 many times (3x by default), **don’t panic**: just [follow the
 instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md)
 here. Make sure you enter your **Admin PIN** correctly within 3x, otherwise
-your current keys are blocked, and you must reset your Yubikey to use new keys.
+your current keys are blocked, and you must reset your YubiKey to use new keys.
 
 ## TODO
 

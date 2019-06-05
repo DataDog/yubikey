@@ -179,4 +179,3 @@ set puk $expect_out(1,string)
 send -- "$puk\r"
 
 expect eof
-

@@ -3,13 +3,7 @@
 # Stop on error.
 set -e
 
-# Use Homebrew formulae.
-HOMEBREW=/usr/local/bin
-GIT=$HOMEBREW/git
-GPG=$HOMEBREW/gpg
-GPG_AGENT=$HOMEBREW/gpg-agent
-GPGCONF=$HOMEBREW/gpgconf
-YKMAN=$HOMEBREW/ykman
+source env.sh
 
 echo "Welcome! This program will automatically generate GPG keys on your Yubikey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
@@ -21,12 +15,13 @@ echo "of the problematic packages if something goes wrong, then try again."
 brew install --force expect git gnupg pinentry-mac ykman
 echo ""
 
-# Check for ROCA.
-DEVICE_TYPE=$($YKMAN info | grep 'Device type:' | cut -f2 -d:)
-FIRMWARE_VERSION=$($YKMAN info | grep 'Firmware version:' | cut -f2 -d:)
-echo "Checking whether Yubikey suffers from ROCA vulnerability..."
-./roca-check.py "$DEVICE_TYPE" "$FIRMWARE_VERSION"
-echo ""
+# Support only these YubiKey types.
+YUBIKEY_VERSION=$($YKMAN info | grep 'Device type:' | cut -f2 -d: | awk '{print $2}')
+if [[ $YUBIKEY_VERSION != "5C" ]]
+then
+  echo "Sorry, but we do not support your YubiKey type."
+  exit 1
+fi
 
 # Get some information from the user.
 
@@ -138,26 +133,10 @@ mkdir -p ~/.gnupg
 cat << EOF > ~/.gnupg/gpg-agent.conf
 # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
 pinentry-program /usr/local/bin/pinentry-mac
-enable-ssh-support
 # For usability while balancing security, cache PIN for at most a day.
 default-cache-ttl 86400
 max-cache-ttl 86400
 EOF
-
-# enable SSH
-read -p "Would you like to SSH using your Yubikey? [y/n] "
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  if [[ $(cat ~/.bash_profile) =~ "gpg-agent.ssh" ]]; then
-    echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
-  fi
-  if [[ $(cat ~/.zshrc) =~ "gpg-agent.ssh" ]]; then
-    echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
-  fi
-  if [[ $(cat ~/.profile) =~ "gpg-agent.ssh" ]]; then
-    echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.profile
-  fi
-fi
-echo ""
 
 # restart GPG daemons to pick up pinentry-mac
 $GPGCONF --kill all
@@ -176,12 +155,6 @@ echo ""
 # but right before, kill all GPG daemons to make sure things work reliably
 $GPGCONF --kill all
 ./expect.sh "$realname" "$email" "$comment"
-# NOTE: After we are done setting up Yubikey, kill existing SSH and GPG agents,
-# and start GPG agent manually (with SSH support added above) to maximize odds
-# of picking up SSH key.
-killall ssh-agent || echo "ssh-agent was not running."
-$GPGCONF --kill all
-$GPG_AGENT --daemon
 echo ""
 
 # Ask user whether all git commits and tags should be signed.
@@ -212,19 +185,6 @@ echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
 echo "So if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
-echo ""
-
-# Export SSH key derived from GPG authentication subkey.
-echo "Exporting your SSH public key to $keyid.ssh.pub."
-ssh-add -L | grep -iF 'cardno' > $keyid.ssh.pub
-ssh-add -L | grep -iF 'cardno' | pbcopy
-echo "It has also been copied to your clipboard."
-echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
-echo "Opening GitHub..."
-open "https://github.com/settings/ssh/new"
-echo "Please save a copy in your password manager."
-read -p "Have you done this? "
-echo "Great."
 echo ""
 
 # Ask user to save revocation certificate before deleting it.
