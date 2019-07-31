@@ -5,9 +5,6 @@ set -e
 
 source env.sh
 
-# Force locale to prevent expect script from breaking on non-english systems.
-export LC_ALL=C
-
 echo "Welcome! This program will automatically generate GPG keys on your Yubikey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo ""
@@ -154,11 +151,18 @@ echo "RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
 $YKMAN openpgp reset
 echo ""
 
+# force locale to prevent expect script from breaking on non-english systems.
+old_locale="${LC_ALL}"
+export LC_ALL=en_US.UTF-8
+
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
 $GPGCONF --kill all
 ./expect.sh "$realname" "$email" "$comment"
 echo ""
+
+# restore initial locale value
+export LC_ALL="${old_locale}"
 
 # Ask user whether all git commits and tags should be signed.
 keyid=$($GPG --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
