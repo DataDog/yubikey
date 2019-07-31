@@ -5,6 +5,9 @@ set -e
 
 source env.sh
 
+# Force locale to prevent expect script from breaking on non-english systems.
+export LC_ALL=C
+
 echo "Welcome! This program will automatically generate GPG keys on your Yubikey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo ""
