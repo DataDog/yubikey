@@ -27,6 +27,7 @@ $GPGCONF --kill all
 $GPG_AGENT --daemon
 
 # Export SSH key derived from GPG authentication subkey.
+keyid=$($GPG --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
 echo "Exporting your SSH public key to $keyid.ssh.pub."
 ssh-add -L | grep -iF 'cardno' > $keyid.ssh.pub
 ssh-add -L | grep -iF 'cardno' | pbcopy
