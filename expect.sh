@@ -153,9 +153,7 @@ expect eof
 # Turn on touch for signature.
 
 send_user "Now requiring you to touch your Yubikey to sign any message.\n"
-spawn ykman openpgp touch sig on
-expect -exact "Set touch policy of SIGNATURE key to ON? \[y/N\]: "
-send -- "y\r"
+spawn ykman openpgp set-touch sig on
 
 expect -exact "Enter admin PIN: "
 stty -echo
@@ -163,14 +161,14 @@ expect_user -re "(.*)\n"
 set puk $expect_out(1,string)
 send -- "$puk\r"
 
+expect -exact "Set touch policy of signature key to on? \[y/N\]: "
+send -- "y\r"
 expect eof
 
 # Turn on touch for authentication.
 
 send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
-spawn ykman openpgp touch aut on
-expect -exact "Set touch policy of AUTHENTICATION key to ON? \[y/N\]: "
-send -- "y\r"
+spawn ykman openpgp set-touch aut on
 
 expect -exact "Enter admin PIN: "
 stty -echo
@@ -178,4 +176,6 @@ expect_user -re "(.*)\n"
 set puk $expect_out(1,string)
 send -- "$puk\r"
 
+expect -exact "Set touch policy of authentication key to on? \[y/N\]: "
+send -- "y\r"
 expect eof

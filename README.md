@@ -4,7 +4,8 @@ Table of contents
 
 - [Summary](#summary)
 - [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
-- [GPG and git](#gpg-and-git)
+- [GPG](#gpg)
+- [git](#git)
 - [U2F](#u2f)
 - [SSH](#ssh)
 - [Keybase](#keybase)
@@ -47,12 +48,20 @@ insurance.
 You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
 [YubiKey 5](https://www.yubico.com/products/yubikey-hardware/).
 
-## GPG and git
+## GPG
 
 **Please read and follow all of the instructions carefully.**
 
 ```bash
-$ ./gpg-and-git.sh
+$ ./gpg.sh
+```
+
+## git
+
+**Please read and follow all of the instructions carefully.**
+
+```bash
+$ ./git.sh
 ```
 
 ### Signing for different git repositories with different keys
