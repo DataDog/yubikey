@@ -3,8 +3,6 @@
 # Stop on error.
 set -e
 
-source env.sh
-
 echo "Welcome! This program will automatically generate GPG keys on your Yubikey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo ""
@@ -12,8 +10,11 @@ echo ""
 # install required tools
 echo "Installing required tools, please try a full upgrade with 'brew upgrade --force'"
 echo "of the problematic packages if something goes wrong, then try again."
-brew install --force expect git gnupg pinentry-mac ykman
+brew install --force expect gnupg pinentry-mac ykman
 echo ""
+
+# 1-2. Get full name and email address.
+source realname-and-email.sh
 
 # Support only these YubiKey types.
 YUBIKEY_VERSION=$($YKMAN info | grep 'Device type:' | cut -f2 -d: | awk '{print $2}')
@@ -22,66 +23,6 @@ then
   echo "Sorry, but we do not support your YubiKey type."
   exit 1
 fi
-
-# Get some information from the user.
-
-# 1. Real name.
-realname=$($GIT config --global --default '' --get user.name)
-echo "What is the real name you use on GitHub?"
-read -p "Real name (press Enter to accept '$realname'): " input
-
-if [[ -z $realname ]]
-then
-  if [[ -z $input ]]
-  then
-    echo "No name found!"
-    exit 1
-  else
-    realname=$input
-    echo "Using given input: $realname"
-    echo "Setting your git-config global user.name too..."
-    $GIT config --global user.name $realname
-  fi
-else
-  if [[ -z $input ]]
-  then
-    echo "Using given user.name: $realname"
-  else
-    realname=$input
-    echo "Using given input: $realname"
-  fi
-fi
-
-echo ""
-
-# 2. Email address.
-email=$($GIT config --global --default '' --get user.email)
-echo "What is an email address you have registered with GitHub?"
-read -p "Email (press Enter to accept '$email'): " input
-
-if [[ -z $email ]]
-then
-  if [[ -z $input ]]
-  then
-    echo "No email found!"
-    exit 1
-  else
-    email=$input
-    echo "Using given input: $email"
-    echo "Setting your git-config global user.email too..."
-    $GIT config --global user.email $email
-  fi
-else
-  if [[ -z $input ]]
-  then
-    echo "Using given user.email: $email"
-  else
-    email=$input
-    echo "Using given input: $email"
-  fi
-fi
-
-echo ""
 
 # 3. Comment.
 comment="GPG on Yubikey for Datadog"
@@ -164,30 +105,11 @@ echo ""
 # restore initial locale value
 export LC_ALL="${old_locale}"
 
-# Ask user whether all git commits and tags should be signed.
-keyid=$($GPG --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
-read -p "Do you want to set up git so that all commits and tags will be signed with this key (STRONGLY recommended)? [y/n] "
-echo ""
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
-  echo "Setting git to use this GPG key globally."
-  echo "Also, turning on signing of all commits and tags by default."
-  # Tell git to use this GPG key.
-  $GIT config --global user.signingkey $keyid
-  # Also, turn on signing commits and tags by default.
-  $GIT config --global commit.gpgsign true
-  $GIT config --global tag.forceSignAnnotated true
-  echo ""
-fi
-
 # Export GPG public key.
+keyid=$($GPG --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
 echo "Exporting your GPG public key to $keyid.gpg.pub."
 $GPG --armor --export $keyid > $keyid.gpg.pub
 $GPG --armor --export $keyid | pbcopy
-echo "It has also been copied to your clipboard."
-echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
-echo "Opening GitHub..."
-open "https://github.com/settings/gpg/new"
 echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
