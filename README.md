@@ -56,9 +56,11 @@ You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
 $ ./gpg.sh
 ```
 
+(Protip: set `TEMPDIR=1` when preparing YubiKey for someone else to avoid polluting your default GPG homedir.)
+
 ## git
 
-**Please read and follow all of the instructions carefully.**
+**STRONGLY RECOMMENDED:** signing all your git commits across all repositories.
 
 ```bash
 $ ./git.sh

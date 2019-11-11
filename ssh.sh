@@ -6,7 +6,8 @@ set -e
 source env.sh
 
 # enable ssh support
-echo "enable-ssh-support" >> ~/.gnupg/gpg-agent.conf
+backup_default_gpg_agent_conf
+echo "enable-ssh-support" >> $DEFAULT_GPG_AGENT_CONF
 
 if [[ $(cat ~/.bash_profile) =~ "gpg-agent.ssh" ]]; then
   echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
