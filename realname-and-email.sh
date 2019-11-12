@@ -16,7 +16,7 @@ if [[ -z $realname ]]
 then
   if [[ -z $input ]]
   then
-    echo "No name found!"
+    echo "No name given!"
     exit 1
   else
     realname=$input
@@ -32,6 +32,13 @@ else
   fi
 fi
 
+realname_len=${#realname}
+if [[ $realname_len -lt 5 ]]
+then
+  echo "Real name has $realname_len < 5 characters!"
+  exit 2
+fi
+
 echo ""
 
 # 2. Email address.
@@ -43,8 +50,8 @@ if [[ -z $email ]]
 then
   if [[ -z $input ]]
   then
-    echo "No email found!"
-    exit 1
+    echo "No email given!"
+    exit 3
   else
     email=$input
     echo "Using given input: $email"

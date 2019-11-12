@@ -1,2 +1,3 @@
-*.pub
-yubikey.code-workspace
+*.gpg.pub.asc
+*.gpg.pub.bin
+*.code-workspace

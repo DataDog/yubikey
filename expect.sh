@@ -17,7 +17,7 @@
 # this in the first place.  The -C flag allows you to define a
 # character to toggle this mode off and on.
 
-set force_conservative 0  ;# set to 1 to force conservative mode even if
+set force_conservative 1  ;# set to 1 to force conservative mode even if
 			  ;# script was not run conservatively originally
 if {$force_conservative} {
 	set send_slow {1 .1}
@@ -45,9 +45,12 @@ set timeout -1
 match_max 100000
 
 # https://stackoverflow.com/a/17060172
-set realname [lindex $argv 0];
-set email    [lindex $argv 1];
-set comment  [lindex $argv 2];
+set GPG_HOMEDIR [lindex $argv 0];
+set PIN         [lindex $argv 1];
+set PUK         [lindex $argv 2];
+set realname    [lindex $argv 3];
+set email       [lindex $argv 4];
+set comment     [lindex $argv 5];
 
 # Turn off OTP.
 send_user "Turning off Yubikey OTP:\n"
@@ -69,7 +72,7 @@ expect {
 # Set up PIN, PUK, and then generate keys on card.
 
 send_user "Now generating your GPG keys on the Yubikey itself.\n"
-spawn gpg --card-edit
+spawn gpg --card-edit --homedir=$GPG_HOMEDIR
 
 expect -exact "gpg/card> "
 send -- "admin\r"
@@ -79,12 +82,39 @@ send -- "admin\r"
 expect -exact "gpg/card> "
 send -- "passwd\r"
 
+# Change PIN
 expect -exact "Your selection? "
 send -- "1\r"
 
+# Default PIN
+expect -exact "PIN: "
+send -- "123456\r"
+
+# New PIN
+expect -exact "PIN: "
+send -- "$PIN\r"
+
+# Repeat new PIN
+expect -exact "PIN: "
+send -- "$PIN\r"
+
+# Change PUK
 expect -exact "Your selection? "
 send -- "3\r"
 
+# Default PUK
+expect -exact "Admin PIN: "
+send -- "12345678\r"
+
+# New PUK
+expect -exact "Admin PIN: "
+send -- "$PUK\r"
+
+# Repeat new PUK
+expect -exact "Admin PIN: "
+send -- "$PUK\r"
+
+# Get out of passwd menu
 expect -exact "Your selection? "
 send -- "q\r"
 
@@ -101,6 +131,10 @@ send -- "1\r"
 expect "What keysize do you want? (*) "
 send -- "4096\r"
 
+# Send new PUK
+expect -exact "Admin PIN: "
+send -- "$PUK\r"
+
 # Encryption key.
 expect -exact "Your selection? "
 # RSA
@@ -108,6 +142,10 @@ send -- "1\r"
 
 expect "What keysize do you want? (*) "
 send -- "4096\r"
+
+# Send new PUK
+expect -exact "Admin PIN: "
+send -- "$PUK\r"
 
 # Authentication key.
 expect -exact "Your selection? "
@@ -117,6 +155,10 @@ send -- "1\r"
 expect "What keysize do you want? (*) "
 send -- "4096\r"
 
+# Send new PUK
+expect -exact "Admin PIN: "
+send -- "$PUK\r"
+
 # Time to generate.
 
 expect -exact "gpg/card> "
@@ -124,6 +166,10 @@ send -- "generate\r"
 
 expect -exact "Make off-card backup of encryption key? (Y/n) "
 send -- "n\r"
+
+# Send new PIN
+expect -exact "PIN: "
+send -- "$PIN\r"
 
 expect -exact "Key is valid for? (0) "
 send -- "10y\r"
@@ -143,6 +189,10 @@ send -- "$comment\r"
 expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
 send -- "O\r"
 
+# Send new PUK
+expect -exact "Admin PIN: "
+send -- "$PUK\r"
+
 send_user "\nNow generating keys on card, lights will be flashing, this will take a few minutes, please wait...\n"
 
 expect -exact "gpg/card> "
@@ -150,32 +200,43 @@ send -- "quit\r"
 
 expect eof
 
-# Turn on touch for signature.
+# Turn on touch for SIGNATURES.
 
 send_user "Now requiring you to touch your Yubikey to sign any message.\n"
 spawn ykman openpgp set-touch sig on
 
 expect -exact "Enter admin PIN: "
 stty -echo
-expect_user -re "(.*)\n"
-set puk $expect_out(1,string)
-send -- "$puk\r"
+send -- "$PUK\r"
 
 expect -exact "Set touch policy of signature key to on? \[y/N\]: "
 send -- "y\r"
 expect eof
 
-# Turn on touch for authentication.
+# Turn on touch for AUTHENTICATION.
 
 send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
 spawn ykman openpgp set-touch aut on
 
 expect -exact "Enter admin PIN: "
 stty -echo
-expect_user -re "(.*)\n"
-set puk $expect_out(1,string)
-send -- "$puk\r"
+send -- "$PUK\r"
 
 expect -exact "Set touch policy of authentication key to on? \[y/N\]: "
 send -- "y\r"
 expect eof
+
+# Turn on touch for ENCRYPTION.
+
+send_user "Now requiring you to touch your Yubikey to encrypt any message.\n"
+spawn ykman openpgp set-touch enc on
+
+expect -exact "Enter admin PIN: "
+stty -echo
+send -- "$PUK\r"
+
+expect -exact "Set touch policy of encryption key to on? \[y/N\]: "
+send -- "y\r"
+expect eof
+
+# FIXME: for some reason, setting touch policy for ATTESTATION does not work right now, I suspect due to a YubiKey bug.
