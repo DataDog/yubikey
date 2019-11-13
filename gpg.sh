@@ -20,15 +20,15 @@ source realname-and-email.sh
 YUBIKEY_VERSION=$($YKMAN info | grep 'Device type:' | cut -f2 -d: | awk '{print $2}')
 if [[ $YUBIKEY_VERSION != "5C" ]]
 then
-  echo "Sorry, but we do not support your YubiKey type."
+  echo "Sorry, but we do not support your YubiKey version: $YUBIKEY_VERSION"
   exit 1
 fi
 
 # 3. Comment.
-comment="GPG on Yubikey for Datadog"
+COMMENT="GPG on Yubikey for Datadog"
 echo "What is a comment you would like to use to distinguish this key?"
-read -p "Comment (press Enter to accept '$comment'): " input
-comment=${input:-$comment}
+read -p "Comment (press Enter to accept '$COMMENT'): " input
+COMMENT=${input:-$COMMENT}
 echo ""
 
 # Generate some information for the user.
@@ -43,14 +43,11 @@ echo "The first number is the PIN."
 echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
 echo ""
 echo "***********************************************************"
-echo "Default PIN code: 123456"
 echo "New PIN code: $PIN"
 echo "***********************************************************"
 echo ""
 echo "Please save this new PIN immediately in your password manager."
 read -p "Have you done this? "
-echo "Great. Now, remember, the first time you are asked for the PIN, please enter: 123456"
-echo "After that, you will be asked to set a new PIN. Enter: $PIN"
 echo ""
 
 # 2. PUK
@@ -59,14 +56,11 @@ echo "The second number is the Admin PIN, aka PUK."
 echo "The Admin PIN can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
 echo ""
 echo "***********************************************************"
-echo "Default Admin PIN code: 12345678"
 echo "New Admin PIN code: $PUK"
 echo "***********************************************************"
 echo ""
 echo "Please save this new Admin PIN immediately in your password manager."
 read -p "Have you done this? "
-echo "Great. Now, remember, the first time you are asked for the Admin PIN, please enter: 12345678"
-echo "After that, you will be asked to set a new Admin PIN. Enter: $PUK"
 echo ""
 
 # Show card information to user so they can be sure they are wiping right key
@@ -80,21 +74,22 @@ echo "RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
 $YKMAN openpgp reset
 echo ""
 
+# Backup GPG agent configuration in default GPG homedir, if it exists.
+backup_default_gpg_agent_conf
+
 # Figure out whether we need to write GPG keys to a tempdir.
 # This is useful when you need to generate keys for someone else w/o adding to your own keystore.
 if [[ -z "$TEMPDIR" ]]
 then
   GPG_HOMEDIR=$DEFAULT_GPG_HOMEDIR
-  echo "Default GPG homedir: $GPG_HOMEDIR"
+  echo "Using *default* GPG homedir: $GPG_HOMEDIR"
 else
   GPG_HOMEDIR=$(mktemp -d)
-  echo "Temp GPG homedir: $GPG_HOMEDIR"
+  echo "Using *temp* GPG homedir: $GPG_HOMEDIR"
 fi
+echo ""
 
-# Backup GPG agent configuration in default GPG homedir, if it exists.
-backup_default_gpg_agent_conf
-
-# Whatever our GPG homedir, we replace the curses pinentry with the tty version, so that we can automate entering PIN and PUK.
+# Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering PIN and PUK.
 GPG_AGENT_CONF=$GPG_HOMEDIR/gpg-agent.conf
 cat << EOF > $GPG_AGENT_CONF
 pinentry-program /usr/local/bin/pinentry-tty
@@ -106,34 +101,38 @@ export LC_ALL=en_US.UTF-8
 
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
-$GPGCONF --kill all --homedir=$GPG_HOMEDIR
-./expect.sh "$GPG_HOMEDIR" "$PIN" "$PUK" "$realname" "$email" "$comment"
+$GPGCONF --homedir=$GPG_HOMEDIR --kill all
+./expect.sh "$GPG_HOMEDIR" "$PIN" "$PUK" "$REALNAME" "$EMAIL" "$COMMENT"
 echo ""
 
 # restore initial locale value
 export LC_ALL="${old_locale}"
 
 # Export GPG public key.
-keyid=$($GPG --card-status --homedir=$GPG_HOMEDIR | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
-echo "Exporting your binary GPG public key to $keyid.gpg.pub.bin."
-$GPG --homedir=$GPG_HOMEDIR --export $keyid > $keyid.gpg.pub.bin
-echo "Exporting your ASCII-armored GPG public key to $keyid.gpg.pub.asc."
-$GPG --homedir=$GPG_HOMEDIR --armor --export $keyid > $keyid.gpg.pub.asc
-$GPG --homedir=$GPG_HOMEDIR --armor --export $keyid | pbcopy
+KEYID=$(get_keyid $GPG_HOMEDIR)
+BIN_GPG_PUBKEY=$KEYID.gpg.pub.bin
+ASC_GPG_PUBKEY=$KEYID.gpg.pub.asc
+echo "Exporting your binary GPG public key to $BIN_GPG_PUBKEY"
+$GPG --homedir=$GPG_HOMEDIR --export $KEYID > $BIN_GPG_PUBKEY
+echo "Exporting your ASCII-armored GPG public key to $ASC_GPG_PUBKEY"
+$GPG --homedir=$GPG_HOMEDIR --armor --export $KEYID > $ASC_GPG_PUBKEY
+cat $ASC_GPG_PUBKEY | pbcopy
 echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
-echo "So if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
+echo "So, if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
+echo "You would also no longer be able to decrypt messages encrypted for this GPG key."
 echo ""
 
 # Ask user to save revocation certificate before deleting it.
-fingerprint=$($GPG --card-status --homedir=$GPG_HOMEDIR | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
-cat $GPG_HOMEDIR/openpgp-revocs.d/$fingerprint.rev | pbcopy
-echo "Your revocation certificate is at $GPG_HOMEDIR/openpgp-revocs.d/$fingerprint.rev"
+FINGERPRINT=$($GPG --homedir=$GPG_HOMEDIR --card-status | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
+REVOCATION_CERT=$GPG_HOMEDIR/openpgp-revocs.d/$FINGERPRINT.rev
+cat $REVOCATION_CERT | pbcopy
+echo "Your revocation certificate is at $REVOCATION_CERT"
 echo "It has been copied to your clipboard."
 echo "Please save a copy in your password manager before we delete it off disk."
 read -p "Have you done this? "
-rm $GPG_HOMEDIR/openpgp-revocs.d/$fingerprint.rev
+rm $REVOCATION_CERT
 echo "Great. Deleted this revocation certificate from disk."
 # NOTE: EMPTY clipboard after this.
 pbcopy < /dev/null

@@ -3,12 +3,13 @@
 # Shared environment variables.
 
 # Use Homebrew binaries.
-HOMEBREW=/usr/local/bin
-GIT=$HOMEBREW/git
-GPG=$HOMEBREW/gpg
-GPG_AGENT=$HOMEBREW/gpg-agent
-GPGCONF=$HOMEBREW/gpgconf
-YKMAN=$HOMEBREW/ykman
+HOMEBREW_PREFIX=$(brew --prefix)
+HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
+GIT=$HOMEBREW_BIN/git
+GPG=$HOMEBREW_BIN/gpg
+GPG_AGENT=$HOMEBREW_BIN/gpg-agent
+GPGCONF=$HOMEBREW_BIN/gpgconf
+YKMAN=$HOMEBREW_BIN/ykman
 
 # Folders and files.
 DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
@@ -32,4 +33,10 @@ function backup_default_gpg_agent_conf {
     else
         echo "$DEFAULT_GPG_AGENT_CONF doesn't exist"
     fi
+}
+
+# Get the GPG keyid using the given homedir.
+function get_keyid {
+    homedir=$1
+    echo $($GPG --homedir=$homedir --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
 }

@@ -48,9 +48,9 @@ match_max 100000
 set GPG_HOMEDIR [lindex $argv 0];
 set PIN         [lindex $argv 1];
 set PUK         [lindex $argv 2];
-set realname    [lindex $argv 3];
-set email       [lindex $argv 4];
-set comment     [lindex $argv 5];
+set REALNAME    [lindex $argv 3];
+set EMAIL       [lindex $argv 4];
+set COMMENT     [lindex $argv 5];
 
 # Turn off OTP.
 send_user "Turning off Yubikey OTP:\n"
@@ -72,7 +72,7 @@ expect {
 # Set up PIN, PUK, and then generate keys on card.
 
 send_user "Now generating your GPG keys on the Yubikey itself.\n"
-spawn gpg --card-edit --homedir=$GPG_HOMEDIR
+spawn gpg --homedir=$GPG_HOMEDIR --card-edit
 
 expect -exact "gpg/card> "
 send -- "admin\r"
@@ -178,13 +178,13 @@ expect -exact "Is this correct? (y/N) "
 send -- "y\r"
 
 expect -exact "Real name: "
-send -- "$realname\r"
+send -- "$REALNAME\r"
 
 expect -exact "Email address: "
-send -- "$email\r"
+send -- "$EMAIL\r"
 
 expect -exact "Comment: "
-send -- "$comment\r"
+send -- "$COMMENT\r"
 
 expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
 send -- "O\r"
@@ -239,4 +239,5 @@ expect -exact "Set touch policy of encryption key to on? \[y/N\]: "
 send -- "y\r"
 expect eof
 
-# FIXME: for some reason, setting touch policy for ATTESTATION does not work right now, I suspect due to a YubiKey bug.
+# Touch for ATTESTATION works only for Yubico firmware >= 5.2.3.
+# https://support.yubico.com/support/solutions/articles/15000027139-yubikey-5-2-3-enhancements-to-openpgp-3-4-support

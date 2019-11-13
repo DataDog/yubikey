@@ -8,61 +8,61 @@ source env.sh
 # Get some information from the user.
 
 # 1. Real name.
-realname=$($GIT config --global --default '' --get user.name)
+REALNAME=$($GIT config --global --default '' --get user.name)
 echo "What is the real name you use on GitHub?"
-read -p "Real name (press Enter to accept '$realname'): " input
+read -p "Real name (press Enter to accept '$REALNAME'): " input
 
-if [[ -z $realname ]]
+if [[ -z $REALNAME ]]
 then
   if [[ -z $input ]]
   then
     echo "No name given!"
     exit 1
   else
-    realname=$input
-    echo "Using given input: $realname"
+    REALNAME=$input
+    echo "Using given input: $REALNAME"
   fi
 else
   if [[ -z $input ]]
   then
-    echo "Using given user.name: $realname"
+    echo "Using given user.name: $REALNAME"
   else
-    realname=$input
-    echo "Using given input: $realname"
+    REALNAME=$input
+    echo "Using given input: $REALNAME"
   fi
 fi
 
-realname_len=${#realname}
-if [[ $realname_len -lt 5 ]]
+REALNAME_LEN=${#REALNAME}
+if [[ $REALNAME_LEN -lt 5 ]]
 then
-  echo "Real name has $realname_len < 5 characters!"
+  echo "Real name has $REALNAME_LEN < 5 characters!"
   exit 2
 fi
 
 echo ""
 
 # 2. Email address.
-email=$($GIT config --global --default '' --get user.email)
+EMAIL=$($GIT config --global --default '' --get user.email)
 echo "What is an email address you have registered with GitHub?"
-read -p "Email (press Enter to accept '$email'): " input
+read -p "Email (press Enter to accept '$EMAIL'): " input
 
-if [[ -z $email ]]
+if [[ -z $EMAIL ]]
 then
   if [[ -z $input ]]
   then
     echo "No email given!"
     exit 3
   else
-    email=$input
-    echo "Using given input: $email"
+    EMAIL=$input
+    echo "Using given input: $EMAIL"
   fi
 else
   if [[ -z $input ]]
   then
-    echo "Using given user.email: $email"
+    echo "Using given user.email: $EMAIL"
   else
-    email=$input
-    echo "Using given input: $email"
+    EMAIL=$input
+    echo "Using given input: $EMAIL"
   fi
 fi
 

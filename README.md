@@ -56,7 +56,8 @@ You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
 $ ./gpg.sh
 ```
 
-(Protip: set `TEMPDIR=1` when preparing YubiKey for someone else to avoid polluting your default GPG homedir.)
+(Protip: set `TEMPDIR=1` when preparing YubiKey for someone else to avoid
+polluting your default GPG homedir.)
 
 ## git
 
@@ -120,8 +121,7 @@ and
 **NOT recommended** unless you plan to use your GPG authentication subkey as
 your only SSH authentication key.
 
-You **must** have first set up [GPG and git](#gpg-and-git). Then, please read
-and follow all of the instructions carefully.
+You **must** have first set up [GPG](#gpg). Then:
 
 ```bash
 $ ./ssh.sh
@@ -272,6 +272,11 @@ many times (3x by default), **don’t panic**: just [follow the
 instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md)
 here. Make sure you enter your **Admin PIN** correctly within 3x, otherwise
 your current keys are blocked, and you must reset your YubiKey to use new keys.
+
+* Combined with the touch requirement for all signing operations, `git rebase`
+might require you to touch the YubiKey too many times. A
+[workaround](https://github.com/DataDog/yubikey/issues/19) is to pass the
+`--no-gpg-sign`.
 
 ## TODO
 

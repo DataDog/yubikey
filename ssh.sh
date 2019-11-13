@@ -28,10 +28,11 @@ $GPGCONF --kill all
 $GPG_AGENT --daemon
 
 # Export SSH key derived from GPG authentication subkey.
-keyid=$($GPG --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
-echo "Exporting your SSH public key to $keyid.ssh.pub."
-ssh-add -L | grep -iF 'cardno' > $keyid.ssh.pub
-ssh-add -L | grep -iF 'cardno' | pbcopy
+KEYID=$(get_keyid $DEFAULT_GPG_HOMEDIR)
+SSH_PUBKEY=$KEYID.ssh.pub
+echo "Exporting your SSH public key to $SSH_PUBKEY"
+ssh-add -L | grep -iF 'cardno' > $SSH_PUBKEY
+cat $SSH_PUBKEY | pbcopy
 echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
 echo "Opening GitHub..."
