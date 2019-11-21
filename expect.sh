@@ -62,9 +62,6 @@ expect {
 
   ": " {
     send -- "y\r"
-    # FIXME: The following line is required on Yubikey 4, but I'm not sure how
-    # to fix this right now.
-    #expect -exact "Mode set! You must remove and re-insert your YubiKey for this change to take effect."
     expect eof
   }
 }
