@@ -4,16 +4,15 @@ Table of contents
 
 - [Summary](#summary)
 - [Estimated burden and prerequisites](#estimated-burden-and-prerequisites)
+- [U2F](#u2f)
 - [GPG](#gpg)
 - [git](#git)
-- [U2F](#u2f)
 - [SSH](#ssh)
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
 - [Troubleshooting](#troubleshooting)
 - [TODO](#todo)
-- [Acknowledgements](#acknowledgements)
 - [References](#references)
 
 ## Summary
@@ -48,6 +47,13 @@ insurance.
 You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
 [YubiKey 5](https://www.yubico.com/products/yubikey-hardware/).
 
+## U2F
+
+**STRONGLY recommended:** configure U2F for
+[GitHub](https://help.github.com/articles/configuring-two-factor-authentication/#configuring-two-factor-authentication-using-fido-u2f)
+and
+[Google](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/).
+
 ## GPG
 
 **Please read and follow all of the instructions carefully.**
@@ -63,58 +69,12 @@ polluting your default GPG homedir.)
 
 **STRONGLY RECOMMENDED:** signing all your git commits across all repositories.
 
+You **must** have first set up [GPG](#gpg). Then:
+
 ```bash
 $ ./git.sh
 ```
 
-### Signing for different git repositories with different keys
-
-The script can setup your Git installation so that all your commits and tags
-will be signed by default with the key contained in the YubiKey. We
-**strongly** recommend that you turn on this option. If you have done so,
-please stop reading here.
-
-Otherwise, one reason for declining this option may be that you wish to sign
-for different repositories with different keys. There are a few ways to handle
-this. Perhaps the simplest is to let the script assign the YubiKey to all git
-repositories, and then use `git config --local` to override `user.signingkey`
-for different repositories.
-
-Alternatively, let us say you use your personal key for open source projects,
-and the one in the YubiKey for Datadog proprietary code. One possible
-solution is to setup git aliases. First, make sure signing is turned on
-globally:
-
-```sh
-git config --global commit.gpgsign true
-git config --global tag.forceSignAnnotated true
-```
-
-Then you can tell git to use a specific key by default, depending on which one
-is the one you use the most:
-
-```sh
-git config --global user.signingkey <id_of_the_key_you_want_to_use_by_default>
-```
-
-You can alias the `commit` command to override the default key and use another
-one to sign that specific commit:
-
-```sh
-git config --global alias.dd-commit '-c user.signingkey=<id_of_the_yubikey_key> commit'
-git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag'
-```
-
-With this setup, every time you do `git commit` or `git tag`, the default key
-will be used while `git dd-commit` and `git dd-tag` will use the one in the
-YubiKey.
-
-## U2F
-
-**STRONGLY recommended:** configure U2F for
-[GitHub](https://help.github.com/articles/configuring-two-factor-authentication/#configuring-two-factor-authentication-using-fido-u2f)
-and
-[Google](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/).
 
 ## SSH
 
@@ -267,16 +227,62 @@ and export it to both YubiKey, and keep a copy on disk:
 
 ## Troubleshooting
 
-* If you are blocked out of using GPG because you entered your PIN wrong too
+### Blocked card
+
+If you are blocked out of using GPG because you entered your PIN wrong too
 many times (3x by default), **don’t panic**: just [follow the
 instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp/troubleshooting/gpg-failed-to-sign-the-data.md)
 here. Make sure you enter your **Admin PIN** correctly within 3x, otherwise
 your current keys are blocked, and you must reset your YubiKey to use new keys.
 
-* Combined with the touch requirement for all signing operations, `git rebase`
+### git rebase
+
+Combined with the touch requirement for all signing operations, `git rebase`
 might require you to touch the YubiKey too many times. A
 [workaround](https://github.com/DataDog/yubikey/issues/19) is to pass the
 `--no-gpg-sign`.
+
+### Signing for different git repositories with different keys
+
+The script can setup your Git installation so that all your commits and tags
+will be signed by default with the key contained in the YubiKey. We
+**strongly** recommend that you turn on this option. If you have done so,
+please stop reading here.
+
+Otherwise, one reason for declining this option may be that you wish to sign
+for different repositories with different keys. There are a few ways to handle
+this. Perhaps the simplest is to let the script assign the YubiKey to all git
+repositories, and then use `git config --local` to override `user.signingkey`
+for different repositories.
+
+Alternatively, let us say you use your personal key for open source projects,
+and the one in the YubiKey for Datadog proprietary code. One possible
+solution is to setup git aliases. First, make sure signing is turned on
+globally:
+
+```sh
+git config --global commit.gpgsign true
+git config --global tag.forceSignAnnotated true
+```
+
+Then you can tell git to use a specific key by default, depending on which one
+is the one you use the most:
+
+```sh
+git config --global user.signingkey <id_of_the_key_you_want_to_use_by_default>
+```
+
+You can alias the `commit` command to override the default key and use another
+one to sign that specific commit:
+
+```sh
+git config --global alias.dd-commit '-c user.signingkey=<id_of_the_yubikey_key> commit'
+git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag'
+```
+
+With this setup, every time you do `git commit` or `git tag`, the default key
+will be used while `git dd-commit` and `git dd-tag` will use the one in the
+YubiKey.
 
 ## TODO
 
@@ -284,16 +290,6 @@ might require you to touch the YubiKey too many times. A
 
 2. Procedures for recovering from key compromise / theft / loss.
 
-## Acknowledgements
-
-I developed this guide while working at [Datadog](https://www.datadoghq.com/),
-in order to use it in various product security efforts. Thanks to Ayaz
-Badouraly, Arthur Bellal, Forrest Buff, Alex Charrier, Jules Denardou, Ivan
-DiLernia, Hippolyte Henry, David Huie, Cody Lee, Ofek Lev, Yann Mahé, Cara
-Marie, Justin Massey, Rishabh Moudgil, Maxime Mouial, Nicholas Muesch, Julien
-Muetton, Massimiliano Pippi, Thomas Renault, Pratik Guha Sarkar, and Santiago
-Torres-Arias (NYU), all of whom who were at Datadog (unless specified
-otherwise), and who helped me to test these instructions.
 
 ## References
 

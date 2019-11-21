@@ -38,5 +38,7 @@ function backup_default_gpg_agent_conf {
 # Get the GPG keyid using the given homedir.
 function get_keyid {
     homedir=$1
-    echo $($GPG --homedir=$homedir --card-status | grep 'sec>' | awk '{print $2}' | cut -f2 -d/)
+    line=$(gpg --card-status | grep 'Signature key ....: ')
+    keyid=$(echo ${line:20} | tr -d "[:blank:]")
+    echo $keyid
 }

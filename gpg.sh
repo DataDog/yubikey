@@ -13,18 +13,10 @@ echo "of the problematic packages if something goes wrong, then try again."
 brew install --force expect gnupg pinentry-mac ykman
 echo ""
 
-# 1-2. Get full name and email address.
+# Get full name and email address.
 source realname-and-email.sh
 
-# Support only these YubiKey types.
-YUBIKEY_VERSION=$($YKMAN info | grep 'Device type:' | cut -f2 -d: | awk '{print $2}')
-if [[ $YUBIKEY_VERSION != "5C" ]]
-then
-  echo "Sorry, but we do not support your YubiKey version: $YUBIKEY_VERSION"
-  exit 1
-fi
-
-# 3. Comment.
+# Get comment to distinguish between keys.
 COMMENT="GPG on Yubikey for Datadog"
 echo "What is a comment you would like to use to distinguish this key?"
 read -p "Comment (press Enter to accept '$COMMENT'): " input
@@ -37,7 +29,7 @@ echo "There are two important random numbers for the Yubikey you MUST keep safel
 echo "See https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html"
 echo ""
 
-# 1. PIN
+# PIN
 PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 echo "The first number is the PIN."
 echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
@@ -50,7 +42,7 @@ echo "Please save this new PIN immediately in your password manager."
 read -p "Have you done this? "
 echo ""
 
-# 2. PUK
+# PUK
 PUK=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 echo "The second number is the Admin PIN, aka PUK."
 echo "The Admin PIN can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
@@ -125,8 +117,7 @@ echo "You would also no longer be able to decrypt messages encrypted for this GP
 echo ""
 
 # Ask user to save revocation certificate before deleting it.
-FINGERPRINT=$($GPG --homedir=$GPG_HOMEDIR --card-status | grep 'Signature key' | cut -f2 -d: | tr -d ' ')
-REVOCATION_CERT=$GPG_HOMEDIR/openpgp-revocs.d/$FINGERPRINT.rev
+REVOCATION_CERT=$GPG_HOMEDIR/openpgp-revocs.d/$KEYID.rev
 cat $REVOCATION_CERT | pbcopy
 echo "Your revocation certificate is at $REVOCATION_CERT"
 echo "It has been copied to your clipboard."
@@ -139,7 +130,7 @@ pbcopy < /dev/null
 echo ""
 
 # Overwrite default GPG agent configuration with our own.
-# We want to replace the tty pinentry with the mac version.
+# We want to replace the pinentry-tty with the pinentry-mac.
 cat << EOF > $DEFAULT_GPG_AGENT_CONF
 # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
 pinentry-program /usr/local/bin/pinentry-mac
