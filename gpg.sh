@@ -31,6 +31,7 @@ echo ""
 
 # PIN
 PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
+SERIAL=$(ykman info | grep 'Serial number:' | cut -f2 -d: | tr -d ' ')
 echo "The first number is the PIN."
 echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
 echo ""
@@ -38,7 +39,11 @@ echo "***********************************************************"
 echo "New PIN code: $PIN"
 echo "***********************************************************"
 echo ""
-echo "Please save this new PIN immediately in your password manager."
+echo "Please save this new PIN (copied to clipboard) immediately in your password manager."
+echo $PIN | pbcopy
+read -p "Have you done this? "
+echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
+echo $SERIAL | pbcopy
 read -p "Have you done this? "
 echo ""
 
@@ -51,7 +56,11 @@ echo "***********************************************************"
 echo "New Admin PIN code: $PUK"
 echo "***********************************************************"
 echo ""
-echo "Please save this new Admin PIN immediately in your password manager."
+echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
+echo $PUK | pbcopy
+read -p "Have you done this? "
+echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
+echo $SERIAL | pbcopy
 read -p "Have you done this? "
 echo ""
 
