@@ -3,8 +3,6 @@
 # Stop on error.
 set -e
 
-brew install --force git
-
 source realname-and-email.sh
 
 # Set git name and email.

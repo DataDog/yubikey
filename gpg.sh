@@ -10,7 +10,7 @@ echo ""
 # install required tools
 echo "Installing required tools, please try a full upgrade with 'brew upgrade --force'"
 echo "of the problematic packages if something goes wrong, then try again."
-brew install --force expect gnupg pinentry-mac ykman
+brew install --force expect gnupg pinentry-mac ykman git
 echo ""
 
 # Get full name and email address.
