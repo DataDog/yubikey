@@ -125,8 +125,12 @@ expect -exact "Your selection? "
 # RSA
 send -- "1\r"
 
+# YubiKey FIPS supports at most RSA-3072 on-card key generation, which should
+# be good until at least 2030 according to NIST:
+# https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3204.pdf
+# https://www.keylength.com/en/compare/
 expect "What keysize do you want? (*) "
-send -- "4096\r"
+send -- "3072\r"
 
 # Send new PUK
 expect -exact "Admin PIN: "
@@ -138,7 +142,7 @@ expect -exact "Your selection? "
 send -- "1\r"
 
 expect "What keysize do you want? (*) "
-send -- "4096\r"
+send -- "3072\r"
 
 # Send new PUK
 expect -exact "Admin PIN: "
@@ -150,7 +154,7 @@ expect -exact "Your selection? "
 send -- "1\r"
 
 expect "What keysize do you want? (*) "
-send -- "4096\r"
+send -- "3072\r"
 
 # Send new PUK
 expect -exact "Admin PIN: "
