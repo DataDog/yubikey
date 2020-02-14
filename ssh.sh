@@ -6,19 +6,29 @@ set -e
 source env.sh
 
 # enable ssh support
-backup_default_gpg_agent_conf
 echo "enable-ssh-support" >> $DEFAULT_GPG_AGENT_CONF
 
-if [[ $(cat ~/.bash_profile) =~ "gpg-agent.ssh" ]]; then
-  echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
+# fish
+if [[ $(cat ~/.config/fish/config.fish) =~ "gpg-agent.ssh" ]]; then
+  echo 'set -gx SSH_AUTH_SOCK {$HOME}/.gnupg/S.gpg-agent.ssh' >> ~/.config/fish/config.fish
+  source ~/.config/fish/config.fish
 fi
 
+# zsh
 if [[ $(cat ~/.zshrc) =~ "gpg-agent.ssh" ]]; then
   echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.zshrc
+  source ~/.zshrc
+fi
+
+# bash
+if [[ $(cat ~/.bash_profile) =~ "gpg-agent.ssh" ]]; then
+  echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.bash_profile
+  source ~/.bash_profile
 fi
 
 if [[ $(cat ~/.profile) =~ "gpg-agent.ssh" ]]; then
   echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> ~/.profile
+  source ~/.profile
 fi
 
 # NOTE: Kill existing SSH and GPG agents, and start GPG agent manually (with SSH

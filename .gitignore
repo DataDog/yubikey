@@ -1,3 +1,4 @@
 *.gpg.pub.asc
 *.gpg.pub.bin
+*.pub
 *.code-workspace
