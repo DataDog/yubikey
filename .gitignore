@@ -2,3 +2,4 @@
 *.gpg.pub.bin
 *.pub
 *.code-workspace
+*.sw[a-z]
