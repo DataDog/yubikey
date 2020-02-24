@@ -11,7 +11,7 @@ GPG_AGENT=$HOMEBREW_BIN/gpg-agent
 GPGCONF=$HOMEBREW_BIN/gpgconf
 YKMAN=$HOMEBREW_BIN/ykman
 
-SSH_ENV="/Users/$(whoami)/.ssh/environment"
+SSH_ENV="$HOME/.ssh/environment"
 
 # Folders and files.
 DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
