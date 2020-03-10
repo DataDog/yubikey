@@ -5,6 +5,25 @@ set -e
 
 source env.sh
 
+configure_shell() {
+    local config_file
+    config_file="$1"
+
+    if [[ -f "${config_file}" ]]; then
+        echo "$(basename "$config_file") detected"
+        if ! grep -q "gpg-agent.ssh" "$config_file"; then
+            if [[ "$(basename "$config_file")" == "config.fish" ]]; then
+                echo 'set -gx SSH_AUTH_SOCK ${HOME}/.gnupg/S.gpg-agent.ssh' >> "${config_file}"
+            else
+                echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${HOME}/.zshrc"
+            fi
+        fi
+        set +e
+        source "${config_file}" > /dev/null 2>&1
+        set -e
+    fi
+}
+
 if ! grep -q "enable-ssh-support" "$DEFAULT_GPG_AGENT_CONF"; then
     # enable ssh support
     echo "enable-ssh-support" >> "$DEFAULT_GPG_AGENT_CONF"
@@ -18,53 +37,25 @@ if [[ -f "$SSH_ENV" ]]; then
     rm -f "$SSH_ENV"
 fi
 
-# fish
-if [[ -f "${HOME}/.config/fish/config.fish" ]]; then
-    echo "fish shell configuration detected"
-    if ! [[ $(cat "${HOME}/.config/fish/config.fish") =~ "gpg-agent.ssh" ]]; then
-        echo 'set -gx SSH_AUTH_SOCK ${HOME}/.gnupg/S.gpg-agent.ssh' >> "${HOME}/.config/fish/config.fish"
-    fi
-    source ${HOME}/.config/fish/config.fish
-fi
+configuration_files=(
+"${HOME}/.config/fish/config.fish"
+"${HOME}/.zshrc"
+"${HOME}/.bash_profile"
+"${HOME}/.profile"
+)
 
-# zsh
-if [[ -f "${HOME}/.zshrc" ]]; then
-    echo "zshell configuration detected"
-    if ! [[ $(cat "${HOME}/.zshrc") =~ "gpg-agent.ssh" ]]; then
-        echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${HOME}/.zshrc"
-    fi
-    set +e
-    source "${HOME}/.zshrc" > /dev/null 2>&1
-    set -e
-fi
-
-# bash
-if [[ -f "${HOME}/.bash_profile" ]]; then
-    echo "bash configuration detected"
-    if ! [[ $(cat "${HOME}/.bash_profile") =~ "gpg-agent.ssh" ]]; then
-        echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${HOME}/.bash_profile"
-    fi
-    source "${HOME}/.bash_profile" > /dev/null 2>&1
-fi
-
-if [[ -f "${HOME}/.profile" ]]; then
-    echo "profile configuration detected"
-    set +e
-    if ! [[ $(cat "${HOME}/.profile") =~ "gpg-agent.ssh" ]]; then
-        echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${HOME}/.profile" 2> /dev/null
-    fi
-    source "${HOME}/.profile"
-    set -e
-fi
+for configuration_file in ${configuration_files[@]}; do
+    configure_shell "$configuration_file"
+done
 
 ssh-add -L
 
 # Export SSH key derived from GPG authentication subkey.
-KEYID=$(get_keyid $DEFAULT_GPG_HOMEDIR)
+KEYID=$(get_keyid "$DEFAULT_GPG_HOMEDIR")
 SSH_PUBKEY=$KEYID.ssh.pub
 echo "Exporting your SSH public key to $SSH_PUBKEY"
-ssh-add -L | grep -iF 'cardno' > $SSH_PUBKEY
-cat $SSH_PUBKEY | pbcopy
+ssh-add -L | grep -iF 'cardno' > "$SSH_PUBKEY"
+cat "$SSH_PUBKEY" | pbcopy
 echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
 echo "Opening GitHub..."
