@@ -15,7 +15,7 @@ configure_shell() {
             if [[ "$(basename "$config_file")" == "config.fish" ]]; then
                 echo 'set -gx SSH_AUTH_SOCK ${HOME}/.gnupg/S.gpg-agent.ssh' >> "${config_file}"
             else
-                echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${HOME}/.zshrc"
+                echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${config_file}"
             fi
         fi
         set +e
