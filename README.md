@@ -247,6 +247,41 @@ instructions](https://github.com/ruimarinho/yubikey-handbook/blob/master/openpgp
 here. Make sure you enter your **Admin PIN** correctly within 3x, otherwise
 your current keys are blocked, and you must reset your YubiKey to use new keys.
 
+### Error with git pull/fetch or when using SSH
+If when you try to ssh or git pull/fetch and you have the error:
+```
+sign_and_send_pubkey: signing failed: agent refused operation
+```
+You are probably misstyping you PIN. To verify it, you can:
+```
+gpg --card-edit
+gpg/card> verify
+...
+PIN retry counter : 3 0 3 # if it is the right PIN
+PIN retry counter : 2 0 3 # if it is a wrong PIN
+...
+```
+If you the PIN is wrong, try 123456 which is the default PIN.
+If it still fails, reset your password:
+```
+gpg --card-edit
+gpg/card> admin
+gpg/card> passwd
+gpg: OpenPGP card no. D2760001240102010006055532110000 detected
+
+Your selection? 1
+PIN changed.
+
+1 - change PIN
+2 - unblock PIN
+3 - change Admin PIN
+4 - set the Reset Code
+Q - quit
+
+Your selection? q
+```
+
+
 ### git rebase
 
 Combined with the touch requirement for all signing operations, `git rebase`
