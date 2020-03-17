@@ -48,8 +48,6 @@ for configuration_file in ${configuration_files[@]}; do
     configure_shell "$configuration_file"
 done
 
-ssh-add -L
-
 # Export SSH key derived from GPG authentication subkey.
 KEYID=$(get_keyid "$DEFAULT_GPG_HOMEDIR")
 SSH_PUBKEY=$KEYID.ssh.pub
