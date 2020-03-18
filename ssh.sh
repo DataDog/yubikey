@@ -30,7 +30,7 @@ configure_shell() {
             echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${config_file}"
         fi
     fi
-    # Avoid bad config file to force us to fail
+    # put set +e before sourcing the rc file just in case people have things that return 1 in it
     set +e
     source "${config_file}" > /dev/null 2>&1
     set -e
@@ -69,3 +69,6 @@ echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "Great."
 echo ""
+echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey everytime${RESET} in order to use SSH."
+echo ""
+echo "Enjoy using your Yubikey at Datadog!"

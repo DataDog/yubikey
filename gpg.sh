@@ -153,7 +153,7 @@ $GPGCONF --kill all
 
 # Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
-echo "You will need to enter your PIN (once a day), and touch your Yubikey everytime in order to sign any message with this GPG key."
+echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey everytime${RESET} in order to sign any message with this GPG key."
 echo ""
 echo "************************************************************"
 echo "Your PIN is: $PIN"

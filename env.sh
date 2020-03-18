@@ -10,6 +10,9 @@ GPG=$HOMEBREW_BIN/gpg
 GPG_AGENT=$HOMEBREW_BIN/gpg-agent
 GPGCONF=$HOMEBREW_BIN/gpgconf
 YKMAN=$HOMEBREW_BIN/ykman
+BOLD=$(tput bold)
+RED=$(tput setaf 1)
+RESET=$(tput sgr0) # Reset text
 
 SSH_ENV="$HOME/.ssh/environment"
 
