@@ -248,11 +248,11 @@ here. Make sure you enter your **Admin PIN** correctly within 3x, otherwise
 your current keys are blocked, and you must reset your YubiKey to use new keys.
 
 ### Error with git pull/fetch or when using SSH
-If when you try to ssh or git pull/fetch and you have the error:
+If you try to ssh or git pull/fetch and you have the following error:
 ```
 sign_and_send_pubkey: signing failed: agent refused operation
 ```
-You are probably misstyping you PIN. To verify it, you can:
+You are probably mistyping your PIN. To verify it, you can:
 ```
 gpg --card-edit
 gpg/card> verify
@@ -261,8 +261,8 @@ PIN retry counter : 3 0 3 # if it is the right PIN
 PIN retry counter : 2 0 3 # if it is a wrong PIN
 ...
 ```
-If you the PIN is wrong, try 123456 which is the default PIN.
-If it still fails, reset your password:
+If your PIN is wrong, try 123456, which is the default PIN.
+If it still fails, reset your PIN:
 ```
 gpg --card-edit
 gpg/card> admin
