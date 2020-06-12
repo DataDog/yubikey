@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+source env.sh
+
 shopt -s extglob
 
 confirm() {
@@ -22,19 +24,17 @@ reset_device() {
     local serial
     serial="$1"
 
-    /usr/local/bin/ykman --device "$(serial)" otp delete 1 -f
-    /usr/local/bin/ykman --device "$(serial)" otp delete 2 -f
-    /usr/local/bin/ykman --device "$(serial)" oath reset -f
-    /usr/local/bin/ykman --device "$(serial)" openpgp reset -f
-    /usr/local/bin/ykman --device "$(serial)" piv reset -f
-    /usr/local/bin/ykman --device "$(serial)" fido reset -f
+    $YKMAN --device "$(serial)" otp delete 1 -f
+    $YKMAN --device "$(serial)" otp delete 2 -f
+    $YKMAN --device "$(serial)" oath reset -f
+    $YKMAN --device "$(serial)" openpgp reset -f
+    $YKMAN --device "$(serial)" piv reset -f
+    $YKMAN --device "$(serial)" fido reset -f
 }
 
-# Don't have you personnal yubikey plugged in
-# to run me `bash yubispam.sh`
 yubikeys=$(/usr/local/bin/ykman list --serials)
 select serial in all $yubikeys cancel; do
-    echo "You choose $serial"
+    echo "You chose $serial"
     case $serial in
         all)
             echo "Are you sure you want to reset $yubikeys ? yes/no"
