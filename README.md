@@ -11,6 +11,7 @@ Table of contents
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
+- [Reset](#reset)
 - [Troubleshooting](#troubleshooting)
 - [TODO](#todo)
 - [References](#references)
@@ -237,11 +238,11 @@ and export it to both YubiKey, and keep a copy on disk:
 
 **Table 6**: Add these lines to `~/.bashrc`.
 
-## Reset your yubikey
+## Reset
 
 If you need to reset YubiKeys, you may use the following script. The script looks for every plugged YubiKey,
 and shows a menu to reset one specific key, or all of them.
-**Please read and follow all of the instructions carefully. YOU WILL NOT BE ABLE TO RETRIEVE KEYS/DATA FROM THE YUBIKEY AFTER COMPLETION**
+**Please read and follow all of the instructions carefully. YOU WILL NOT BE ABLE TO RETRIEVE KEYS/DATA FROM THE YUBIKEY AFTER COMPLETION.**
 
 ```bash
 $ ./reset.sh
