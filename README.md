@@ -240,7 +240,7 @@ and export it to both YubiKey, and keep a copy on disk:
 ## Reset your yubikey
 
 If you need to reset YubiKeys, you may use the following script. The script looks for every plugged YubiKey,
-then shows a menu to reset one specific key or all of them.
+and shows a menu to reset one specific key, or all of them.
 **Please read and follow all of the instructions carefully. YOU WILL NOT BE ABLE TO RETRIEVE KEYS/DATA FROM THE YUBIKEY**
 
 ```bash
