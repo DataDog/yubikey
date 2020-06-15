@@ -237,6 +237,17 @@ and export it to both YubiKey, and keep a copy on disk:
 
 **Table 6**: Add these lines to `~/.bashrc`.
 
+## Reset your yubikey
+
+If you need/want to reset your/serveral yubikey/s, you can use the reset.sh. The script look for every plugged yubikey
+then shows a menu to reset one specific key or all of them.
+**Please read and follow all of the instructions carefully. YOU WILL NOT BE ABLE TO RETRIEVE KEYS/DATA FROM THE YUBIKEY**
+
+```bash
+$ ./reset.sh
+```
+
+
 ## Troubleshooting
 
 ### Blocked card
