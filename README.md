@@ -296,10 +296,13 @@ Your selection? q
 
 ### git rebase
 
-Combined with the touch requirement for all signing operations, `git rebase`
-might require you to touch the YubiKey too many times. A
-[workaround](https://github.com/DataDog/yubikey/issues/19) is to pass the
-`--no-gpg-sign`.
+You can perform signing operations for 15 seconds after touching your
+yubikey before having to touch it again. When running large git rebase
+you may have to touch your yubikey multiple times, if the rebase seems
+to hang and the yubikey flashes, it means you need to touch it again.
+
+If you are still having issues when rebasing, you might consider using
+the `--no-gpg-sign` flag as a [workaround](https://github.com/DataDog/yubikey/issues/19).
 
 ### Signing for different git repositories with different keys
 
