@@ -204,7 +204,7 @@ expect eof
 # Turn on touch for SIGNATURES.
 
 send_user "Now requiring you to touch your Yubikey to sign any message.\n"
-spawn ykman openpgp set-touch sig on
+spawn ykman openpgp set-touch sig cached
 
 expect -exact "Enter admin PIN: "
 stty -echo
