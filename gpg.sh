@@ -70,7 +70,27 @@ echo "Yubikey status:"
 $GPG --card-status
 echo
 
-# reset yubikey openPGP applet
+# Set some parameters based on whether FIPS key or not.
+DEVICE_TYPE=$($YKMAN info | grep 'Device type:' | cut -f2 -d: | awk '{$1=$1;print}')
+echo "YubiKey device type: $DEVICE_TYPE"
+if [[ "$DEVICE_TYPE" == *"YubiKey FIPS"* ]]; then
+  echo "Which appears to be a FIPS key"
+  # YubiKey FIPS supports at most RSA-3072 on-card key generation, which should
+  # be good until at least 2030 according to NIST:
+  # https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3204.pdf
+  # https://www.keylength.com/en/compare/
+  KEY_LENGTH=3072
+  # It also does not appear to allow the very handy cached touch policy:
+  # https://github.com/Yubico/yubikey-manager/issues/277
+  TOUCH_POLICY=on
+else
+  echo "Which does not appear to be a FIPS key"
+  KEY_LENGTH=4096
+  TOUCH_POLICY=cached
+fi
+echo
+
+# Reset YubiKey openPGP applet
 echo "RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
 $YKMAN openpgp reset
 echo
@@ -103,7 +123,7 @@ export LC_ALL=en_US.UTF-8
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
 $GPGCONF --homedir=$GPG_HOMEDIR --kill all
-./expect.sh "$GPG_HOMEDIR" "$PIN" "$PUK" "$REALNAME" "$EMAIL" "$COMMENT"
+./expect.sh "$GPG_HOMEDIR" "$PIN" "$PUK" "$KEY_LENGTH" "$TOUCH_POLICY" "$REALNAME" "$EMAIL" "$COMMENT"
 echo
 
 # restore initial locale value
