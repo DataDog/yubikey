@@ -210,7 +210,7 @@ expect -exact "Enter admin PIN: "
 stty -echo
 send -- "$PUK\r"
 
-expect -exact "Set touch policy of signature key to on? \[y/N\]: "
+expect -exact "Set touch policy of signature key to cached? \[y/N\]: "
 send -- "y\r"
 expect eof
 
