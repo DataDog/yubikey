@@ -39,7 +39,7 @@ then
   exit 2
 fi
 
-echo ""
+echo
 
 # 2. Email address.
 EMAIL=$($GIT config --global --default '' --get user.email)
@@ -66,4 +66,4 @@ else
   fi
 fi
 
-echo ""
+echo

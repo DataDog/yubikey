@@ -5,13 +5,13 @@ set -e
 
 echo "Welcome! This program will automatically generate GPG keys on your Yubikey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
-echo ""
+echo
 
 # install required tools
 echo "Installing required tools, please try a full upgrade with 'brew upgrade --force'"
 echo "of the problematic packages if something goes wrong, then try again."
 brew install --force expect gnupg pinentry-mac ykman git
-echo ""
+echo
 
 # Get full name and email address.
 source realname-and-email.sh
@@ -21,59 +21,59 @@ COMMENT="GPG on Yubikey for Datadog"
 echo "What is a comment you would like to use to distinguish this key?"
 read -p "Comment (press Enter to accept '$COMMENT'): " input
 COMMENT=${input:-$COMMENT}
-echo ""
+echo
 
 # Generate some information for the user.
 
 echo "There are two important random numbers for the Yubikey you MUST keep safely."
 echo "See https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html"
-echo ""
+echo
 
 # PIN
 PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 SERIAL=$(ykman info | grep 'Serial number:' | cut -f2 -d: | tr -d ' ')
 echo "The first number is the PIN."
 echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
-echo ""
+echo
 echo "***********************************************************"
 echo "New PIN code: $PIN"
 echo "***********************************************************"
-echo ""
+echo
 echo "Please save this new PIN (copied to clipboard) immediately in your password manager."
 echo $PIN | pbcopy
 read -p "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
 echo $SERIAL | pbcopy
 read -p "Have you done this? "
-echo ""
+echo
 
 # PUK
 PUK=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 echo "The second number is the Admin PIN, aka PUK."
 echo "The Admin PIN can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
-echo ""
+echo
 echo "***********************************************************"
 echo "New Admin PIN code: $PUK"
 echo "***********************************************************"
-echo ""
+echo
 echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
 echo $PUK | pbcopy
 read -p "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
 echo $SERIAL | pbcopy
 read -p "Have you done this? "
-echo ""
+echo
 
 # Show card information to user so they can be sure they are wiping right key
 # NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
 echo "Yubikey status:"
 $GPG --card-status
-echo ""
+echo
 
 # reset yubikey openPGP applet
 echo "RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
 $YKMAN openpgp reset
-echo ""
+echo
 
 # Backup GPG agent configuration in default GPG homedir, if it exists.
 backup_default_gpg_agent_conf
@@ -88,7 +88,7 @@ else
   GPG_HOMEDIR=$(mktemp -d)
   echo "Using *temp* GPG homedir: $GPG_HOMEDIR"
 fi
-echo ""
+echo
 
 # Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering PIN and PUK.
 GPG_AGENT_CONF=$GPG_HOMEDIR/gpg-agent.conf
@@ -104,7 +104,7 @@ export LC_ALL=en_US.UTF-8
 # but right before, kill all GPG daemons to make sure things work reliably
 $GPGCONF --homedir=$GPG_HOMEDIR --kill all
 ./expect.sh "$GPG_HOMEDIR" "$PIN" "$PUK" "$REALNAME" "$EMAIL" "$COMMENT"
-echo ""
+echo
 
 # restore initial locale value
 export LC_ALL="${old_locale}"
@@ -123,7 +123,7 @@ read -p "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
 echo "So, if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo "You would also no longer be able to decrypt messages encrypted for this GPG key."
-echo ""
+echo
 
 # Ask user to save revocation certificate before deleting it.
 REVOCATION_CERT=$GPG_HOMEDIR/openpgp-revocs.d/$KEYID.rev
@@ -136,7 +136,7 @@ rm $REVOCATION_CERT
 echo "Great. Deleted this revocation certificate from disk."
 # NOTE: EMPTY clipboard after this.
 pbcopy < /dev/null
-echo ""
+echo
 
 # Overwrite default GPG agent configuration with our own.
 # We want to replace the pinentry-tty with the pinentry-mac.
@@ -154,10 +154,10 @@ $GPGCONF --kill all
 # Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
 echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey everytime${RESET} in order to sign any message with this GPG key. Touch is cached for 15s on sign operations."
-echo ""
+echo
 echo "************************************************************"
 echo "Your PIN is: $PIN"
 echo "Your Admin PIN, aka PUK is: $PUK"
 echo "************************************************************"
-echo ""
+echo
 echo "Enjoy using your Yubikey at Datadog!"
