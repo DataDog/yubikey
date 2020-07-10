@@ -66,6 +66,48 @@ expect {
   }
 }
 
+# Turn on touch for SIGNATURES.
+
+send_user "Now requiring you to touch your Yubikey to sign any message.\n"
+spawn ykman openpgp set-touch sig cached
+
+expect -exact "Enter admin PIN: "
+stty -echo
+send -- "$PUK\r"
+
+expect -exact "Set touch policy of signature key to cached? \[y/N\]: "
+send -- "y\r"
+expect eof
+
+# Turn on touch for AUTHENTICATION.
+
+send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
+spawn ykman openpgp set-touch aut on
+
+expect -exact "Enter admin PIN: "
+stty -echo
+send -- "$PUK\r"
+
+expect -exact "Set touch policy of authentication key to on? \[y/N\]: "
+send -- "y\r"
+expect eof
+
+# Turn on touch for ENCRYPTION.
+
+send_user "Now requiring you to touch your Yubikey to encrypt any message.\n"
+spawn ykman openpgp set-touch enc on
+
+expect -exact "Enter admin PIN: "
+stty -echo
+send -- "$PUK\r"
+
+expect -exact "Set touch policy of encryption key to on? \[y/N\]: "
+send -- "y\r"
+expect eof
+
+# Touch for ATTESTATION works only for Yubico firmware >= 5.2.3.
+# https://support.yubico.com/support/solutions/articles/15000027139-yubikey-5-2-3-enhancements-to-openpgp-3-4-support
+
 # Set up PIN, PUK, and then generate keys on card.
 
 send_user "Now generating your GPG keys on the Yubikey itself.\n"
@@ -200,45 +242,3 @@ expect -exact "gpg/card> "
 send -- "quit\r"
 
 expect eof
-
-# Turn on touch for SIGNATURES.
-
-send_user "Now requiring you to touch your Yubikey to sign any message.\n"
-spawn ykman openpgp set-touch sig cached
-
-expect -exact "Enter admin PIN: "
-stty -echo
-send -- "$PUK\r"
-
-expect -exact "Set touch policy of signature key to cached? \[y/N\]: "
-send -- "y\r"
-expect eof
-
-# Turn on touch for AUTHENTICATION.
-
-send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
-spawn ykman openpgp set-touch aut on
-
-expect -exact "Enter admin PIN: "
-stty -echo
-send -- "$PUK\r"
-
-expect -exact "Set touch policy of authentication key to on? \[y/N\]: "
-send -- "y\r"
-expect eof
-
-# Turn on touch for ENCRYPTION.
-
-send_user "Now requiring you to touch your Yubikey to encrypt any message.\n"
-spawn ykman openpgp set-touch enc on
-
-expect -exact "Enter admin PIN: "
-stty -echo
-send -- "$PUK\r"
-
-expect -exact "Set touch policy of encryption key to on? \[y/N\]: "
-send -- "y\r"
-expect eof
-
-# Touch for ATTESTATION works only for Yubico firmware >= 5.2.3.
-# https://support.yubico.com/support/solutions/articles/15000027139-yubikey-5-2-3-enhancements-to-openpgp-3-4-support
