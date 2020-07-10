@@ -123,7 +123,7 @@ export LC_ALL=en_US.UTF-8
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
 $GPGCONF --homedir=$GPG_HOMEDIR --kill all
-./expect.sh "$GPG_HOMEDIR" "$PIN" "$PUK" "$KEY_LENGTH" "$TOUCH_POLICY" "$REALNAME" "$EMAIL" "$COMMENT"
+./expect.sh "$TOUCH_POLICY" "$PUK" "$GPG_HOMEDIR" "$PIN" "$KEY_LENGTH" "$REALNAME" "$EMAIL" "$COMMENT"
 echo
 
 # restore initial locale value

@@ -45,11 +45,11 @@ set timeout -1
 match_max 100000
 
 # https://stackoverflow.com/a/17060172
-set GPG_HOMEDIR   [lindex $argv 0];
-set PIN           [lindex $argv 1];
-set PUK           [lindex $argv 2];
-set KEY_LENGTH    [lindex $argv 3];
-set TOUCH_POLICY  [lindex $argv 4];
+set TOUCH_POLICY  [lindex $argv 0];
+set PUK           [lindex $argv 1];
+set GPG_HOMEDIR   [lindex $argv 2];
+set PIN           [lindex $argv 3];
+set KEY_LENGTH    [lindex $argv 4];
 set REALNAME      [lindex $argv 5];
 set EMAIL         [lindex $argv 6];
 set COMMENT       [lindex $argv 7];
