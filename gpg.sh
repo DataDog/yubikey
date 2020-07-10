@@ -24,57 +24,16 @@ COMMENT=${input:-$COMMENT}
 echo
 
 # Generate some information for the user.
-
-echo "There are two important random numbers for the Yubikey you MUST keep safely."
-echo "See https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html"
-echo
-
-# PIN
 PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
-SERIAL=$(ykman info | grep 'Serial number:' | cut -f2 -d: | tr -d ' ')
-echo "The first number is the PIN."
-echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
-echo
-echo "***********************************************************"
-echo "New PIN code: $PIN"
-echo "***********************************************************"
-echo
-echo "Please save this new PIN (copied to clipboard) immediately in your password manager."
-echo $PIN | pbcopy
-read -p "Have you done this? "
-echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
-echo $SERIAL | pbcopy
-read -p "Have you done this? "
-echo
-
-# PUK
 PUK=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
-echo "The second number is the Admin PIN, aka PUK."
-echo "The Admin PIN can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
-echo
-echo "***********************************************************"
-echo "New Admin PIN code: $PUK"
-echo "***********************************************************"
-echo
-echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
-echo $PUK | pbcopy
-read -p "Have you done this? "
-echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
-echo $SERIAL | pbcopy
-read -p "Have you done this? "
-echo
-
-# Show card information to user so they can be sure they are wiping right key
-# NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
-echo "Yubikey status:"
-$GPG --card-status
-echo
+SERIAL=$($YKMAN info | grep 'Serial number:' | cut -f2 -d: | tr -d ' ')
 
 # Set some parameters based on whether FIPS key or not.
 DEVICE_TYPE=$($YKMAN info | grep 'Device type:' | cut -f2 -d: | awk '{$1=$1;print}')
 echo "YubiKey device type: $DEVICE_TYPE"
 if [[ "$DEVICE_TYPE" == *"YubiKey FIPS"* ]]; then
   echo "Which appears to be a FIPS key"
+  YUBIKEY_FIPS=true
   # YubiKey FIPS supports at most RSA-3072 on-card key generation, which should
   # be good until at least 2030 according to NIST:
   # https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3204.pdf
@@ -85,9 +44,16 @@ if [[ "$DEVICE_TYPE" == *"YubiKey FIPS"* ]]; then
   TOUCH_POLICY=on
 else
   echo "Which does not appear to be a FIPS key"
+  YUBIKEY_FIPS=false
   KEY_LENGTH=4096
   TOUCH_POLICY=cached
 fi
+echo
+
+# Show card information to user so they can be sure they are wiping right key
+# NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
+echo "Yubikey status:"
+$GPG --card-status
 echo
 
 # Reset YubiKey openPGP applet
@@ -129,6 +95,53 @@ echo
 # restore initial locale value
 export LC_ALL="${old_locale}"
 
+# Overwrite default GPG agent configuration with our own.
+# We want to replace the pinentry-tty with the pinentry-mac.
+cat << EOF > $DEFAULT_GPG_AGENT_CONF
+# https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
+pinentry-program /usr/local/bin/pinentry-mac
+# For usability while balancing security, cache PIN for at most a day.
+default-cache-ttl 86400
+max-cache-ttl 86400
+EOF
+
+# restart GPG daemons to pick up pinentry-mac
+$GPGCONF --kill all
+
+echo "There are two important random numbers for the Yubikey you MUST keep safely."
+echo "See https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html"
+echo
+
+echo "The first number is the PIN."
+echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
+echo
+echo "***********************************************************"
+echo "New PIN code: $PIN"
+echo "***********************************************************"
+echo
+echo "Please save this new PIN (copied to clipboard) immediately in your password manager."
+echo $PIN | pbcopy
+read -p "Have you done this? "
+echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
+echo $SERIAL | pbcopy
+read -p "Have you done this? "
+echo
+
+echo "The second number is the Admin PIN, aka PUK."
+echo "The Admin PIN can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
+echo
+echo "***********************************************************"
+echo "New Admin PIN code: $PUK"
+echo "***********************************************************"
+echo
+echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
+echo $PUK | pbcopy
+read -p "Have you done this? "
+echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
+echo $SERIAL | pbcopy
+read -p "Have you done this? "
+echo
+
 # Export GPG public key.
 KEYID=$(get_keyid $GPG_HOMEDIR)
 BIN_GPG_PUBKEY=$KEYID.gpg.pub.bin
@@ -158,26 +171,12 @@ echo "Great. Deleted this revocation certificate from disk."
 pbcopy < /dev/null
 echo
 
-# Overwrite default GPG agent configuration with our own.
-# We want to replace the pinentry-tty with the pinentry-mac.
-cat << EOF > $DEFAULT_GPG_AGENT_CONF
-# https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
-pinentry-program /usr/local/bin/pinentry-mac
-# For usability while balancing security, cache PIN for at most a day.
-default-cache-ttl 86400
-max-cache-ttl 86400
-EOF
-
-# restart GPG daemons to pick up pinentry-mac
-$GPGCONF --kill all
-
 # Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
-echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey everytime${RESET} in order to sign any message with this GPG key. Touch is cached for 15s on sign operations."
-echo
-echo "************************************************************"
-echo "Your PIN is: $PIN"
-echo "Your Admin PIN, aka PUK is: $PUK"
-echo "************************************************************"
-echo
+echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey every time${RESET} in order to sign any message with this GPG key."
+if [[ "$YUBIKEY_FIPS" == "true" ]]; then
+  echo "You may wish to pass the --no-gpg-sign flag to git rebase."
+else
+  echo "Touch is cached for 15s on sign operations."
+fi
 echo "Enjoy using your Yubikey at Datadog!"

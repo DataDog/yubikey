@@ -248,7 +248,6 @@ and shows a menu to reset one specific key, or all of them.
 $ ./reset.sh
 ```
 
-
 ## Troubleshooting
 
 ### Blocked card
@@ -293,13 +292,13 @@ Q - quit
 Your selection? q
 ```
 
-
 ### git rebase
 
-You can perform signing operations for 15 seconds after touching your
-yubikey before having to touch it again. When running large git rebase
-you may have to touch your yubikey multiple times, if the rebase seems
-to hang and the yubikey flashes, it means you need to touch it again.
+If you are using the FIPS model, you can perform signing operations for 15
+seconds after touching your YubiKey before having to touch it again. When
+running a large git rebase, you may have to touch your YubiKey multiple times.
+If the rebase seems to hang and the YubiKey flashes, it means you need to touch
+it again.
 
 If you are still having issues when rebasing, you might consider using
 the `--no-gpg-sign` flag as a [workaround](https://github.com/DataDog/yubikey/issues/19).

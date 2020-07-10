@@ -32,7 +32,7 @@ reset_device() {
     $YKMAN --device "$(serial)" fido reset -f
 }
 
-yubikeys=$(/usr/local/bin/ykman list --serials)
+yubikeys=$($YKMAN list --serials)
 select serial in all $yubikeys cancel; do
     echo "You chose $serial"
     case $serial in
