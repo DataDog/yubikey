@@ -96,7 +96,7 @@ Keybase app, or uploading an encrypted copy of your private key. For example,
 see this [profile](https://keybase.io/trishankdatadog).
 
 If you have the [Keybase application](https://keybase.io/docs/the_app/install_macos)
-installed, you can import your Yubikey public key like this:
+installed, you can import your YubiKey public key like this:
 
 ```bash
 $ keybase pgp select

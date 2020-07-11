@@ -55,7 +55,7 @@ set EMAIL         [lindex $argv 6];
 set COMMENT       [lindex $argv 7];
 
 # Turn off OTP.
-send_user "Turning off Yubikey OTP:\n"
+send_user "Turning off YubiKey OTP:\n"
 spawn ykman mode "FIDO+CCID"
 expect {
   "Mode is already FIDO+CCID, nothing to do..." {
@@ -70,7 +70,7 @@ expect {
 
 # Turn on touch for SIGNATURES.
 
-send_user "Now requiring you to touch your Yubikey to sign any message.\n"
+send_user "Now requiring you to touch your YubiKey to sign any message.\n"
 spawn ykman openpgp set-touch sig $TOUCH_POLICY
 
 expect -exact "Enter admin PIN: "
@@ -83,7 +83,7 @@ expect eof
 
 # Turn on touch for AUTHENTICATION.
 
-send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
+send_user "Now requiring you to touch your YubiKey to authenticate SSH.\n"
 spawn ykman openpgp set-touch aut $TOUCH_POLICY
 
 expect -exact "Enter admin PIN: "
@@ -96,7 +96,7 @@ expect eof
 
 # Turn on touch for ENCRYPTION.
 
-send_user "Now requiring you to touch your Yubikey to encrypt any message.\n"
+send_user "Now requiring you to touch your YubiKey to encrypt any message.\n"
 spawn ykman openpgp set-touch enc $TOUCH_POLICY
 
 expect -exact "Enter admin PIN: "
@@ -112,7 +112,7 @@ expect eof
 
 # Set up PIN, PUK, and then generate keys on card.
 
-send_user "Now generating your GPG keys on the Yubikey itself.\n"
+send_user "Now generating your GPG keys on the YubiKey itself.\n"
 spawn gpg --homedir=$GPG_HOMEDIR --card-edit
 
 expect -exact "gpg/card> "

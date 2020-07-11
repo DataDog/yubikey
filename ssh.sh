@@ -69,6 +69,6 @@ echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "Great."
 echo
-echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey everytime${RESET} in order to use SSH."
+echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey everytime${RESET} in order to use SSH."
 echo
-echo "Enjoy using your Yubikey at Datadog!"
+echo "Enjoy using your YubiKey at Datadog!"

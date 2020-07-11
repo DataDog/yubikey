@@ -3,7 +3,7 @@
 # Stop on error.
 set -e
 
-echo "Welcome! This program will automatically generate GPG keys on your Yubikey."
+echo "Welcome! This program will automatically generate GPG keys on your YubiKey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo
 
@@ -17,7 +17,7 @@ echo
 source realname-and-email.sh
 
 # Get comment to distinguish between keys.
-COMMENT="GPG on Yubikey for Datadog"
+COMMENT="GPG on YubiKey for Datadog"
 echo "What is a comment you would like to use to distinguish this key?"
 read -p "Comment (press Enter to accept '$COMMENT'): " input
 COMMENT=${input:-$COMMENT}
@@ -52,7 +52,7 @@ echo
 
 # Show card information to user so they can be sure they are wiping right key
 # NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
-echo "Yubikey status:"
+echo "YubiKey status:"
 $GPG --card-status
 echo
 
@@ -108,7 +108,7 @@ EOF
 # restart GPG daemons to pick up pinentry-mac
 $GPGCONF --kill all
 
-echo "There are two important random numbers for the Yubikey you MUST keep safely."
+echo "There are two important random numbers for the YubiKey you MUST keep safely."
 echo "See https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html"
 echo
 
@@ -154,7 +154,7 @@ cat $ASC_GPG_PUBKEY | pbcopy
 echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
-echo "So, if your Yubikey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
+echo "So, if your YubiKey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo "You would also no longer be able to decrypt messages encrypted for this GPG key."
 echo
 
@@ -173,10 +173,10 @@ echo
 
 # Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
-echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey every time${RESET} in order to sign any message with this GPG key."
+echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey every time${RESET} in order to sign any message with this GPG key."
 if [[ "$YUBIKEY_FIPS" == "true" ]]; then
   echo "You may wish to pass the --no-gpg-sign flag to git rebase."
 else
   echo "Touch is cached for 15s on sign operations."
 fi
-echo "Enjoy using your Yubikey at Datadog!"
+echo "Enjoy using your YubiKey at Datadog!"
