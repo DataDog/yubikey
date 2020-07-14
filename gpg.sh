@@ -3,14 +3,27 @@
 # Stop on error.
 set -e
 
+# https://stackoverflow.com/a/44348249
+function install_or_upgrade {
+  if brew ls --versions "$1" >/dev/null; then
+    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
+  else
+    HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
+  fi
+}
+
 echo "Welcome! This program will automatically generate GPG keys on your YubiKey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo
 
 # install required tools
-echo "Installing required tools, please try a full upgrade with 'brew upgrade --force'"
-echo "of the problematic packages if something goes wrong, then try again."
-brew install --force expect gnupg pinentry-mac ykman git
+echo "Installing or upgrading required tools..."
+brew update
+install_or_upgrade expect
+install_or_upgrade git
+install_or_upgrade gnupg
+install_or_upgrade pinentry-mac
+install_or_upgrade ykman
 echo
 
 # Get full name and email address.
@@ -53,6 +66,8 @@ echo
 # Show card information to user so they can be sure they are wiping right key
 # NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
 echo "YubiKey status:"
+# NOTE: For some as yet unknown reason, we need to reload scdaemon when a brew update is done with SSH auth using GPG...
+$GPGCONF --kill all
 $GPG --card-status
 echo
 

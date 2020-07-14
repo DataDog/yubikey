@@ -5,7 +5,7 @@ set -e
 
 source env.sh
 
-configure_shell() {
+function configure_shell {
     case $(/usr/bin/basename "$SHELL") in
         bash)
             config_file="${HOME}/.bashrc"
