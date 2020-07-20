@@ -208,13 +208,8 @@ expect -exact "Enter admin PIN: "
 stty -echo
 send -- "$PUK\r"
 
-if {[string equal $TOUCH_POLICY "cached"]} {
-    expect -exact "Set touch policy of signature key to cached? \[y/N\]: "
-    send -- "y\r"
-} else {
-    expect -exact "Set touch policy of signature key to on? \[y/N\]: "
-    send -- "y\r"
-}
+expect -exact "Set touch policy of signature key to $TOUCH_POLICY? \[y/N\]: "
+send -- "y\r"
 expect eof
 
 # Turn on touch for AUTHENTICATION.

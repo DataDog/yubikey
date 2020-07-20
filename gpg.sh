@@ -52,15 +52,26 @@ if [[ "$DEVICE_TYPE" == *"YubiKey FIPS"* ]]; then
   # https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3204.pdf
   # https://www.keylength.com/en/compare/
   KEY_LENGTH=3072
-  # It also does not appear to allow the very handy cached touch policy:
-  # https://github.com/Yubico/yubikey-manager/issues/277
-  TOUCH_POLICY=on
 else
   echo "Which does not appear to be a FIPS key"
   YUBIKEY_FIPS=false
   KEY_LENGTH=4096
+fi
+# Activate cache policy if possible (when firmware version equal or superior to 5.2.3
+# https://github.com/Yubico/yubikey-manager/issues/277#issuecomment-529805540
+FIRMWARE_VERSION=$($YKMAN info | grep 'Firmware version:' | cut -f2 -d: | awk '{$1=$1;print}')
+set +e
+vercomp "$FIRMWARE_VERSION" 5.2.3
+if [[ "$?" -eq 2 ]]; then
+  echo "Firware version is inferior to 5.2.3, setting touch policy to on"
+  YUBIKEY_CACHE=false
+  TOUCH_POLICY=on
+else
+  echo "Firware version is superior or equal to 5.2.3, setting touch policy to cached"
+  YUBIKEY_CACHE=true
   TOUCH_POLICY=cached
 fi
+set -e
 echo
 
 # Show card information to user so they can be sure they are wiping right key
@@ -188,8 +199,8 @@ echo
 
 # Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
-echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey every time${RESET} in order to sign any message with this GPG key."
-if [[ "$YUBIKEY_FIPS" == "true" ]]; then
+echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey${RESET} in order to sign any message with this GPG key."
+if [[ "$YUBIKEY_CACHE" == "true" ]]; then
   echo "You may wish to pass the --no-gpg-sign flag to git rebase."
 else
   echo "Touch is cached for 15s on sign operations."
