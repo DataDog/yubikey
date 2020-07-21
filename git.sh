@@ -20,7 +20,7 @@ $GIT config --global user.signingkey $KEYID
 # Also, turn on signing commits and tags by default.
 $GIT config --global commit.gpgsign true
 $GIT config --global tag.forceSignAnnotated true
-echo ""
+echo
 
 # Export GPG public key to GitHub.
 echo "Exporting your GPG public key to GitHub."
@@ -29,4 +29,4 @@ echo "It has been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
 echo "Opening GitHub..."
 open "https://github.com/settings/gpg/new"
-echo ""
+echo

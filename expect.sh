@@ -45,15 +45,17 @@ set timeout -1
 match_max 100000
 
 # https://stackoverflow.com/a/17060172
-set GPG_HOMEDIR [lindex $argv 0];
-set PIN         [lindex $argv 1];
-set PUK         [lindex $argv 2];
-set REALNAME    [lindex $argv 3];
-set EMAIL       [lindex $argv 4];
-set COMMENT     [lindex $argv 5];
+set TOUCH_POLICY  [lindex $argv 0];
+set PUK           [lindex $argv 1];
+set GPG_HOMEDIR   [lindex $argv 2];
+set PIN           [lindex $argv 3];
+set KEY_LENGTH    [lindex $argv 4];
+set REALNAME      [lindex $argv 5];
+set EMAIL         [lindex $argv 6];
+set COMMENT       [lindex $argv 7];
 
 # Turn off OTP.
-send_user "Turning off Yubikey OTP:\n"
+send_user "Turning off YubiKey OTP:\n"
 spawn ykman mode "FIDO+CCID"
 expect {
   "Mode is already FIDO+CCID, nothing to do..." {
@@ -68,7 +70,7 @@ expect {
 
 # Set up PIN, PUK, and then generate keys on card.
 
-send_user "Now generating your GPG keys on the Yubikey itself.\n"
+send_user "Now generating your GPG keys on the YubiKey itself.\n"
 spawn gpg --homedir=$GPG_HOMEDIR --card-edit
 
 expect -exact "gpg/card> "
@@ -125,12 +127,8 @@ expect -exact "Your selection? "
 # RSA
 send -- "1\r"
 
-# YubiKey FIPS supports at most RSA-3072 on-card key generation, which should
-# be good until at least 2030 according to NIST:
-# https://csrc.nist.gov/CSRC/media/projects/cryptographic-module-validation-program/documents/security-policies/140sp3204.pdf
-# https://www.keylength.com/en/compare/
 expect "What keysize do you want? (*) "
-send -- "3072\r"
+send -- "$KEY_LENGTH\r"
 
 # Send new PUK
 expect -exact "Admin PIN: "
@@ -142,7 +140,7 @@ expect -exact "Your selection? "
 send -- "1\r"
 
 expect "What keysize do you want? (*) "
-send -- "3072\r"
+send -- "$KEY_LENGTH\r"
 
 # Send new PUK
 expect -exact "Admin PIN: "
@@ -154,7 +152,7 @@ expect -exact "Your selection? "
 send -- "1\r"
 
 expect "What keysize do you want? (*) "
-send -- "3072\r"
+send -- "$KEY_LENGTH\r"
 
 # Send new PUK
 expect -exact "Admin PIN: "
@@ -204,13 +202,13 @@ expect eof
 # Turn on touch for SIGNATURES.
 
 send_user "Now requiring you to touch your Yubikey to sign any message.\n"
-spawn ykman openpgp set-touch sig cached
+spawn ykman openpgp set-touch sig $TOUCH_POLICY
 
 expect -exact "Enter admin PIN: "
 stty -echo
 send -- "$PUK\r"
 
-expect -exact "Set touch policy of signature key to cached? \[y/N\]: "
+expect -exact "Set touch policy of signature key to $TOUCH_POLICY? \[y/N\]: "
 send -- "y\r"
 expect eof
 

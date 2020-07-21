@@ -5,7 +5,7 @@ set -e
 
 source env.sh
 
-configure_shell() {
+function configure_shell {
     case $(/usr/bin/basename "$SHELL") in
         bash)
             config_file="${HOME}/.bashrc"
@@ -68,7 +68,7 @@ open "https://github.com/settings/ssh/new"
 echo "Please save a copy in your password manager."
 read -p "Have you done this? "
 echo "Great."
-echo ""
-echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your Yubikey everytime${RESET} in order to use SSH."
-echo ""
-echo "Enjoy using your Yubikey at Datadog!"
+echo
+echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey everytime${RESET} in order to use SSH."
+echo
+echo "Enjoy using your YubiKey at Datadog!"
