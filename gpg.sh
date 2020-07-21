@@ -63,7 +63,7 @@ FIRMWARE_VERSION=$($YKMAN info | grep 'Firmware version:' | cut -f2 -d: | awk '{
 set +e
 vercomp "$FIRMWARE_VERSION" 5.2.3
 if [[ "$?" -eq 2 ]] || [[ "$YUBIKEY_FIPS" == "true" ]]; then
-  echo "Firware version is inferior to 5.2.3, setting touch policy to on"
+  echo "Setting touch policy to on"
   TOUCH_POLICY=on
 else
   echo "Firware version is superior or equal to 5.2.3, setting touch policy to cached"
