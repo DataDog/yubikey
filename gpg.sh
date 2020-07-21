@@ -66,7 +66,7 @@ if [[ "$?" -eq 2 ]] || [[ "$YUBIKEY_FIPS" == "true" ]]; then
   echo "Setting touch policy to on"
   TOUCH_POLICY=on
 else
-  echo "Firware version is superior or equal to 5.2.3, setting touch policy to cached"
+  echo "Setting touch policy to cached"
   TOUCH_POLICY=cached
 fi
 set -e
