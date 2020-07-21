@@ -62,13 +62,11 @@ fi
 FIRMWARE_VERSION=$($YKMAN info | grep 'Firmware version:' | cut -f2 -d: | awk '{$1=$1;print}')
 set +e
 vercomp "$FIRMWARE_VERSION" 5.2.3
-if [[ "$?" -eq 2 ]]; then
+if [[ "$?" -eq 2 ]] || [[ "$YUBIKEY_FIPS" == "true" ]]; then
   echo "Firware version is inferior to 5.2.3, setting touch policy to on"
-  YUBIKEY_CACHE=false
   TOUCH_POLICY=on
 else
   echo "Firware version is superior or equal to 5.2.3, setting touch policy to cached"
-  YUBIKEY_CACHE=true
   TOUCH_POLICY=cached
 fi
 set -e
@@ -200,7 +198,7 @@ echo
 # Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
 echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey${RESET} in order to sign any message with this GPG key."
-if [[ "$YUBIKEY_CACHE" == "true" ]]; then
+if [[ "$TOUCH_POLICY" == "on" ]]; then
   echo "You may wish to pass the --no-gpg-sign flag to git rebase."
 else
   echo "Touch is cached for 15s on sign operations."
