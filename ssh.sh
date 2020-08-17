@@ -25,9 +25,9 @@ function configure_shell {
     echo "$config_file_basename detected"
     if ! grep -q "gpg-agent.ssh" "$config_file"; then
         if [[ "$config_file_basename" == "config.fish" ]]; then
-            echo 'set -gx SSH_AUTH_SOCK ${HOME}/.gnupg/S.gpg-agent.ssh' >> "${config_file}"
+            echo "set -gx SSH_AUTH_SOCK ${HOME}/.gnupg/S.gpg-agent.ssh" >> "${config_file}"
         else
-            echo 'export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"' >> "${config_file}"
+            echo "export \"SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh\"" >> "${config_file}"
         fi
     fi
     # put set +e before sourcing the rc file just in case people have things that return 1 in it
@@ -60,13 +60,13 @@ KEYID=$(get_keyid "$DEFAULT_GPG_HOMEDIR")
 SSH_PUBKEY=$KEYID.ssh.pub
 echo "Exporting your SSH public key to $SSH_PUBKEY"
 ssh-add -L | grep -iF 'cardno' > "$SSH_PUBKEY"
-cat "$SSH_PUBKEY" | pbcopy
+echo "$SSH_PUBKEY" | pbcopy
 echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
 echo "Opening GitHub..."
 open "https://github.com/settings/ssh/new"
 echo "Please save a copy in your password manager."
-read -p "Have you done this? "
+read -pr "Have you done this? "
 echo "Great."
 echo
 echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey everytime${RESET} in order to use SSH."

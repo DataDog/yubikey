@@ -32,7 +32,7 @@ source realname-and-email.sh
 # Get comment to distinguish between keys.
 COMMENT="GPG on YubiKey for Datadog"
 echo "What is a comment you would like to use to distinguish this key?"
-read -p "Comment (press Enter to accept '$COMMENT'): " input
+read -pr "Comment (press Enter to accept '$COMMENT'): " input
 COMMENT=${input:-$COMMENT}
 echo
 
@@ -102,7 +102,7 @@ echo
 
 # Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering PIN and PUK.
 GPG_AGENT_CONF=$GPG_HOMEDIR/gpg-agent.conf
-cat << EOF > $GPG_AGENT_CONF
+cat << EOF > "$GPG_AGENT_CONF"
 pinentry-program /usr/local/bin/pinentry-tty
 EOF
 
@@ -112,7 +112,7 @@ export LC_ALL=en_US.UTF-8
 
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
-$GPGCONF --homedir=$GPG_HOMEDIR --kill all
+$GPGCONF --homedir="$GPG_HOMEDIR" --kill all
 ./expect.sh "$TOUCH_POLICY" "$PUK" "$GPG_HOMEDIR" "$PIN" "$KEY_LENGTH" "$REALNAME" "$EMAIL" "$COMMENT"
 echo
 
@@ -121,7 +121,7 @@ export LC_ALL="${old_locale}"
 
 # Overwrite default GPG agent configuration with our own.
 # We want to replace the pinentry-tty with the pinentry-mac.
-cat << EOF > $DEFAULT_GPG_AGENT_CONF
+cat << EOF > "$DEFAULT_GPG_AGENT_CONF"
 # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
 pinentry-program /usr/local/bin/pinentry-mac
 # For usability while balancing security, cache PIN for at most a day.
@@ -144,11 +144,11 @@ echo "New PIN code: $PIN"
 echo "***********************************************************"
 echo
 echo "Please save this new PIN (copied to clipboard) immediately in your password manager."
-echo $PIN | pbcopy
-read -p "Have you done this? "
+echo "$PIN" | pbcopy
+read -pr "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
-echo $SERIAL | pbcopy
-read -p "Have you done this? "
+echo "$SERIAL" | pbcopy
+read -pr "Have you done this? "
 echo
 
 echo "The second number is the Admin PIN, aka PUK."
@@ -159,24 +159,24 @@ echo "New Admin PIN code: $PUK"
 echo "***********************************************************"
 echo
 echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
-echo $PUK | pbcopy
-read -p "Have you done this? "
+echo "$PUK" | pbcopy
+read -pr "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
-echo $SERIAL | pbcopy
-read -p "Have you done this? "
+echo "$SERIAL" | pbcopy
+read -pr "Have you done this? "
 echo
 
 # Export GPG public key.
-KEYID=$(get_keyid $GPG_HOMEDIR)
+KEYID=$(get_keyid "$GPG_HOMEDIR")
 BIN_GPG_PUBKEY=$KEYID.gpg.pub.bin
 ASC_GPG_PUBKEY=$KEYID.gpg.pub.asc
 echo "Exporting your binary GPG public key to $BIN_GPG_PUBKEY"
-$GPG --homedir=$GPG_HOMEDIR --export $KEYID > $BIN_GPG_PUBKEY
+$GPG --homedir="$GPG_HOMEDIR" --export "$KEYID" > "$BIN_GPG_PUBKEY"
 echo "Exporting your ASCII-armored GPG public key to $ASC_GPG_PUBKEY"
-$GPG --homedir=$GPG_HOMEDIR --armor --export $KEYID > $ASC_GPG_PUBKEY
-cat $ASC_GPG_PUBKEY | pbcopy
+$GPG --homedir="$GPG_HOMEDIR" --armor --export "$KEYID" > "$ASC_GPG_PUBKEY"
+echo "$ASC_GPG_PUBKEY" | pbcopy
 echo "Please save a copy in your password manager."
-read -p "Have you done this? "
+read -pr "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
 echo "So, if your YubiKey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo "You would also no longer be able to decrypt messages encrypted for this GPG key."
@@ -184,12 +184,12 @@ echo
 
 # Ask user to save revocation certificate before deleting it.
 REVOCATION_CERT=$GPG_HOMEDIR/openpgp-revocs.d/$KEYID.rev
-cat $REVOCATION_CERT | pbcopy
+echo "$REVOCATION_CERT" | pbcopy
 echo "Your revocation certificate is at $REVOCATION_CERT"
 echo "It has been copied to your clipboard."
 echo "Please save a copy in your password manager before we delete it off disk."
-read -p "Have you done this? "
-rm $REVOCATION_CERT
+read -pr "Have you done this? "
+rm "$REVOCATION_CERT"
 echo "Great. Deleted this revocation certificate from disk."
 # NOTE: EMPTY clipboard after this.
 pbcopy < /dev/null
