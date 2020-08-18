@@ -32,6 +32,7 @@ function configure_shell {
     fi
     # put set +e before sourcing the rc file just in case people have things that return 1 in it
     set +e
+    # shellcheck disable=SC1090
     source "${config_file}" > /dev/null 2>&1
     set -e
     if [[ "$SSH_AUTH_SOCK" != "${HOME}/.gnupg/S.gpg-agent.ssh" ]]; then

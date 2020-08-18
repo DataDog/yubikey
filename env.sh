@@ -57,6 +57,7 @@ function vercomp {
         return 0
     fi
     local IFS=.
+    # shellcheck disable=SC2206
     local i ver1=($1) ver2=($2)
     # fill empty fields in ver1 with zeros
     for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
