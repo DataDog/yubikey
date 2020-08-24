@@ -32,7 +32,7 @@ source realname-and-email.sh
 # Get comment to distinguish between keys.
 COMMENT="GPG on YubiKey for Datadog"
 echo "What is a comment you would like to use to distinguish this key?"
-read -pr "Comment (press Enter to accept '$COMMENT'): " input
+read -rp "Comment (press Enter to accept '$COMMENT'): " input
 COMMENT=${input:-$COMMENT}
 echo
 
@@ -145,10 +145,10 @@ echo "***********************************************************"
 echo
 echo "Please save this new PIN (copied to clipboard) immediately in your password manager."
 echo "$PIN" | pbcopy
-read -pr "Have you done this? "
+read -rp "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
 echo "$SERIAL" | pbcopy
-read -pr "Have you done this? "
+read -rp "Have you done this? "
 echo
 
 echo "The second number is the Admin PIN, aka PUK."
@@ -160,10 +160,10 @@ echo "***********************************************************"
 echo
 echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
 echo "$PUK" | pbcopy
-read -pr "Have you done this? "
+read -rp "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
 echo "$SERIAL" | pbcopy
-read -pr "Have you done this? "
+read -rp "Have you done this? "
 echo
 
 # Export GPG public key.
@@ -176,7 +176,7 @@ echo "Exporting your ASCII-armored GPG public key to $ASC_GPG_PUBKEY"
 $GPG --homedir="$GPG_HOMEDIR" --armor --export "$KEYID" > "$ASC_GPG_PUBKEY"
 echo "$ASC_GPG_PUBKEY" | pbcopy
 echo "Please save a copy in your password manager."
-read -pr "Have you done this? "
+read -rp "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
 echo "So, if your YubiKey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo "You would also no longer be able to decrypt messages encrypted for this GPG key."
@@ -188,7 +188,7 @@ echo "$REVOCATION_CERT" | pbcopy
 echo "Your revocation certificate is at $REVOCATION_CERT"
 echo "It has been copied to your clipboard."
 echo "Please save a copy in your password manager before we delete it off disk."
-read -pr "Have you done this? "
+read -rp "Have you done this? "
 rm "$REVOCATION_CERT"
 echo "Great. Deleted this revocation certificate from disk."
 # NOTE: EMPTY clipboard after this.

@@ -67,7 +67,7 @@ echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
 echo "Opening GitHub..."
 open "https://github.com/settings/ssh/new"
 echo "Please save a copy in your password manager."
-read -pr "Have you done this? "
+read -rp "Have you done this? "
 echo "Great."
 echo
 echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey everytime${RESET} in order to use SSH."
