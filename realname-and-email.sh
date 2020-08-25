@@ -10,7 +10,7 @@ source env.sh
 # 1. Real name.
 REALNAME=$($GIT config --global --default '' --get user.name)
 echo "What is the real name you use on GitHub?"
-read -p "Real name (press Enter to accept '$REALNAME'): " input
+read -rp "Real name (press Enter to accept '$REALNAME'): " input
 
 if [[ -z $REALNAME ]]
 then
@@ -44,7 +44,7 @@ echo
 # 2. Email address.
 EMAIL=$($GIT config --global --default '' --get user.email)
 echo "What is an email address you have registered with GitHub?"
-read -p "Email (press Enter to accept '$EMAIL'): " input
+read -rp "Email (press Enter to accept '$EMAIL'): " input
 
 if [[ -z $EMAIL ]]
 then
