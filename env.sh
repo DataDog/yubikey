@@ -8,7 +8,7 @@ HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
 export GIT=$HOMEBREW_BIN/git
 export GPG=$HOMEBREW_BIN/gpg
 export GPG_AGENT=$HOMEBREW_BIN/gpg-agent
-export GPGCONF=`which gpgconf`
+export GPGCONF="$(which gpgconf)"
 export YKMAN=$HOMEBREW_BIN/ykman
 
 # Colors galore.
