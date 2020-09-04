@@ -2,14 +2,11 @@
 
 # Shared environment variables.
 
-# Use Homebrew binaries.
-HOMEBREW_PREFIX=$(brew --prefix)
-HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
-export GIT=$HOMEBREW_BIN/git
-export GPG=$HOMEBREW_BIN/gpg
-export GPG_AGENT=$HOMEBREW_BIN/gpg-agent
+export GIT="$(which git)"
+export GPG="$(which gpg)"
+export GPG_AGENT="$(which gpg-agent)"
 export GPGCONF="$(which gpgconf)"
-export YKMAN=$HOMEBREW_BIN/ykman
+export YKMAN="$(which ykman)"
 
 # Colors galore.
 BOLD=$(tput bold)
