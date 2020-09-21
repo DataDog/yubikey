@@ -24,12 +24,12 @@ reset_device() {
     local serial
     serial="$1"
 
-    $YKMAN --device "$(serial)" otp delete 1 -f
-    $YKMAN --device "$(serial)" otp delete 2 -f
-    $YKMAN --device "$(serial)" oath reset -f
-    $YKMAN --device "$(serial)" openpgp reset -f
-    $YKMAN --device "$(serial)" piv reset -f
-    $YKMAN --device "$(serial)" fido reset -f
+    $YKMAN --device "${serial}" otp delete 1 -f
+    $YKMAN --device "${serial}" otp delete 2 -f
+    $YKMAN --device "${serial}" oath reset -f
+    $YKMAN --device "${serial}" openpgp reset -f
+    $YKMAN --device "${serial}" piv reset -f
+    $YKMAN --device "${serial}" fido reset -f
 }
 
 yubikeys=$($YKMAN list --serials)
