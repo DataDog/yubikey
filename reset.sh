@@ -9,9 +9,10 @@ confirm() {
     msg="$1"
 
     echo "$msg"
-    read -srn 3 answer
+    read -rn 3 answer
     case $answer in
         Yes|yes|Y|y|YES)
+            echo
             return 0
             ;;
         *)
@@ -24,12 +25,15 @@ reset_device() {
     local serial
     serial="$1"
 
-    $YKMAN --device "${serial}" otp delete 1 -f
-    $YKMAN --device "${serial}" otp delete 2 -f
+    for i in $(seq 1 2); do
+        if ! $YKMAN --device "${serial}" otp delete "$i" -f >/dev/null 2>&1; then
+            echo "Warning the slot $i didn't contain OTP configuration or an error happened"
+        fi
+    done
     $YKMAN --device "${serial}" oath reset -f
     $YKMAN --device "${serial}" openpgp reset -f
     $YKMAN --device "${serial}" piv reset -f
-    $YKMAN --device "${serial}" fido reset -f
+    $YKMAN --device "${serial}" fido reset
 }
 
 yubikeys=$($YKMAN list --serials)
@@ -37,8 +41,7 @@ select serial in all $yubikeys cancel; do
     echo "You chose $serial"
     case $serial in
         all)
-            echo "Are you sure you want to reset $yubikeys ? yes/no"
-            confirm || exit 0
+            confirm "Are you sure you want to reset $yubikeys ? yes/no" || exit 0
             for yubikey in $yubikeys; do
                 echo "Reset $yubikey"
                 reset_device "$yubikey"
@@ -50,8 +53,7 @@ select serial in all $yubikeys cancel; do
             break
             ;;
         +([0-9]))
-            echo "Are you sure you want to reset $serial ? yes/no"
-            confirm || exit 0
+            confirm "Are you sure you want to reset $serial ? yes/no" || exit 0
             echo "Reset $serial"
             reset_device "$serial"
             break
