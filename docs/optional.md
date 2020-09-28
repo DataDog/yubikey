@@ -6,6 +6,7 @@ Table of contents
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
 - [Signing for different git repositories with different keys](#signing-for-different-git-repositories-with-different-keys)
+- [Configure another computer to use a configured Yubikey](#configure-another-computer-to-use-a-configured-yubikey)
 
 ## Keybase
 
@@ -199,25 +200,28 @@ With this setup, every time you do `git commit` or `git tag`, the default key
 will be used while `git dd-commit` and `git dd-tag` will use the one in the
 YubiKey.
 
-## Configure another computer to use the already configured Yubikey
-On the second computer you have to:
-* install pinentry-mac
-<code>
-brew install pinentry-mac
-</code>
-* put the following in your ~/.gnupg/gpg-agent.conf
-<code>
+## Configure another computer to use a configured Yubikey
+
+On the second computer you need to:
+
+* Install pinentry-mac: `brew install pinentry-mac`
+
+* Add the following in your `~/.gnupg/gpg-agent.conf`:
+
+```
 pinentry-program /usr/local/bin/pinentry-mac
 enable-ssh-support
-</code>
-* add the following in your RC configuration (works with bash and zsh, if you use another shel like fishl, you will need to adapt it)
-<code>
-# Add gpg autostart
+```
+
+* Add the following in your RC configuration (works with `bash` and `zsh`, if you use another shell like `fish`, you will need to adapt it):
+
+```
 gpgconf --launch gpg-agent
 export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
-</code>
-* put in your ~/.gitconfig (You can copy paste from the one the script set up for you)
-<code>
+```
+
+* Add the following to your `~/.gitconfig` (you can copy paste from the one the script set up for you):
+```
 [user]
 	email = YOUR EMAIL
 	name = YOUR NAME
@@ -226,4 +230,4 @@ export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
 	gpgsign = true
 [tag]
 	forceSignAnnotated = true
-</code>
+```
