@@ -155,14 +155,13 @@ the `--no-gpg-sign` flag as a [workaround](https://github.com/DataDog/yubikey/is
 
 ## Optional
 
-Go [here](docs/optional.md) for support on optional bits such as Keybase, VMware Fusion, Docker Content Trust, and signing for different git repositories with different keys.
+Go [here](docs/optional.md) for support on optional bits such as Keybase, VMware Fusion, Docker Content Trust, signing for different git repositories with different keys, and configuring a computer to use an already configured Yubikey.
 
 ## TODO
 
 1. Instructions for revoking and / or replacing keys.
 
 2. Procedures for recovering from key compromise / theft / loss.
-
 
 ## References
 
