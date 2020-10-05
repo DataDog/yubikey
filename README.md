@@ -152,6 +152,20 @@ it again.
 If you are still having issues when rebasing, you might consider using
 the `--no-gpg-sign` flag as a [workaround](https://github.com/DataDog/yubikey/issues/19).
 
+### Error: No PyUSB backend detected!
+
+If you see the following error while running `./gpg.sh`:
+
+```
+Usage: ykman [OPTIONS] COMMAND [ARGS]...
+Try "ykman -h" for help.
+
+Error: No PyUSB backend detected!
+```
+
+Hit CTRL-C to exit the script (if the script has not already exited) and [reinstall](https://github.com/Yubico/yubikey-manager/issues/185#issuecomment-446379356) `libsub`, then try again:
+
+    `brew reinstall libusb`
 
 ## Optional
 
