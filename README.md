@@ -9,7 +9,6 @@
 - [Reset](#reset)
 - [Troubleshooting](#troubleshooting)
 - [Optional](#optional)
-- [TODO](#todo)
 - [References](#references)
 
 ## Summary
@@ -103,18 +102,12 @@ Go [here](docs/troubleshooting.md) for troubleshooting common issues such as unb
 
 Go [here](docs/optional.md) for support on optional bits such as Keybase, VMware Fusion, Docker Content Trust, signing for different git repositories with different keys, and configuring a computer to use an already configured Yubikey.
 
-## TODO
-
-1. Instructions for revoking and / or replacing keys.
-
-2. Procedures for recovering from key compromise / theft / loss.
-
 ## References
 
-1. [https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/](https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/)
+1. [YubiKey Handbook](https://ruimarinho.gitbooks.io/yubikey-handbook/content/openpgp/)
 
-2. [https://mikegerwitz.com/papers/git-horror-story](https://mikegerwitz.com/papers/git-horror-story)
+2. [A Git Horror Story: Repository Integrity With Signed Commits](https://mikegerwitz.com/papers/git-horror-story)
 
-3. [http://karl.kornel.us/2017/10/welp-there-go-my-git-signatures/](http://karl.kornel.us/2017/10/welp-there-go-my-git-signatures/)
+3. [Welp, there go my Git signatures](http://karl.kornel.us/2017/10/welp-there-go-my-git-signatures/)
 
-4. [https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2014-May/005877.html](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2014-May/005877.html)
+4. [[Bitcoin-development] PSA: Please sign your git commits](https://lists.linuxfoundation.org/pipermail/bitcoin-dev/2014-May/005877.html)
