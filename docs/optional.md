@@ -1,7 +1,5 @@
 # Optional
 
-Table of contents
-
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
