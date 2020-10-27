@@ -12,19 +12,54 @@ function install_or_upgrade {
   fi
 }
 
+function check_presence {
+  if ! which "$1" >/dev/null; then
+      echo "$1 is missing, please install it"
+      return 1
+  fi
+}
+
 echo "Welcome! This program will automatically generate GPG keys on your YubiKey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo
 
-# install required tools
-echo "Installing or upgrading required tools..."
-brew update
-install_or_upgrade expect
-install_or_upgrade git
-install_or_upgrade gnupg
-install_or_upgrade pinentry-mac
-install_or_upgrade ykman
+echo "You need to have expect, git, gnupg, pinentry-mac and ykman installed on your device."
+read -rp "Do you want us to install them for you ? (y/n)" answer
+case "$answer" in
+    yes|YES|y|Y|Yes)
+        # install required tools
+        echo "Installing or upgrading required tools..."
+        brew update
+        install_or_upgrade expect
+        install_or_upgrade git
+        install_or_upgrade gnupg
+        install_or_upgrade pinentry-mac
+        install_or_upgrade ykman
+        ;;
+    *)
+        echo "Skipping install or upgrade of required tools"
+        check_presence expect
+        check_presence git
+        check_presence gpg
+        check_presence pinentry-mac
+        check_presence ykman
+        ;;
+esac
 echo
+
+source env.sh
+
+case $(${GPG} --version | /usr/bin/head -n1 | /usr/bin/cut -d" " -f3) in
+    2.2.23|2.2.22)
+        echo "Your version of gnupg has a bug that makes $0 fail"
+        echo "Bugged version are 2.2.23 and 2.2.22"
+        echo "Please use version < 2.2.22 or > 2.2.23"
+        echo "See https://dev.gnupg.org/T5086 for more details"
+        exit 1
+        ;;
+    *)
+        ;;
+esac
 
 # Get full name and email address.
 source realname-and-email.sh
