@@ -3,6 +3,7 @@
 # Stop on error.
 set -e
 
+source env.sh
 source realname-and-email.sh
 
 # Set git name and email.

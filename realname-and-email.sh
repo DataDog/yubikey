@@ -3,8 +3,6 @@
 # Stop on error.
 set -e
 
-source env.sh
-
 # Get some information from the user.
 
 # 1. Real name.
