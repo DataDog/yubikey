@@ -194,8 +194,15 @@ send -- "$PUK\r"
 
 send_user "\nNow generating keys on card, lights will be flashing, this will take a few minutes, please wait...\n"
 
-expect -exact "gpg/card> "
-send -- "quit\r"
+# Send new PIN
+expect {
+    "PIN: " {
+        send -- "$PIN\r"
+        expect -exact "gpg/card> "
+        send -- "quit\r"
+    }
+    "gpg/card> " { send -- "quit\r" }
+}
 
 expect eof
 
