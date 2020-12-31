@@ -46,9 +46,9 @@ match_max 100000
 
 # https://stackoverflow.com/a/17060172
 set TOUCH_POLICY  [lindex $argv 0];
-set PUK           [lindex $argv 1];
+set ADMIN_PIN     [lindex $argv 1];
 set GPG_HOMEDIR   [lindex $argv 2];
-set PIN           [lindex $argv 3];
+set USER_PIN      [lindex $argv 3];
 set KEY_LENGTH    [lindex $argv 4];
 set REALNAME      [lindex $argv 5];
 set EMAIL         [lindex $argv 6];
@@ -68,7 +68,7 @@ expect {
   }
 }
 
-# Set up PIN, PUK, and then generate keys on card.
+# Set up User and Admin PINs, and then generate keys on card.
 
 send_user "Now generating your GPG keys on the YubiKey itself.\n"
 spawn gpg --homedir=$GPG_HOMEDIR --card-edit
@@ -81,37 +81,37 @@ send -- "admin\r"
 expect -exact "gpg/card> "
 send -- "passwd\r"
 
-# Change PIN
+# Change User PIN
 expect -exact "Your selection? "
 send -- "1\r"
 
-# Default PIN
+# Default User PIN
 expect -exact "PIN: "
 send -- "123456\r"
 
-# New PIN
+# New User PIN
 expect -exact "PIN: "
-send -- "$PIN\r"
+send -- "$USER_PIN\r"
 
-# Repeat new PIN
+# Repeat new User PIN
 expect -exact "PIN: "
-send -- "$PIN\r"
+send -- "$USER_PIN\r"
 
-# Change PUK
+# Change Admin PIN
 expect -exact "Your selection? "
 send -- "3\r"
 
-# Default PUK
+# Default Admin PIN
 expect -exact "Admin PIN: "
 send -- "12345678\r"
 
-# New PUK
+# New Admin PIN
 expect -exact "Admin PIN: "
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
-# Repeat new PUK
+# Repeat new Admin PIN
 expect -exact "Admin PIN: "
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 # Get out of passwd menu
 expect -exact "Your selection? "
@@ -130,9 +130,9 @@ send -- "1\r"
 expect "What keysize do you want? (*) "
 send -- "$KEY_LENGTH\r"
 
-# Send new PUK
+# Send new Admin PIN
 expect -exact "Admin PIN: "
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 # Encryption key.
 expect -exact "Your selection? "
@@ -142,9 +142,9 @@ send -- "1\r"
 expect "What keysize do you want? (*) "
 send -- "$KEY_LENGTH\r"
 
-# Send new PUK
+# Send new Admin PIN
 expect -exact "Admin PIN: "
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 # Authentication key.
 expect -exact "Your selection? "
@@ -154,9 +154,9 @@ send -- "1\r"
 expect "What keysize do you want? (*) "
 send -- "$KEY_LENGTH\r"
 
-# Send new PUK
+# Send new Admin PIN
 expect -exact "Admin PIN: "
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 # Time to generate.
 
@@ -166,9 +166,9 @@ send -- "generate\r"
 expect -exact "Make off-card backup of encryption key? (Y/n) "
 send -- "n\r"
 
-# Send new PIN
+# Send new User PIN
 expect -exact "PIN: "
-send -- "$PIN\r"
+send -- "$USER_PIN\r"
 
 expect -exact "Key is valid for? (0) "
 send -- "10y\r"
@@ -188,16 +188,16 @@ send -- "$COMMENT\r"
 expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
 send -- "O\r"
 
-# Send new PUK
+# Send new Admin PIN
 expect -exact "Admin PIN: "
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 send_user "\nNow generating keys on card, lights will be flashing, this will take a few minutes, please wait...\n"
 
-# Send new PIN
+# Send new User PIN
 expect {
     "PIN: " {
-        send -- "$PIN\r"
+        send -- "$USER_PIN\r"
         expect -exact "gpg/card> "
         send -- "quit\r"
     }
@@ -213,7 +213,7 @@ spawn ykman openpgp set-touch sig $TOUCH_POLICY
 
 expect -exact "Enter admin PIN: "
 stty -echo
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 expect -exact "Set touch policy of signature key to $TOUCH_POLICY? \[y/N\]: "
 send -- "y\r"
@@ -226,7 +226,7 @@ spawn ykman openpgp set-touch aut on
 
 expect -exact "Enter admin PIN: "
 stty -echo
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 expect -exact "Set touch policy of authentication key to on? \[y/N\]: "
 send -- "y\r"
@@ -239,7 +239,7 @@ spawn ykman openpgp set-touch enc on
 
 expect -exact "Enter admin PIN: "
 stty -echo
-send -- "$PUK\r"
+send -- "$ADMIN_PIN\r"
 
 expect -exact "Set touch policy of encryption key to on? \[y/N\]: "
 send -- "y\r"

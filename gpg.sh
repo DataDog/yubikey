@@ -72,8 +72,8 @@ COMMENT=${input:-$COMMENT}
 echo
 
 # Generate some information for the user.
-PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
-PUK=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
+USER_PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
+ADMIN_PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 SERIAL=$($YKMAN info | grep 'Serial number:' | cut -f2 -d: | tr -d ' ')
 
 # Set some parameters based on whether FIPS key or not.
@@ -135,7 +135,7 @@ else
 fi
 echo
 
-# Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering PIN and PUK.
+# Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering User and Admin PINs.
 GPG_AGENT_CONF=$GPG_HOMEDIR/gpg-agent.conf
 cat << EOF > "$GPG_AGENT_CONF"
 pinentry-program /usr/local/bin/pinentry-tty
@@ -148,7 +148,7 @@ export LC_ALL=en_US.UTF-8
 # drive yubikey setup
 # but right before, kill all GPG daemons to make sure things work reliably
 $GPGCONF --homedir="$GPG_HOMEDIR" --kill all
-./expect.sh "$TOUCH_POLICY" "$PUK" "$GPG_HOMEDIR" "$PIN" "$KEY_LENGTH" "$REALNAME" "$EMAIL" "$COMMENT"
+./expect.sh "$TOUCH_POLICY" "$ADMIN_PIN" "$GPG_HOMEDIR" "$USER_PIN" "$KEY_LENGTH" "$REALNAME" "$EMAIL" "$COMMENT"
 echo
 
 # restore initial locale value
@@ -159,7 +159,7 @@ export LC_ALL="${old_locale}"
 cat << EOF > "$DEFAULT_GPG_AGENT_CONF"
 # https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
 pinentry-program /usr/local/bin/pinentry-mac
-# For usability while balancing security, cache PIN for at most a day.
+# For usability while balancing security, cache User PIN for at most a day.
 default-cache-ttl 86400
 max-cache-ttl 86400
 EOF
@@ -171,30 +171,30 @@ echo "There are two important random numbers for the YubiKey you MUST keep safel
 echo "See https://developers.yubico.com/yubikey-piv-manager/PIN_and_Management_Key.html"
 echo
 
-echo "The first number is the PIN."
-echo "The PIN is used during normal operation to authorize an action such as creating a digital signature for any of the loaded certificates."
+echo "The first number is the User PIN."
+echo "The User PIN is used during normal operation to authorize an action such as issuing a new GPG signature."
 echo
 echo "***********************************************************"
-echo "New PIN code: $PIN"
+echo "New User PIN: $USER_PIN"
 echo "***********************************************************"
 echo
-echo "Please save this new PIN (copied to clipboard) immediately in your password manager."
-echo "$PIN" | pbcopy
+echo "Please save this new User PIN (copied to clipboard) immediately in your password manager."
+echo "$USER_PIN" | pbcopy
 read -rp "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
 echo "$SERIAL" | pbcopy
 read -rp "Have you done this? "
 echo
 
-echo "The second number is the Admin PIN, aka PUK."
+echo "The second number is the Admin PIN."
 echo "The Admin PIN can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
 echo
 echo "***********************************************************"
-echo "New Admin PIN code: $PUK"
+echo "New Admin PIN: $ADMIN_PIN"
 echo "***********************************************************"
 echo
 echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
-echo "$PUK" | pbcopy
+echo "$ADMIN_PIN" | pbcopy
 read -rp "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
 echo "$SERIAL" | pbcopy
@@ -232,7 +232,7 @@ echo
 
 # Final reminders.
 echo "Finally, remember that your keys will not expire until 10 years from now."
-echo "You will need to ${RED}${BOLD}enter your PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey${RESET} in order to sign any message with this GPG key."
+echo "You will need to ${RED}${BOLD}enter your User PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey${RESET} in order to sign any message with this GPG key."
 if [[ "$TOUCH_POLICY" == "on" ]]; then
   echo "You may wish to pass the --no-gpg-sign flag to git rebase."
 else
