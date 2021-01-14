@@ -25,24 +25,29 @@ export SSH_ENV="$HOME/.ssh/environment"
 # Folders and files.
 DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
 DEFAULT_GPG_AGENT_CONF=$DEFAULT_GPG_HOMEDIR/gpg-agent.conf
+DEFAULT_GPG_CONF=$DEFAULT_GPG_HOMEDIR/gpg.conf
 
 # Functions.
 
-# Backup GPG agent configuration in default GPG homedir, if it exists.
-function backup_default_gpg_agent_conf {
-    if [[ -e $DEFAULT_GPG_AGENT_CONF ]]
+# Backup configuration in default GPG homedir, if it exists.
+function backup_conf {
+    local conf
+    local conf_backup
+    conf="$1"
+
+    if [[ -e "$conf" ]]
     then
-        DEFAULT_GPG_AGENT_CONF_BACKUP=$DEFAULT_GPG_AGENT_CONF.$(date +%s)
-        if [[ -e $DEFAULT_GPG_AGENT_CONF_BACKUP ]]
+        conf_backup=$conf.$(date +%s)
+        if [[ -e $conf_backup ]]
         then
-            echo "Unlikely for $DEFAULT_GPG_AGENT_CONF_BACKUP to exist!"
+            echo "Unlikely for $conf_backup to exist!"
             exit 4
         else
-            echo "Backing up $DEFAULT_GPG_AGENT_CONF to $DEFAULT_GPG_AGENT_CONF_BACKUP"
-            mv "$DEFAULT_GPG_AGENT_CONF" "$DEFAULT_GPG_AGENT_CONF_BACKUP"
+            echo "Backing up $conf to $conf_backup"
+            mv "$conf" "$conf_backup"
         fi
     else
-        echo "$DEFAULT_GPG_AGENT_CONF doesn't exist"
+        echo "$conf doesn't exist"
     fi
 }
 
