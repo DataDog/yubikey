@@ -63,14 +63,21 @@ polluting your default GPG homedir.)
 
 ## git
 
-**STRONGLY RECOMMENDED:** signing all your git commits across all repositories.
+**STRONGLY RECOMMENDED:** signing your git commits and tags.
 
-You **must** have first set up [GPG](#gpg). Then:
+You **must** first set up [GPG](#gpg).
+
+Then, to sign git commits and tags for a _particular_ repository:
+
+```bash
+$ ./git.sh /path/to/git/repository
+```
+
+Or, to sign git commits and tags for _all_ repositories:
 
 ```bash
 $ ./git.sh
 ```
-
 
 ## SSH
 
