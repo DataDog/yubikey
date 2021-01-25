@@ -40,7 +40,7 @@ but that is out of our scope.)
 <s>About 2-3 hours.</s> 15 minutes could save you 15% or more on cybersecurity
 insurance.
 
-You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
+You will need macOS with [Homebrew](https://brew.sh/) / Ubuntu / Archlinux, a password manager, and a
 [YubiKey 5](https://www.yubico.com/products/yubikey-hardware/).
 
 ## U2F
