@@ -1,15 +1,146 @@
 #!/bin/bash
 
-# Shared environment variables.
+function which_flavour {
+    if [[ -f /etc/os-release ]]; then
+        detected="$(grep '^ID=' /etc/os-release | cut -d= -f2)"
+    fi
+    echo "$detected"
+}
+
+case "$OSTYPE" in
+    darwin*)
+        OS='macos'
+        ;;
+    linux*)
+        OS=$(which_flavour)
+        ;;
+    *)
+        OS="not detected"
+        ;;
+esac
+
+echo "OS detected is $OS"
+read -rp "Is it correct ? (y|N)" input
+input=$(echo "$input" | tr "[:lower:]" "[:upper:]")
+case $input in
+    Y|YES)
+        ;;
+    *)
+        echo "Exiting, if your OS is marked as supported, please open an issue"
+        echo "https://github.com/DataDog/yubikey/issues/new/choose"
+        exit 1
+esac
+
+case ${OS,,} in
+    macos)
+        PKG_MANAGER="brew"
+        PKG_MANAGER_ENV=""
+        PKG_MANAGER_INSTALL="install"
+        PKG_MANAGER_UPDATE="update"
+        PKG_MANAGER_UPGRADE="upgrade"
+        PKG_CHECK="brew"
+        PKG_CHECK_ARGS="list"
+        HOMEBREW_PREFIX=$(brew --prefix)
+        HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
+        GIT=$HOMEBREW_BIN/git
+        GPG=$HOMEBREW_BIN/gpg
+        GPG_AGENT=$HOMEBREW_BIN/gpg-agent
+        GPGCONF=$HOMEBREW_BIN/gpgconf
+        YKMAN=$HOMEBREW_BIN/ykman
+        CLIP="pbcopy"
+        CLIP_ARGS=""
+        PINENTRY="/usr/local/bin/pinentry-tty"
+        OPEN="open"
+        DEPS=(
+            "expect"
+            "git"
+            "gpg"
+            "pinentry-mac"
+            "ykman"
+        )
+        export HOMEBREW_NO_AUTO_UPDATE=1
+        ;;
+    ubuntu|debian)
+        PKG_MANAGER="apt"
+        PKG_MANAGER_ENV="sudo"
+        PKG_MANAGER_INSTALL="install"
+        PKG_MANAGER_UPDATE="update"
+        PKG_MANAGER_UPGRADE="install"
+        PKG_CHECK="apt"
+        PKG_CHECK_ARGS="show"
+        BIN_PATH="/usr/bin"
+        GIT="${BIN_PATH}/git"
+        GPG="${BIN_PATH}/gpg"
+        GPG_AGENT="${BIN_PATH}/gpg-agent"
+        GPGCONF="${BIN_PATH}/gpgconf"
+        YKMAN="${BIN_PATH}/ykman"
+        CLIP="${BIN_PATH}/xclip"
+        CLIP_ARGS="-selection clipboard -i"
+        PINENTRY="/usr/bin/pinentry-tty"
+        OPEN="xdg-open"
+        DEPS=(
+            "expect"
+            "git"
+            "gpg"
+            "pinentry-tty"
+            "python"
+            "scdaemon"
+            "yubikey-manager"
+            "xclip"
+        )
+        sudo apt-add-repository ppa:yubico/stable
+        ;;
+    arch)
+        PKG_MANAGER="pacman"
+        PKG_MANAGER_ENV="sudo"
+        PKG_MANAGER_INSTALL="-S"
+        PKG_MANAGER_UPDATE="-Sy"
+        PKG_MANAGER_UPGRADE="-S"
+        PKG_CHECK="pacman"
+        PKG_CHECK_ARGS="-Qi"
+        BIN_PATH="/usr/bin"
+        GIT="${BIN_PATH}/git"
+        GPG="${BIN_PATH}/gpg"
+        GPG_AGENT="${BIN_PATH}/gpg-agent"
+        GPGCONF="${BIN_PATH}/gpgconf"
+        YKMAN="${BIN_PATH}/ykman"
+        CLIP="${BIN_PATH}/xclip"
+        CLIP_ARGS="-selection clipboard -i"
+        PINENTRY="/usr/bin/pinentry"
+        OPEN="xdg-open"
+        # shellcheck disable=SC2034
+        DEPS=(
+            "expect"
+            "gnupg"
+            "pinentry"
+            "git"
+            "yubikey-manager"
+            "xclip"
+            "pcsclite"
+        )
+        ;;
+    *)
+        echo "Sorry, your OS is not supported"
+        exit 1
+esac
 
 # Use Homebrew binaries.
-HOMEBREW_PREFIX=$(brew --prefix)
-HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
-export GIT=$HOMEBREW_BIN/git
-export GPG=$HOMEBREW_BIN/gpg
-export GPG_AGENT=$HOMEBREW_BIN/gpg-agent
-export GPGCONF=$HOMEBREW_BIN/gpgconf
-export YKMAN=$HOMEBREW_BIN/ykman
+export PKG_MANAGER
+export PKG_MANAGER_ENV
+export PKG_MANAGER_INSTALL
+export PKG_MANAGER_UPDATE
+export PKG_MANAGER_UPGRADE
+export PKG_CHECK
+export PKG_CHECK_ARGS
+export GIT
+export GPG
+export GPG_AGENT
+export GPGCONF
+export YKMAN
+export CLIP
+export CLIP_ARGS
+export OPEN
+export PINENTRY
 
 # Colors galore.
 BOLD=$(tput bold)
@@ -23,9 +154,9 @@ export RESET
 export SSH_ENV="$HOME/.ssh/environment"
 
 # Folders and files.
-DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
-DEFAULT_GPG_AGENT_CONF=$DEFAULT_GPG_HOMEDIR/gpg-agent.conf
-DEFAULT_GPG_CONF=$DEFAULT_GPG_HOMEDIR/gpg.conf
+export DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
+export DEFAULT_GPG_AGENT_CONF=$DEFAULT_GPG_HOMEDIR/gpg-agent.conf
+export DEFAULT_GPG_CONF=$DEFAULT_GPG_HOMEDIR/gpg.conf
 
 # Functions.
 
@@ -87,3 +218,5 @@ function vercomp {
     done
     return 0
 }
+
+function join { local IFS="$1"; shift; echo "$*"; }

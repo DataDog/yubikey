@@ -36,7 +36,7 @@ echo
 
 # Export GPG public key to GitHub.
 echo "Exporting your GPG public key to GitHub."
-$GPG --armor --export "$KEYID" | pbcopy
+$GPG --armor --export "$KEYID" | $CLIP $CLIP_ARGS
 echo "It has been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
 echo "Opening GitHub..."

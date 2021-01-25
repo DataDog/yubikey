@@ -1,55 +1,55 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Stop on error.
 set -e
 
+source env.sh
+
 # https://stackoverflow.com/a/44348249
 function install_or_upgrade {
-  if brew ls --versions "$1" >/dev/null; then
-    HOMEBREW_NO_AUTO_UPDATE=1 brew upgrade "$1"
-  else
-    HOMEBREW_NO_AUTO_UPDATE=1 brew install "$1"
-  fi
+    local pkg
+    pkg="$1"
+    if "$PKG_CHECK" "$PKG_CHECK_ARGS" "$pkg" >/dev/null; then
+        eval "$PKG_MANAGER_ENV" "$PKG_MANAGER" "$PKG_MANAGER_UPGRADE" "$pkg"
+    else
+        eval "$PKG_MANAGER_ENV" "$PKG_MANAGER" "$PKG_MANAGER_INSTALL" "$pkg"
+    fi
 }
 
 function check_presence {
-  if ! which "$1" >/dev/null; then
-      echo "$1 is missing, please install it"
-      return 1
-  fi
+    local pkg
+    pkg="$1"
+    if ! "$PKG_CHECK" "$PKG_CHECK_ARGS" "$pkg" >/dev/null 2>&1; then
+        echo "$pkg is missing, please install it"
+        return 1
+    fi
 }
 
 echo "Welcome! This program will automatically generate GPG keys on your YubiKey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
 echo
 
-echo "You need to have expect, git, gnupg, pinentry-mac and ykman installed on your device."
+echo "You need to have $(join ',' "${DEPS[@]}") installed on your device."
 read -rp "Do you want us to install them for you ? (y/n)" answer
 case "$answer" in
     yes|YES|y|Y|Yes)
         # install required tools
         echo "Installing or upgrading required tools..."
-        brew update
-        install_or_upgrade expect
-        install_or_upgrade git
-        install_or_upgrade gnupg
-        install_or_upgrade pinentry-mac
-        install_or_upgrade ykman
+        eval "$PKG_MANAGER_ENV" "$PKG_MANAGER" "$PKG_MANAGER_UPDATE"
+        for pkg in "${DEPS[@]}"; do
+            install_or_upgrade "$pkg"
+        done
         ;;
     *)
         echo "Skipping install or upgrade of required tools"
-        check_presence expect
-        check_presence git
-        check_presence gpg
-        check_presence pinentry-mac
-        check_presence ykman
+        for pkg in "${DEPS[@]}"; do
+            check_presence "$pkg"
+        done
         ;;
 esac
 echo
 
-source env.sh
-
-case $(${GPG} --version | /usr/bin/head -n1 | /usr/bin/cut -d" " -f3) in
+case $(${GPG} --version | head -n1 | cut -d" " -f3) in
     2.2.23|2.2.22)
         echo "Your version of gnupg has a bug that makes $0 fail"
         echo "Bugged version are 2.2.23 and 2.2.22"
@@ -138,7 +138,7 @@ echo
 # Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering User and Admin PINs.
 GPG_AGENT_CONF=$GPG_HOMEDIR/gpg-agent.conf
 cat << EOF > "$GPG_AGENT_CONF"
-pinentry-program /usr/local/bin/pinentry-tty
+pinentry-program $PINENTRY
 EOF
 
 # Backup GPG configuration in default GPG homedir, if it exists.
@@ -209,10 +209,10 @@ echo "New User PIN: $USER_PIN"
 echo "***********************************************************"
 echo
 echo "Please save this new User PIN (copied to clipboard) immediately in your password manager."
-echo "$USER_PIN" | pbcopy
+echo "$USER_PIN" | $CLIP $CLIP_ARGS
 read -rp "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
-echo "$SERIAL" | pbcopy
+echo "$SERIAL" | $CLIP $CLIP_ARGS
 read -rp "Have you done this? "
 echo
 
@@ -224,10 +224,10 @@ echo "New Admin PIN: $ADMIN_PIN"
 echo "***********************************************************"
 echo
 echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
-echo "$ADMIN_PIN" | pbcopy
+echo "$ADMIN_PIN" | $CLIP $CLIP_ARGS
 read -rp "Have you done this? "
 echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
-echo "$SERIAL" | pbcopy
+echo "$SERIAL" | $CLIP $CLIP_ARGS
 read -rp "Have you done this? "
 echo
 
@@ -239,7 +239,7 @@ echo "Exporting your binary GPG public key to $BIN_GPG_PUBKEY"
 $GPG --homedir="$GPG_HOMEDIR" --export "$KEYID" > "$BIN_GPG_PUBKEY"
 echo "Exporting your ASCII-armored GPG public key to $ASC_GPG_PUBKEY"
 $GPG --homedir="$GPG_HOMEDIR" --armor --export "$KEYID" > "$ASC_GPG_PUBKEY"
-echo "$ASC_GPG_PUBKEY" | pbcopy
+echo "$ASC_GPG_PUBKEY" | $CLIP $CLIP_ARGS
 echo "Please save a copy in your password manager."
 read -rp "Have you done this? "
 echo "There is NO off-card backup of your private / secret keys."
@@ -249,7 +249,7 @@ echo
 
 # Ask user to save revocation certificate before deleting it.
 REVOCATION_CERT=$GPG_HOMEDIR/openpgp-revocs.d/$KEYID.rev
-echo "$REVOCATION_CERT" | pbcopy
+echo "$REVOCATION_CERT" | $CLIP $CLIP_ARGS
 echo "Your revocation certificate is at $REVOCATION_CERT"
 echo "It has been copied to your clipboard."
 echo "Please save a copy in your password manager before we delete it off disk."
@@ -257,7 +257,7 @@ read -rp "Have you done this? "
 rm "$REVOCATION_CERT"
 echo "Great. Deleted this revocation certificate from disk."
 # NOTE: EMPTY clipboard after this.
-pbcopy < /dev/null
+$CLIP $CLIP_ARGS < /dev/null
 echo
 
 # Final reminders.

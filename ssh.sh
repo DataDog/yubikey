@@ -6,7 +6,7 @@ set -e
 source env.sh
 
 function configure_shell {
-    case $(/usr/bin/basename "$SHELL") in
+    case $(basename "$SHELL") in
         bash)
             config_file="${HOME}/.bashrc"
             ;;
@@ -61,11 +61,11 @@ KEYID=$(get_keyid "$DEFAULT_GPG_HOMEDIR")
 SSH_PUBKEY=$KEYID.ssh.pub
 echo "Exporting your SSH public key to $SSH_PUBKEY"
 ssh-add -L | grep -iF 'cardno' > "$SSH_PUBKEY"
-echo "$SSH_PUBKEY" | pbcopy
+echo "$SSH_PUBKEY" | $CLIP $CLIP_ARGS
 echo "It has also been copied to your clipboard."
 echo "You may now add it to GitHub: https://github.com/settings/ssh/new"
 echo "Opening GitHub..."
-open "https://github.com/settings/ssh/new"
+$OPEN "https://github.com/settings/ssh/new"
 echo "Please save a copy in your password manager."
 read -rp "Have you done this? "
 echo "Great."
