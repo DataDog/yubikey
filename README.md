@@ -48,7 +48,7 @@ You will need macOS, [Homebrew](https://brew.sh/), a password manager, and a
 **STRONGLY recommended:** configure U2F for
 [GitHub](https://help.github.com/articles/configuring-two-factor-authentication/#configuring-two-factor-authentication-using-fido-u2f)
 and
-[Google](https://www.yubico.com/support/knowledge-base/categories/articles/how-to-use-your-yubikey-with-google/).
+[Google](https://support.yubico.com/hc/en-us/articles/360013717460-Using-Your-YubiKey-with-Google).
 
 ## GPG
 
