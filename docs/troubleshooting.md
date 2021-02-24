@@ -4,6 +4,7 @@
 - [Error with git pull/fetch or when using SSH](#error-with-git-pullfetch-or-when-using-ssh)
 - [git rebase](#git-rebase)
 - [No PyUSB backend detected](#no-pyusb-backend-detected)
+- [bash upgrade](#bash-upgrade)
 
 ## Blocked card
 
@@ -71,3 +72,15 @@ Error: No PyUSB backend detected!
 ```
 
 Hit CTRL-C to exit the script (if the script has not already exited) and [reinstall](https://github.com/Yubico/yubikey-manager/issues/185#issuecomment-446379356) `libsub`, then try again: `brew reinstall libusb`
+
+## bash upgrade
+
+If you see the following error while running `./gpg.sh`:
+
+```
+OS detected is macos
+Is it correct ? (y|N) Y
+env.sh: line 34: ${OS,,}: bad substitution
+```
+
+Run `brew install bash`. The script is using a feature not that is not supported by the old macOS bash.
