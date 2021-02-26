@@ -4,7 +4,7 @@
 - [Error with git pull/fetch or when using SSH](#error-with-git-pullfetch-or-when-using-ssh)
 - [git rebase](#git-rebase)
 - [No PyUSB backend detected](#no-pyusb-backend-detected)
-- [bash upgrade](#bash-upgrade)
+- [Bad substitution](#bad-substitution)
 
 ## Blocked card
 
@@ -73,7 +73,7 @@ Error: No PyUSB backend detected!
 
 Hit CTRL-C to exit the script (if the script has not already exited) and [reinstall](https://github.com/Yubico/yubikey-manager/issues/185#issuecomment-446379356) `libsub`, then try again: `brew reinstall libusb`
 
-## bash upgrade
+## Bad substitution
 
 If you see the following error while running `./gpg.sh`:
 
