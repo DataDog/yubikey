@@ -56,7 +56,7 @@ set COMMENT       [lindex $argv 7];
 
 # Turn off OTP.
 send_user "Turning off YubiKey OTP:\n"
-spawn ykman mode "FIDO+CCID"
+spawn ykman config mode "FIDO+CCID"
 expect {
   "Mode is already FIDO+CCID, nothing to do..." {
     expect eof
@@ -209,7 +209,7 @@ expect eof
 # Turn on touch for SIGNATURES.
 
 send_user "Now requiring you to touch your Yubikey to sign any message.\n"
-spawn ykman openpgp set-touch sig $TOUCH_POLICY
+spawn ykman openpgp keys set-touch sig $TOUCH_POLICY
 
 expect -exact "Enter admin PIN: "
 stty -echo
@@ -222,7 +222,7 @@ expect eof
 # Turn on touch for AUTHENTICATION.
 
 send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
-spawn ykman openpgp set-touch aut on
+spawn ykman openpgp keys set-touch aut on
 
 expect -exact "Enter admin PIN: "
 stty -echo
@@ -235,7 +235,7 @@ expect eof
 # Turn on touch for ENCRYPTION.
 
 send_user "Now requiring you to touch your Yubikey to encrypt any message.\n"
-spawn ykman openpgp set-touch enc on
+spawn ykman openpgp keys set-touch enc on
 
 expect -exact "Enter admin PIN: "
 stty -echo
