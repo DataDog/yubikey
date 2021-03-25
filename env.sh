@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function which_flavour {
     if [[ -f /etc/os-release ]]; then
