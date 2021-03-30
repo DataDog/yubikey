@@ -58,6 +58,8 @@ case ${OS,,} in
             "pinentry-mac"
             "ykman"
         )
+        NOTIFICATION_CMD="osascript -e 'display notification \"Git wants to sign a commit!\" with title \"Click on your Yubikey\"'\ngpg \"\$@\""
+        NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
     ubuntu|debian)
@@ -88,6 +90,8 @@ case ${OS,,} in
             "yubikey-manager"
             "xclip"
         )
+        NOTIFICATION_CMD="notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'\ngpg \"\$@\""
+        NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
         sudo apt-add-repository ppa:yubico/stable
         ;;
     arch)
@@ -118,6 +122,8 @@ case ${OS,,} in
             "xclip"
             "pcsclite"
         )
+        NOTIFICATION_CMD="notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'\ngpg \"\$@\""
+        NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
         ;;
     *)
         echo "Sorry, your OS is not supported"
@@ -141,6 +147,7 @@ export CLIP
 export CLIP_ARGS
 export OPEN
 export PINENTRY
+export NOTIFICATION_SCRIPT_PATH
 
 # Colors galore.
 BOLD=$(tput bold)
