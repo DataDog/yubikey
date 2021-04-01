@@ -16,6 +16,7 @@
 # pacifies every program I know of.  The -c flag makes the script do
 # this in the first place.  The -C flag allows you to define a
 # character to toggle this mode off and on.
+
 set force_conservative 1  ;# set to 1 to force conservative mode even if
 			  ;# script was not run conservatively originally
 if {$force_conservative} {
