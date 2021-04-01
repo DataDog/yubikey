@@ -84,3 +84,4 @@ env.sh: line 34: ${OS,,}: bad substitution
 ```
 
 Run `brew install bash`. The script is using a feature not that is not supported by the old macOS bash.
+If still does not work, run `/usr/local/bin/bash git.sh` instead.
