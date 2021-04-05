@@ -94,7 +94,8 @@ $ ./ssh.sh
 
 ## notification
 
-Script to configure an OS native notification when you need to touch your Yubikey to sign commit via GPG
+Script to configure an OS native notification when you need to touch your Yubikey to sign commit via GPG.
+![image](https://user-images.githubusercontent.com/4062883/113619875-d41f2a00-9659-11eb-9d49-e35fe7908b80.png)
 
 You **must** have first set up [Git](#git). Then:
 
