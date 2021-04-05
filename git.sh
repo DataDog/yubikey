@@ -1,4 +1,4 @@
- #!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Stop on error.
 set -e
@@ -9,10 +9,10 @@ source realname-and-email.sh
 # Determine whether to set globally or locally.
 if [[ -z "$1" ]]
 then
-    echo "Signing git commits & tags ${RED}${BOLD}GLOBALLY${RESET}"
+    echo "Signing git commits & tags ${GREEN}${BOLD}GLOBALLY${RESET}"
     SCOPE="--global"
 else
-    echo "Signing git commits & tags ${RED}${BOLD}LOCALLY${RESET}: $1"
+    echo "Signing git commits & tags ${GREEN}${BOLD}LOCALLY${RESET}: $1"
     SCOPE="--local"
     cd "$1"
 fi
@@ -38,7 +38,7 @@ echo
 echo "Exporting your GPG public key to GitHub."
 $GPG --armor --export "$KEYID" | $CLIP $CLIP_ARGS
 echo "It has been copied to your clipboard."
-echo "You may now add it to GitHub: https://github.com/settings/gpg/new"
-echo "Opening GitHub..."
+echo "${YELLOW}You may now add it to GitHub: https://github.com/settings/gpg/new${RESET}"
+echo "${GREEN}Opening GitHub...${RESET}"
 open "https://github.com/settings/gpg/new"
 echo
