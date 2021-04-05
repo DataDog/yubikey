@@ -6,6 +6,7 @@
 - [GPG](#gpg)
 - [git](#git)
 - [SSH](#ssh)
+- [Notification](#notification)
 - [Reset](#reset)
 - [Troubleshooting](#troubleshooting)
 - [Optional](#optional)
@@ -88,6 +89,17 @@ You **must** have first set up [GPG](#gpg). Then:
 
 ```bash
 $ ./ssh.sh
+```
+
+
+## notification
+
+Script to configure an OS native notification when you need to touch your Yubikey to sign commit via GPG
+
+You **must** have first set up [Git](#git). Then:
+
+```bash
+$ ./notification.sh
 ```
 
 
