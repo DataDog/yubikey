@@ -154,6 +154,14 @@ BOLD=$(tput bold)
 export BOLD
 RED=$(tput setaf 1)
 export RED
+GREEN=$(tput setaf 2)
+export GREEN
+YELLOW=$(tput setaf 3)
+export YELLOW
+BLUE=$(tput setaf 4)
+export BLUE
+MAGENTA=$(tput setaf 5)
+export MAGENTA
 RESET=$(tput sgr0) # Reset text
 export RESET
 

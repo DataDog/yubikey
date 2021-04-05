@@ -3,6 +3,7 @@
 # Stop on error.
 set -e
 
+# shellcheck disable=SC1091
 source env.sh
 
 # https://stackoverflow.com/a/44348249
@@ -25,12 +26,12 @@ function check_presence {
     fi
 }
 
-echo "Welcome! This program will automatically generate GPG keys on your YubiKey."
-echo "If you ever run into problems, just press Ctrl-C, and rerun this program again."
+echo "${GREEN}Welcome! This program will automatically generate GPG keys on your YubiKey."
+echo "If you ever run into problems, just press Ctrl-C, and rerun this program again.${RESET}"
 echo
 
-echo "You need to have $(join ',' "${DEPS[@]}") installed on your device."
-read -rp "Do you want us to install them for you ? (y/n)" answer
+echo "${YELLOW}You need to have $(join ',' "${DEPS[@]}") installed on your device."
+read -rp "Do you want us to install them for you ? (y/n)${RESET}" answer
 case "$answer" in
     yes|YES|y|Y|Yes)
         # install required tools
@@ -62,12 +63,13 @@ case $(${GPG} --version | head -n1 | cut -d" " -f3) in
 esac
 
 # Get full name and email address.
+# shellcheck disable=SC1091
 source realname-and-email.sh
 
 # Get comment to distinguish between keys.
 COMMENT="GPG on YubiKey for Datadog"
-echo "What is a comment you would like to use to distinguish this key?"
-read -rp "Comment (press Enter to accept '$COMMENT'): " input
+echo "${YELLOW}What is a comment you would like to use to distinguish this key?"
+read -rp "Comment (press Enter to accept '$COMMENT'): ${RESET}" input
 COMMENT=${input:-$COMMENT}
 echo
 
@@ -111,14 +113,15 @@ echo
 # NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
 echo "YubiKey status:"
 # NOTE: For some as yet unknown reason, we need to reload scdaemon when a brew update is done with SSH auth using GPG...
+# shellcheck disable=SC2153
 $GPGCONF --kill all
 $GPG --card-status
 echo
 
 # Reset YubiKey openPGP applet
-echo "RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
+echo "${YELLOW}RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
 $YKMAN openpgp reset
-echo
+echo "${RESET}"
 
 # Backup GPG agent configuration in default GPG homedir, if it exists.
 backup_conf "$DEFAULT_GPG_AGENT_CONF"
@@ -205,45 +208,45 @@ echo
 
 echo "The first number is the User PIN."
 echo "The User PIN is used during normal operation to authorize an action such as issuing a new GPG signature."
-echo
+echo "${GREEN}"
 echo "***********************************************************"
 echo "New User PIN: $USER_PIN"
 echo "***********************************************************"
-echo
-echo "Please save this new User PIN (copied to clipboard) immediately in your password manager."
+echo "${RESET}"
+echo "${YELLOW}Please save this new User PIN (copied to clipboard) immediately in your password manager.${RESET}"
 echo "$USER_PIN" | $CLIP $CLIP_ARGS
-read -rp "Have you done this? "
-echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
+read -rp "${YELLOW}Have you done this?${RESET}"
+echo "${YELLOW}Please also associate it with this YubiKey serial number (copied to clipboard): ${SERIAL}${RESET}"
 echo "$SERIAL" | $CLIP $CLIP_ARGS
-read -rp "Have you done this? "
+read -rp "${YELLOW}Have you done this? ${RESET}"
 echo
 
 echo "The second number is the Admin PIN."
 echo "The Admin PIN can be used to reset the PIN if it is ever lost or becomes blocked after the maximum number of incorrect attempts."
-echo
+echo "${GREEN}"
 echo "***********************************************************"
 echo "New Admin PIN: $ADMIN_PIN"
 echo "***********************************************************"
-echo
-echo "Please save this new Admin PIN (copied to clipboard) immediately in your password manager."
+echo "${RESET}"
+echo "${YELLOW}Please save this new Admin PIN (copied to clipboard) immediately in your password manager.${RESET}"
 echo "$ADMIN_PIN" | $CLIP $CLIP_ARGS
-read -rp "Have you done this? "
-echo "Please also associate it with this YubiKey serial number (copied to clipboard): $SERIAL"
+read -rp "${YELLOW}Have you done this? ${RESET}"
+echo "${YELLOW}Please also associate it with this YubiKey serial number (copied to clipboard): ${SERIAL}${RESET}"
 echo "$SERIAL" | $CLIP $CLIP_ARGS
-read -rp "Have you done this? "
+read -rp "${YELLOW}Have you done this?${RESET}"
 echo
 
 # Export GPG public key.
 KEYID=$(get_keyid "$GPG_HOMEDIR")
 BIN_GPG_PUBKEY=$KEYID.gpg.pub.bin
 ASC_GPG_PUBKEY=$KEYID.gpg.pub.asc
-echo "Exporting your binary GPG public key to $BIN_GPG_PUBKEY"
+echo "${GREEN}Exporting your binary GPG public key to ${BIN_GPG_PUBKEY}${RESET}"
 $GPG --homedir="$GPG_HOMEDIR" --export "$KEYID" > "$BIN_GPG_PUBKEY"
-echo "Exporting your ASCII-armored GPG public key to $ASC_GPG_PUBKEY"
+echo "${GREEN}Exporting your ASCII-armored GPG public key to ${ASC_GPG_PUBKEY}${RESET}"
 $GPG --homedir="$GPG_HOMEDIR" --armor --export "$KEYID" > "$ASC_GPG_PUBKEY"
 echo "$ASC_GPG_PUBKEY" | $CLIP $CLIP_ARGS
-echo "Please save a copy in your password manager."
-read -rp "Have you done this? "
+echo "${YELLOW}Please save a copy in your password manager.${RESET}"
+read -rp "${YELLOW}Have you done this? ${RESET}"
 echo "There is NO off-card backup of your private / secret keys."
 echo "So, if your YubiKey is damaged, lost, or stolen, then you must rotate your GPG keys out-of-band."
 echo "You would also no longer be able to decrypt messages encrypted for this GPG key."
@@ -252,10 +255,10 @@ echo
 # Ask user to save revocation certificate before deleting it.
 REVOCATION_CERT=$GPG_HOMEDIR/openpgp-revocs.d/$KEYID.rev
 echo "$REVOCATION_CERT" | $CLIP $CLIP_ARGS
-echo "Your revocation certificate is at $REVOCATION_CERT"
+echo "${GREEN}Your revocation certificate is at ${REVOCATION_CERT}${RESET}"
 echo "It has been copied to your clipboard."
-echo "Please save a copy in your password manager before we delete it off disk."
-read -rp "Have you done this? "
+echo "${YELLOW}Please save a copy in your password manager before we delete it off disk.${RESET}"
+read -rp "${YELLOW}Have you done this? ${RESET}"
 rm "$REVOCATION_CERT"
 echo "Great. Deleted this revocation certificate from disk."
 # NOTE: EMPTY clipboard after this.
@@ -263,10 +266,10 @@ $CLIP $CLIP_ARGS < /dev/null
 echo
 
 # Final reminders.
-echo "Finally, remember that your keys will not expire until 10 years from now."
-echo "You will need to ${RED}${BOLD}enter your User PIN (once a day)${RESET}, and ${RED}${BOLD}touch your YubiKey${RESET} in order to sign any message with this GPG key."
+echo "Finally, remember that your keys will not ${GREEN}expire until 10 years from now.${RESET}"
+echo "You will need to ${GREEN}${BOLD}enter your User PIN (once a day)${RESET}, and ${GREEN}${BOLD}touch your YubiKey${RESET} in order to sign any message with this GPG key."
 if [[ "$TOUCH_POLICY" == "on" ]]; then
-  echo "You may wish to pass the --no-gpg-sign flag to git rebase."
+  echo "${YELLOW}You may wish to pass the --no-gpg-sign flag to git rebase.${RESET}"
 else
   echo "Touch is cached for 15s on sign operations."
 fi
