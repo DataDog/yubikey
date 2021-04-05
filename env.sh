@@ -20,16 +20,6 @@ case "$OSTYPE" in
 esac
 
 echo "OS detected is $OS"
-read -rp "Is it correct ? (y|N)" input
-input=$(echo "$input" | tr "[:upper:]" "[:lower:]")
-case $input in
-    y|yes)
-        ;;
-    *)
-        echo "Exiting, if your OS is marked as supported, please open an issue"
-        echo "https://github.com/DataDog/yubikey/issues/new/choose"
-        exit 1
-esac
 
 case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
     macos)
