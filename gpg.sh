@@ -199,9 +199,12 @@ default-cache-ttl 86400
 max-cache-ttl 86400
 EOF
 
+# Sometimes on macOS, a gpg update make the yubikey detection flaky or completely impossible
+# So we enforce the scdaemon.conf configuration to detect the Yubikey as it is on macOS only
+# cf env.sh
+# https://gpgtools.tenderapp.com/discussions/problems/58454-after-updating-to-gpgtools-20171-yubikey-no-longer-functions-properly-both-in-mail-gpg2-card-edit/page/1
 cat << EOF > "$DEFAULT_GPG_SCDAEMON_CONF"
-disable-ccid
-reader-port "Yubico YubiKey FIDO+CCID"
+$SCDAEMON_CONF
 EOF
 
 # restart GPG daemons to pick up pinentry-mac
