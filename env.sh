@@ -162,6 +162,7 @@ export SSH_ENV="$HOME/.ssh/environment"
 export DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
 export DEFAULT_GPG_AGENT_CONF=$DEFAULT_GPG_HOMEDIR/gpg-agent.conf
 export DEFAULT_GPG_CONF=$DEFAULT_GPG_HOMEDIR/gpg.conf
+export DEFAULT_GPG_SCDAEMON_CONF=${DEFAULT_GPG_HOMEDIR}/scdaemon.conf
 
 # Functions.
 

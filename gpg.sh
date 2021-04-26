@@ -199,6 +199,11 @@ default-cache-ttl 86400
 max-cache-ttl 86400
 EOF
 
+cat << EOF > "$DEFAULT_GPG_SCDAEMON_CONF"
+disable-ccid
+reader-port "Yubico YubiKey FIDO+CCID"
+EOF
+
 # restart GPG daemons to pick up pinentry-mac
 $GPGCONF --kill all
 
