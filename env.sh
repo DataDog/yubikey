@@ -50,7 +50,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         )
         NOTIFICATION_CMD="osascript -e 'display notification \"Git wants to sign a commit!\" with title \"Click on your Yubikey\"'\ngpg \"\$@\""
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
-        SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)""
+        SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
     ubuntu|debian)
