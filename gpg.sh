@@ -203,9 +203,7 @@ EOF
 # So we enforce the scdaemon.conf configuration to detect the Yubikey as it is on macOS only
 # cf env.sh
 # https://gpgtools.tenderapp.com/discussions/problems/58454-after-updating-to-gpgtools-20171-yubikey-no-longer-functions-properly-both-in-mail-gpg2-card-edit/page/1
-cat << EOF > "$DEFAULT_GPG_SCDAEMON_CONF"
-$SCDAEMON_CONF
-EOF
+echo -e "$SCDAEMON_CONF" > "$DEFAULT_GPG_SCDAEMON_CONF"
 
 # restart GPG daemons to pick up pinentry-mac
 $GPGCONF --kill all
