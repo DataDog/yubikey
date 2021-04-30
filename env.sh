@@ -59,7 +59,7 @@ echo "Sign completed"
 EOF
         set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
-        SCDAEMON_CONF="disable-ccid\nreader-port \"Yubico YubiKey FIDO+CCID\""
+        SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
     ubuntu|debian)
