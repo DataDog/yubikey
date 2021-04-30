@@ -48,7 +48,16 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
             "pinentry-mac"
             "ykman"
         )
-        NOTIFICATION_CMD="osascript -e 'display notification \"Git wants to sign a commit!\" with title \"Click on your Yubikey\"'\ngpg \"\$@\""
+        set +e
+        read -r -d '' NOTIFICATION_CMD << EOF
+osascript -e 'display notification "Git wants to sign a commit!" with title "Click on your Yubikey"'
+gpg "\$@"
+if [[ "\$?" -ne 0 ]]; then
+    echo "Signing failed, exiting"
+fi
+echo "Sign completed"
+EOF
+        set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
         SCDAEMON_CONF="disable-ccid\nreader-port \"Yubico YubiKey FIDO+CCID\""
         export HOMEBREW_NO_AUTO_UPDATE=1
@@ -81,7 +90,16 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
             "yubikey-manager"
             "xclip"
         )
-        NOTIFICATION_CMD="notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'\ngpg \"\$@\""
+        set +e
+        read -r -d '' NOTIFICATION_CMD << EOF
+notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'
+gpg "\$@"
+if [[ "\$?" -ne 0 ]]; then
+    echo "Signing failed, exiting"
+fi
+echo "Sign completed"
+EOF
+        set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
         SCDAEMON_CONF=""
         sudo apt-add-repository ppa:yubico/stable
@@ -114,8 +132,16 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
             "xclip"
             "pcsclite"
         )
-        # shellcheck disable=SC2034
-        NOTIFICATION_CMD="notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'\ngpg \"\$@\""
+        set +e
+        read -r -d '' NOTIFICATION_CMD << EOF
+notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'
+gpg "\$@"
+if [[ "\$?" -ne 0 ]]; then
+    echo "Signing failed, exiting"
+fi
+echo "Sign completed"
+EOF
+        set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
         # shellcheck disable=SC2034
         SCDAEMON_CONF=""
