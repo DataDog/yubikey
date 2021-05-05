@@ -20,18 +20,8 @@ case "$OSTYPE" in
 esac
 
 echo "OS detected is $OS"
-read -rp "Is it correct ? (y|N)" input
-input=$(echo "$input" | tr "[:lower:]" "[:upper:]")
-case $input in
-    Y|YES)
-        ;;
-    *)
-        echo "Exiting, if your OS is marked as supported, please open an issue"
-        echo "https://github.com/DataDog/yubikey/issues/new/choose"
-        exit 1
-esac
 
-case ${OS,,} in
+case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
     macos)
         PKG_MANAGER="brew"
         PKG_MANAGER_ENV=""
@@ -58,8 +48,18 @@ case ${OS,,} in
             "pinentry-mac"
             "ykman"
         )
-        NOTIFICATION_CMD="osascript -e 'display notification \"Git wants to sign a commit!\" with title \"Click on your Yubikey\"'\ngpg \"\$@\""
+        set +e
+        read -r -d '' NOTIFICATION_CMD << EOF
+osascript -e 'display notification "Git wants to sign a commit!" with title "Click on your Yubikey"'
+gpg "\$@"
+if [[ "\$?" -ne 0 ]]; then
+    echo "Signing failed, exiting"
+fi
+echo "Sign completed"
+EOF
+        set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
+        SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
     ubuntu|debian)
@@ -90,8 +90,18 @@ case ${OS,,} in
             "yubikey-manager"
             "xclip"
         )
-        NOTIFICATION_CMD="notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'\ngpg \"\$@\""
+        set +e
+        read -r -d '' NOTIFICATION_CMD << EOF
+notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'
+gpg "\$@"
+if [[ "\$?" -ne 0 ]]; then
+    echo "Signing failed, exiting"
+fi
+echo "Sign completed"
+EOF
+        set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
+        SCDAEMON_CONF=""
         sudo apt-add-repository ppa:yubico/stable
         ;;
     arch)
@@ -122,8 +132,19 @@ case ${OS,,} in
             "xclip"
             "pcsclite"
         )
-        NOTIFICATION_CMD="notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'\ngpg \"\$@\""
+        set +e
+        read -r -d '' NOTIFICATION_CMD << EOF
+notify-send 'Git wants to sign a commit!' 'Click on your Yubikey'
+gpg "\$@"
+if [[ "\$?" -ne 0 ]]; then
+    echo "Signing failed, exiting"
+fi
+echo "Sign completed"
+EOF
+        set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
+        # shellcheck disable=SC2034
+        SCDAEMON_CONF=""
         ;;
     *)
         echo "Sorry, your OS is not supported"
@@ -154,6 +175,14 @@ BOLD=$(tput bold)
 export BOLD
 RED=$(tput setaf 1)
 export RED
+GREEN=$(tput setaf 2)
+export GREEN
+YELLOW=$(tput setaf 3)
+export YELLOW
+BLUE=$(tput setaf 4)
+export BLUE
+MAGENTA=$(tput setaf 5)
+export MAGENTA
 RESET=$(tput sgr0) # Reset text
 export RESET
 
@@ -164,6 +193,7 @@ export SSH_ENV="$HOME/.ssh/environment"
 export DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
 export DEFAULT_GPG_AGENT_CONF=$DEFAULT_GPG_HOMEDIR/gpg-agent.conf
 export DEFAULT_GPG_CONF=$DEFAULT_GPG_HOMEDIR/gpg.conf
+export DEFAULT_GPG_SCDAEMON_CONF=${DEFAULT_GPG_HOMEDIR}/scdaemon.conf
 
 # Functions.
 

@@ -1,4 +1,4 @@
- #!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Stop on error.
 set -e
@@ -7,14 +7,14 @@ set -e
 
 # 1. Real name.
 REALNAME=$($GIT config --global --default '' --get user.name)
-echo "What is the real name you use on GitHub?"
-read -rp "Real name (press Enter to accept '$REALNAME'): " input
+echo "${YELLOW}What is the real name you use on GitHub?"
+read -rp "Real name (press Enter to accept '$REALNAME')${RESET}: " input
 
 if [[ -z $REALNAME ]]
 then
   if [[ -z $input ]]
   then
-    echo "No name given!"
+    echo "${RED}No name given!${RESET}"
     exit 1
   else
     REALNAME=$input
@@ -33,7 +33,7 @@ fi
 REALNAME_LEN=${#REALNAME}
 if [[ $REALNAME_LEN -lt 5 ]]
 then
-  echo "Real name has $REALNAME_LEN < 5 characters!"
+  echo "${RED}Real name has $REALNAME_LEN < 5 characters!${RESET}"
   exit 2
 fi
 
@@ -41,14 +41,14 @@ echo
 
 # 2. Email address.
 EMAIL=$($GIT config --global --default '' --get user.email)
-echo "What is an email address you have registered with GitHub?"
-read -rp "Email (press Enter to accept '$EMAIL'): " input
+echo "${YELLOW}What is an email address you have registered with GitHub?"
+read -rp "Email (press Enter to accept '$EMAIL'): ${RESET}" input
 
 if [[ -z $EMAIL ]]
 then
   if [[ -z $input ]]
   then
-    echo "No email given!"
+    echo "${RED}No email given!${RESET}"
     exit 3
   else
     EMAIL=$input
