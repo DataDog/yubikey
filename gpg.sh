@@ -110,7 +110,7 @@ set -e
 echo
 
 # Sometimes on macOS, a gpg update make the yubikey detection flaky or completely impossible
-# So we enforce the scdaemon.conf configuration to detect the Yubikey as it is on macOS only
+# So we enforce the scdaemon.conf configuration to detect the YubiKey as it is on macOS only
 # cf env.sh
 # https://gpgtools.tenderapp.com/discussions/problems/58454-after-updating-to-gpgtools-20171-yubikey-no-longer-functions-properly-both-in-mail-gpg2-card-edit/page/1
 if [[ -n "$SCDAEMON_CONF" ]]; then
