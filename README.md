@@ -6,7 +6,6 @@
 - [GPG](#gpg)
 - [git](#git)
 - [SSH](#ssh)
-- [Notifications](#notifications)
 - [Reset](#reset)
 - [Troubleshooting](#troubleshooting)
 - [Optional](#optional)
@@ -90,16 +89,6 @@ You **must** have first set up [GPG](#gpg). Then:
 ```bash
 $ ./ssh.sh
 ```
-
-## Notifications
-
-Script to configure an OS-native notification when you need to touch your YubiKey to sign commit via GPG.
-![image](https://user-images.githubusercontent.com/4062883/113619875-d41f2a00-9659-11eb-9d49-e35fe7908b80.png)
-
-You **must** have first set up [Git](#git). Then:
-
-```bash
-$ ./notification.sh
 ```
 
 ## Reset

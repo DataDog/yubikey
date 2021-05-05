@@ -10,5 +10,4 @@ chmod u+x "$NOTIFICATION_SCRIPT_PATH"
 echo "${GREEN}The notification script has been deployed${RESET}"
 
 $GIT config --global --add gpg.program "$NOTIFICATION_SCRIPT_PATH"
-echo "${GREEN}The notification has been set up in git${RESET}"
-echo "${GREEN}Enjoy your YubiKey${RESET}"
+echo "${GREEN}Notifications have been set up in git${RESET}"

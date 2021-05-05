@@ -42,3 +42,7 @@ echo "${YELLOW}You may now add it to GitHub: https://github.com/settings/gpg/new
 echo "${GREEN}Opening GitHub...${RESET}"
 open "https://github.com/settings/gpg/new"
 echo
+
+# Turn on notifications.
+./notifications.sh
+echo "${GREEN}Enjoy signing your git commits with your YubiKey!${RESET}"
