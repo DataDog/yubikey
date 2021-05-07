@@ -249,9 +249,9 @@ echo
 KEYID=$(get_keyid "$GPG_HOMEDIR")
 BIN_GPG_PUBKEY=$KEYID.gpg.pub.bin
 ASC_GPG_PUBKEY=$KEYID.gpg.pub.asc
-echo "${GREEN}Exporting your binary GPG public key to ${BIN_GPG_PUBKEY}${RESET}"
+echo "${GREEN}Exporting your binary GPG public key to $(pwd)/${BIN_GPG_PUBKEY}${RESET}"
 $GPG --homedir="$GPG_HOMEDIR" --export "$KEYID" > "$BIN_GPG_PUBKEY"
-echo "${GREEN}Exporting your ASCII-armored GPG public key to ${ASC_GPG_PUBKEY}${RESET}"
+echo "${GREEN}Exporting your ASCII-armored GPG public key to $(pwd)/${ASC_GPG_PUBKEY}${RESET}"
 $GPG --homedir="$GPG_HOMEDIR" --armor --export "$KEYID" > "$ASC_GPG_PUBKEY"
 echo "$ASC_GPG_PUBKEY" | $CLIP $CLIP_ARGS
 echo "${YELLOW}Please save a copy in your password manager.${RESET}"
