@@ -44,5 +44,5 @@ open "https://github.com/settings/gpg/new"
 echo
 
 # Turn on notifications.
-source notifications.sh
+source notifications.sh $SCOPE
 echo "${GREEN}Enjoy signing your git commits with your YubiKey!${RESET}"
