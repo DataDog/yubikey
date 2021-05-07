@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-source env.sh
+# Look if the file is sourced or directly called. if not source env.sh
+# https://stackoverflow.com/questions/2683279/how-to-detect-if-a-script-is-being-sourced
+[[ $_ != $0 ]] || source env.sh
 
 set -e
 
