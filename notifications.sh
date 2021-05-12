@@ -7,7 +7,7 @@
 # Honour git.sh setting or set to --global by default
 # Besides you can specify --local when directly called
 SCOPE=${1:---global}
-echo "Notifying the signature of git commits & tags ${GREEN}${BOLD}${SCOPEi//--/}ly${RESET}"
+echo "Notifying the signature of git commits & tags ${GREEN}${BOLD}${SCOPE//--/}ly${RESET}"
 
 set -e
 
