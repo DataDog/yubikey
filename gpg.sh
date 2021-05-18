@@ -111,6 +111,7 @@ echo
 
 # Create homdir for first install
 mkdir -p "$DEFAULT_GPG_HOMEDIR"
+chmod 700 "$DEFAULT_GPG_HOMEDIR"
 
 # Sometimes on macOS, a gpg update make the yubikey detection flaky or completely impossible
 # So we enforce the scdaemon.conf configuration to detect the YubiKey as it is on macOS only
