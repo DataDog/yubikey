@@ -4,7 +4,7 @@
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
 - [Signing for different git repositories with different keys](#signing-for-different-git-repositories-with-different-keys)
-- [Configure another computer to use a configured Yubikey](#configure-another-computer-to-use-a-configured-yubikey)
+- [Configure another computer to use a configured YubiKey](#configure-another-computer-to-use-a-configured-yubikey)
 
 ## Keybase
 
@@ -198,9 +198,11 @@ With this setup, every time you do `git commit` or `git tag`, the default key
 will be used while `git dd-commit` and `git dd-tag` will use the one in the
 YubiKey.
 
-## Configure another computer to use a configured Yubikey
+## Configure another computer to use a configured YubiKey
 
 On the second computer you need to:
+
+* `gpg --import` your copy of your public key stored in your password manager.
 
 * Install pinentry-mac: `brew install pinentry-mac`
 

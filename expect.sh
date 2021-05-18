@@ -208,7 +208,7 @@ expect eof
 
 # Turn on touch for SIGNATURES.
 
-send_user "Now requiring you to touch your Yubikey to sign any message.\n"
+send_user "Now requiring you to touch your YubiKey to sign any message.\n"
 spawn ykman openpgp keys set-touch sig $TOUCH_POLICY
 
 expect -exact "Enter Admin PIN: "
@@ -221,7 +221,7 @@ expect eof
 
 # Turn on touch for AUTHENTICATION.
 
-send_user "Now requiring you to touch your Yubikey to authenticate SSH.\n"
+send_user "Now requiring you to touch your YubiKey to authenticate SSH.\n"
 spawn ykman openpgp keys set-touch aut on
 
 expect -exact "Enter Admin PIN: "
@@ -234,7 +234,7 @@ expect eof
 
 # Turn on touch for ENCRYPTION.
 
-send_user "Now requiring you to touch your Yubikey to encrypt any message.\n"
+send_user "Now requiring you to touch your YubiKey to encrypt any message.\n"
 spawn ykman openpgp keys set-touch enc on
 
 expect -exact "Enter Admin PIN: "
