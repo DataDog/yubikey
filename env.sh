@@ -102,7 +102,13 @@ EOF
         set -e
         NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
         SCDAEMON_CONF=""
-        sudo apt-add-repository ppa:yubico/stable
+	# chromeos does not follow the same ubuntu release path
+	# So only install yubico's ppa if you can't find it in the existing distro
+        dpkg -l yubikey-manager || sudo apt-add-repository ppa:yubico/stable
+        # some more chromeos specific treatment
+        if [ -d "/mnt/chromeos" ]; then
+            sudo apt install -f python3-pkg-resources
+        fi
         ;;
     arch)
         PKG_MANAGER="pacman"
