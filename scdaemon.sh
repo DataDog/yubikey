@@ -4,7 +4,7 @@
 set -e
 
 # shellcheck disable=SC1091
-source env.sh
+[[ ${BASH_SOURCE[0]} != "$0" ]] || source env.sh
 
 echo "${GREEN}Generating scdaemon.conf.${RESET}"
 
