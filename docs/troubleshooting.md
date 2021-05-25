@@ -5,6 +5,7 @@
 - [git rebase](#git-rebase)
 - [No PyUSB backend detected](#no-pyusb-backend-detected)
 - [Bad substitution](#bad-substitution)
+--[Card-not-recognized-with-perpetual-PIN-entry-prompt](#card-not-recognized-with-perpetual-pin-entry-prompt)
 
 ## Blocked card
 
@@ -85,8 +86,8 @@ env.sh: line 34: ${OS,,}: bad substitution
 
 Run `brew install bash`. The script is using a feature not that is not supported by the old macOS bash.
 
-## Key not recognized blocking code signing on PIN Entry
+## Card not recognized with perpetual PIN entry prompt
 
-This manifests as PIN Entry dialog prompting to insert the key in a perpetual loop.
+This manifests as PIN Entry dialog prompting to insert the card in a perpetual loop.
 
-Run [gpg-gen-scdaemon-conf.sh](../gpg-gen-scdaemon-conf.sh), then `killall gpg-agent`.
+Run [gpg-gen-scdaemon-conf.sh](../scdaemon.sh), then `killall gpg-agent`.
