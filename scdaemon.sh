@@ -16,3 +16,5 @@ if [[ -n "$SCDAEMON_CONF" ]]; then
     backup_conf "$DEFAULT_GPG_SCDAEMON_CONF"
     echo -e "$SCDAEMON_CONF" > "$DEFAULT_GPG_SCDAEMON_CONF"
 fi
+
+$GPGCONF --kill all
