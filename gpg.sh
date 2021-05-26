@@ -6,26 +6,6 @@ set -e
 # shellcheck disable=SC1091
 source env.sh
 
-# https://stackoverflow.com/a/44348249
-function install_or_upgrade {
-    local pkg
-    pkg="$1"
-    if "$PKG_CHECK" "$PKG_CHECK_ARGS" "$pkg" >/dev/null; then
-        eval "$PKG_MANAGER_ENV" "$PKG_MANAGER" "$PKG_MANAGER_UPGRADE" "$pkg"
-    else
-        eval "$PKG_MANAGER_ENV" "$PKG_MANAGER" "$PKG_MANAGER_INSTALL" "$pkg"
-    fi
-}
-
-function check_presence {
-    local pkg
-    pkg="$1"
-    if ! "$PKG_CHECK" "$PKG_CHECK_ARGS" "$pkg" >/dev/null 2>&1; then
-        echo "$pkg is missing, please install it"
-        return 1
-    fi
-}
-
 echo "${GREEN}Welcome! This program will automatically generate GPG keys on your YubiKey."
 echo "If you ever run into problems, just press Ctrl-C, and rerun this program again.${RESET}"
 echo
@@ -53,7 +33,7 @@ echo
 case $(${GPG} --version | head -n1 | cut -d" " -f3) in
     2.2.23|2.2.22)
         echo "Your version of gnupg has a bug that makes $0 fail"
-        echo "Bugged version are 2.2.23 and 2.2.22"
+        echo "Buggy versions are 2.2.23 and 2.2.22"
         echo "Please use version < 2.2.22 or > 2.2.23"
         echo "See https://dev.gnupg.org/T5086 for more details"
         exit 1
@@ -122,9 +102,7 @@ mkdir -p "$USER_BIN_DIR"
 # Show card information to user so they can be sure they are wiping right key
 # NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
 echo "YubiKey status:"
-# NOTE: For some as yet unknown reason, we need to reload scdaemon when a brew update is done with SSH auth using GPG...
 # shellcheck disable=SC2153
-$GPGCONF --kill all
 $GPG --card-status
 echo
 

@@ -1,10 +1,61 @@
 # Optional
 
+- [Configure another computer to use a configured YubiKey](#configure-another-computer-to-use-a-configured-yubikey)
+- [Signing for different git repositories with different keys](#signing-for-different-git-repositories-with-different-keys)
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
-- [Signing for different git repositories with different keys](#signing-for-different-git-repositories-with-different-keys)
-- [Configure another computer to use a configured YubiKey](#configure-another-computer-to-use-a-configured-yubikey)
+
+## Configure another computer to use a configured YubiKey
+
+You don't need to do anything extra if you have not set up GPG and SSH to your use YubiKey.
+
+Otherwise, you need to:
+
+1. Write your copy of your GPG public key stored in your password manager to disk.
+1. Run [`./import.sh /path/to/pubkey.asc`](../import.sh).
+
+## Signing for different git repositories with different keys
+
+The script can setup your Git installation so that all your commits and tags
+will be signed by default with the key contained in the YubiKey. We
+**strongly** recommend that you turn on this option. If you have done so,
+please stop reading here.
+
+Otherwise, one reason for declining this option may be that you wish to sign
+for different repositories with different keys. There are a few ways to handle
+this. Perhaps the simplest is to let the script assign the YubiKey to all git
+repositories, and then use `git config --local` to override `user.signingkey`
+for different repositories.
+
+Alternatively, let us say you use your personal key for open source projects,
+and the one in the YubiKey for Datadog proprietary code. One possible
+solution is to setup git aliases. First, make sure signing is turned on
+globally:
+
+```sh
+git config --global commit.gpgsign true
+git config --global tag.forceSignAnnotated true
+```
+
+Then you can tell git to use a specific key by default, depending on which one
+is the one you use the most:
+
+```sh
+git config --global user.signingkey <id_of_the_key_you_want_to_use_by_default>
+```
+
+You can alias the `commit` command to override the default key and use another
+one to sign that specific commit:
+
+```sh
+git config --global alias.dd-commit '-c user.signingkey=<id_of_the_yubikey_key> commit'
+git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag'
+```
+
+With this setup, every time you do `git commit` or `git tag`, the default key
+will be used while `git dd-commit` and `git dd-tag` will use the one in the
+YubiKey.
 
 ## Keybase
 

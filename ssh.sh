@@ -1,4 +1,4 @@
- #!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Stop on error.
 set -e
@@ -36,7 +36,7 @@ function configure_shell {
     source "${config_file}" > /dev/null 2>&1
     set -e
     if [[ "$SSH_AUTH_SOCK" != "${HOME}/.gnupg/S.gpg-agent.ssh" ]]; then
-        echo "Failed to configure SSH_AUTH_SOCK into $config_file"
+        echo "Failed to configure SSH_AUTH_SOCK in $config_file"
         exit 1
     fi
 }
@@ -72,4 +72,4 @@ echo "Great."
 echo
 echo "You will need to ${GREEN}${BOLD}enter your PIN (once a day)${RESET}, and ${GREEN}${BOLD}touch your YubiKey everytime${RESET} in order to use SSH."
 echo
-echo "Enjoy using your YubiKey at Datadog!"
+echo "Enjoy authenticating over SSH with your YubiKey at Datadog!"
