@@ -5,6 +5,7 @@
 - [git rebase](#git-rebase)
 - [No PyUSB backend detected](#no-pyusb-backend-detected)
 - [Bad substitution](#bad-substitution)
+--[Operation-not-supported-by-device-error](#operation-not-supported-by-device-error)
 
 ## Blocked card
 
@@ -84,3 +85,17 @@ env.sh: line 34: ${OS,,}: bad substitution
 ```
 
 Run `brew install bash`. The script is using a feature not that is not supported by the old macOS bash.
+
+## Operation not supported by device error
+
+This manifests as PIN Entry dialog prompting to insert the card in a perpetual loop.
+
+You may also see:
+
+```shell
+gpg --card-status
+gpg: selecting card failed: Operation not supported by device
+gpg: OpenPGP card not available: Operation not supported by device
+```
+
+Run [./scdaemon.sh](../scdaemon.sh).

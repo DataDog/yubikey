@@ -113,14 +113,8 @@ echo
 mkdir -p "$DEFAULT_GPG_HOMEDIR"
 chmod 700 "$DEFAULT_GPG_HOMEDIR"
 
-# Sometimes on macOS, a gpg update make the yubikey detection flaky or completely impossible
-# So we enforce the scdaemon.conf configuration to detect the YubiKey as it is on macOS only
-# cf env.sh
-# https://gpgtools.tenderapp.com/discussions/problems/58454-after-updating-to-gpgtools-20171-yubikey-no-longer-functions-properly-both-in-mail-gpg2-card-edit/page/1
-if [[ -n "$SCDAEMON_CONF" ]]; then
-    backup_conf "$DEFAULT_GPG_SCDAEMON_CONF"
-    echo -e "$SCDAEMON_CONF" > "$DEFAULT_GPG_SCDAEMON_CONF"
-fi
+# Update scdaemon.conf
+./scdaemon.sh
 
 # Show card information to user so they can be sure they are wiping right key
 # NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...
