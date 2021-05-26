@@ -90,4 +90,4 @@ Run `brew install bash`. The script is using a feature not that is not supported
 
 This manifests as PIN Entry dialog prompting to insert the card in a perpetual loop.
 
-Run [gpg-gen-scdaemon-conf.sh](../scdaemon.sh), then `killall gpg-agent`.
+Run [./scdaemon.sh](../scdaemon.sh).
