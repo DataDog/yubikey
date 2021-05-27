@@ -96,10 +96,20 @@ echo "YubiKey status:"
 $GPG --card-status
 echo
 
-# We don't need to ask the user about whether they want to sign their git commits with GPG,
-# because presumably they wouldn't bother running this script otherwise.
+# Import the GPG public key.
+echo "Importing your GPG public key..."
 $GPG --import "$1"
-./git.sh
+echo
+
+read -rp "${YELLOW}Do you also want to use GPG on your YubiKey to sign git commits? (y/n)${RESET}" answer
+case "$answer" in
+    yes|YES|y|Y|Yes)
+        echo "Configuring git to use GPG signing subkey..."
+        ./git.sh
+        ;;
+    *)
+        echo "Skipping signing git commits."
+esac
 echo
 
 # Authenticating over SSH with their GPG authentication subkey OTOH is a different story.
