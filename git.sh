@@ -7,6 +7,7 @@ source env.sh
 source realname-and-email.sh
 
 # Determine whether to set globally or locally.
+OLD_PWD="$(pwd)"
 if [[ -z "$1" ]]
 then
     echo "Signing git commits & tags ${GREEN}${BOLD}GLOBALLY${RESET}"
@@ -33,6 +34,7 @@ $GIT config $SCOPE user.signingkey "$KEYID"
 $GIT config $SCOPE commit.gpgsign true
 $GIT config $SCOPE tag.forceSignAnnotated true
 echo
+cd "$OLD_PWD"
 
 # Export GPG public key to GitHub.
 echo "Exporting your GPG public key to GitHub."
