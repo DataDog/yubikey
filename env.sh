@@ -34,7 +34,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
         GIT=$HOMEBREW_BIN/git
         GPG=$(which gpg)
-        GPG_AGENT=$HOMEBREW_BIN/gpg-agent
+        GPG_AGENT=$(which gpg-agent)
         GPGCONF=$(which gpgconf)
         YKMAN=$HOMEBREW_BIN/ykman
         CLIP="pbcopy"
