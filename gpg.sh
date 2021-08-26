@@ -5,42 +5,7 @@ set -e
 
 # shellcheck disable=SC1091
 source env.sh
-
-echo "${GREEN}Welcome! This program will automatically generate GPG keys on your YubiKey."
-echo "If you ever run into problems, just press Ctrl-C, and rerun this program again.${RESET}"
-echo
-
-echo "${YELLOW}You need to have $(join ',' "${DEPS[@]}") installed on your device."
-read -rp "Do you want us to install them for you ? (y/n)${RESET}" answer
-case "$answer" in
-    yes|YES|y|Y|Yes)
-        # install required tools
-        echo "Installing or upgrading required tools..."
-        eval "$PKG_MANAGER_ENV" "$PKG_MANAGER" "$PKG_MANAGER_UPDATE"
-        for pkg in "${DEPS[@]}"; do
-            install_or_upgrade "$pkg"
-        done
-        ;;
-    *)
-        echo "Skipping install or upgrade of required tools"
-        for pkg in "${DEPS[@]}"; do
-            check_presence "$pkg"
-        done
-        ;;
-esac
-echo
-
-case $(${GPG} --version | head -n1 | cut -d" " -f3) in
-    2.2.23|2.2.22)
-        echo "Your version of gnupg has a bug that makes $0 fail"
-        echo "Buggy versions are 2.2.23 and 2.2.22"
-        echo "Please use version < 2.2.22 or > 2.2.23"
-        echo "See https://dev.gnupg.org/T5086 for more details"
-        exit 1
-        ;;
-    *)
-        ;;
-esac
+source lib/install.sh
 
 # Get full name and email address.
 # shellcheck disable=SC1091
@@ -89,9 +54,7 @@ fi
 set -e
 echo
 
-# Create homdir for first install
-mkdir -p "$DEFAULT_GPG_HOMEDIR"
-chmod 700 "$DEFAULT_GPG_HOMEDIR"
+source lib/tree.sh
 
 # Create a bin directory where user has write access
 mkdir -p "$USER_BIN_DIR"
@@ -111,9 +74,6 @@ echo "${YELLOW}RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
 $YKMAN openpgp reset
 echo "${RESET}"
 
-# Backup GPG agent configuration in default GPG homedir, if it exists.
-backup_conf "$DEFAULT_GPG_AGENT_CONF"
-
 # Figure out whether we need to write GPG keys to a tempdir.
 # This is useful when you need to generate keys for someone else w/o adding to your own keystore.
 if [[ -z "$TEMPDIR" ]]
@@ -132,36 +92,7 @@ cat << EOF > "$GPG_AGENT_CONF"
 pinentry-program $PINENTRY
 EOF
 
-# Backup GPG configuration in default GPG homedir, if it exists.
-backup_conf "$DEFAULT_GPG_CONF"
-
-# https://csrc.nist.rip/groups/STM/cmvp/documents/140-1/140crt/140crt1130.pdf
-# https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-131Ar2.pdf
-# Specify crypto algorithms that will be used
-# Note: the goal is to favor algorithms:
-# - without known vulnerabilties
-# - with a long key and block sizes
-GPG_CONF=$GPG_HOMEDIR/gpg.conf
-cat << EOF > "$GPG_CONF"
-disable-pubkey-algo ELG
-disable-pubkey-algo DSA
-
-disable-cipher-algo 3DES
-disable-cipher-algo BLOWFISH
-disable-cipher-algo CAMELLIA256
-disable-cipher-algo CAMELLIA128
-disable-cipher-algo CAMELLIA192
-disable-cipher-algo CAST5
-disable-cipher-algo IDEA
-disable-cipher-algo TWOFISH
-
-personal-cipher-preferences AES256 AES192 AES
-personal-digest-preferences SHA512 SHA384 SHA256 SHA224
-personal-compress-preferences BZIP2 ZLIB ZIP Uncompressed
-
-default-preference-list AES256 AES192 AES SHA512 SHA384 SHA256 SHA224 BZIP2 ZLIB ZIP Uncompressed
-EOF
-
+source lib/gpg_conf.sh
 # force locale to prevent expect script from breaking on non-english systems.
 old_locale="${LC_ALL}"
 export LC_ALL=en_US.UTF-8
@@ -177,15 +108,7 @@ echo
 # restore initial locale value
 export LC_ALL="${old_locale}"
 
-# Overwrite default GPG agent configuration with our own.
-# We want to replace the pinentry-tty with the pinentry-mac.
-cat << EOF > "$DEFAULT_GPG_AGENT_CONF"
-# https://www.gnupg.org/documentation/manuals/gnupg/Agent-Options.html
-pinentry-program $HOMEBREW_BIN/pinentry-mac
-# For usability while balancing security, cache User PIN for at most a day.
-default-cache-ttl 86400
-max-cache-ttl 86400
-EOF
+source lib/gpg_agent_conf.sh
 
 # restart GPG daemons to pick up pinentry-mac
 $GPGCONF --kill all
