@@ -5,7 +5,8 @@
 - [git rebase](#git-rebase)
 - [No PyUSB backend detected](#no-pyusb-backend-detected)
 - [Bad substitution](#bad-substitution)
---[Operation-not-supported-by-device-error](#operation-not-supported-by-device-error)
+- [Operation-not-supported-by-device-error](#operation-not-supported-by-device-error)
+- [Please insert the card with serial number](#please-insert-the-card-with-serial-number)
 
 ## Blocked card
 
@@ -99,3 +100,52 @@ gpg: OpenPGP card not available: Operation not supported by device
 ```
 
 Run [./scdaemon.sh](../scdaemon.sh).
+
+## Please insert the card with serial number
+
+This happens when the card is inserted, then you try to make a commit, but it can't be signed.
+
+You may get a system popup that says something like this:
+
+```
+Please insert the card with serial number:
+00 000 000
+```
+
+Where `00 000 000` is the serial number of your security card. 
+
+**Solution**
+
+First, you have to make sure that the card is recognized by your computer. 
+For doing so:
+
+Plug the card and then type `gpg --card-edit` on the terminal.
+If the card is detected, you'll see something like:
+
+```
+Serial number ....: 00000000
+```
+
+Make sure that the number that appeared in the popup matches this one.
+
+Also take note about the signature key that looks like this:
+```
+Signature key: ABCD 1234 ABCD 1234  ABCD 1234 ABCD 1234
+```
+
+If you remove the whitespaces, it should match the signature that git 
+is using for signing the commits (use `git config --global user.signingkey` 
+for getting the key). But in this case, it may look different:
+
+```
+$ git config --global user.signingkey
+XYZZ0000XYZZ0000XYZZ0000XYZZ0000
+```
+
+If the numbers don't match, as shown above, then assign the signature key 
+that you got from the `gpg --card-edit` command without whitespaces.
+
+```
+git config --global user.signingkey ABCD1234ABCD1234ABCD1234ABCD1234
+```
+
