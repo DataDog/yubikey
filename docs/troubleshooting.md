@@ -98,4 +98,4 @@ gpg: selecting card failed: Operation not supported by device
 gpg: OpenPGP card not available: Operation not supported by device
 ```
 
-Run [./scdaemon.sh](../scdaemon.sh).
+Run [./lib/scdaemon.sh](../lib/scdaemon.sh).

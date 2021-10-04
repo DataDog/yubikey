@@ -60,7 +60,7 @@ source lib/tree.sh
 mkdir -p "$USER_BIN_DIR"
 
 # Update scdaemon.conf
-./scdaemon.sh
+source lib/scdaemon.sh
 
 # Show card information to user so they can be sure they are wiping right key
 # NOTE: explicitly check against default GPG homedir to make sure we are not wiping something critical...

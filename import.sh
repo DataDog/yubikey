@@ -23,7 +23,7 @@ source lib/gpg_conf.sh
 source lib/gpg_agent_conf.sh
 
 # Configure scdaemon.
-./scdaemon.sh
+source lib/scdaemon.sh
 echo "YubiKey status:"
 $GPG --card-status
 echo
@@ -40,7 +40,7 @@ read -rp "${YELLOW}Do you also want to use GPG on your YubiKey to sign git commi
 case "$answer" in
     yes|YES|y|Y|Yes)
         echo "Configuring git to use GPG signing subkey..."
-        ./git.sh
+        source lib/git_conf.sh
         ;;
     *)
         echo "Skipping signing git commits."
@@ -52,7 +52,7 @@ read -rp "${YELLOW}Do you also want to use GPG on your YubiKey to authenticate o
 case "$answer" in
     yes|YES|y|Y|Yes)
         echo "Configuring SSH to use GPG authentication subkey..."
-        ./ssh.sh
+        source lib/ssh_conf.sh
         ;;
     *)
         echo "Skipping using GPG authentication subkey for SSH."
