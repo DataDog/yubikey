@@ -209,7 +209,7 @@ On the second computer you need to:
 * Add the following in your `~/.gnupg/gpg-agent.conf`:
 
 ```
-pinentry-program /usr/local/bin/pinentry-mac
+pinentry-program "$HOMEBREW_BIN/pinentry-mac"
 enable-ssh-support
 ```
 

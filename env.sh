@@ -39,7 +39,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         YKMAN=$HOMEBREW_BIN/ykman
         CLIP="pbcopy"
         CLIP_ARGS=""
-        PINENTRY="/usr/local/bin/pinentry-tty"
+        PINENTRY="$HOMEBREW_BIN/bin/pinentry-tty"
         OPEN="open"
         DEPS=(
             "expect"
@@ -58,7 +58,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="$HOMEBREW_BIN/yubinotif"
         SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
