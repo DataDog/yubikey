@@ -206,10 +206,10 @@ On the second computer you need to:
 
 * Install pinentry-mac: `brew install pinentry-mac`
 
-* Add the following in your `~/.gnupg/gpg-agent.conf`:
+* Add the following in your `~/.gnupg/gpg-agent.conf`, substituting homebrew_path with the output of $(brew --prefix):
 
 ```
-pinentry-program "$HOMEBREW_BIN/pinentry-mac"
+pinentry-program {{ homebrew_path }}/bin/pinentry-mac
 enable-ssh-support
 ```
 
