@@ -50,7 +50,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         )
         set +e
         read -r -d '' NOTIFICATION_CMD << EOF
-osascript -e 'display notification "git wants to sign a commit!" with title "Touch your YubiKey after submitting the pin"'
+osascript -e 'display notification "git wants to sign a commit!" with title "Touch your YubiKey after submitting the User PIN"'
 gpg "\$@"
 if [[ "\$?" -ne 0 ]]; then
     echo "Signing failed, exiting"
@@ -92,7 +92,7 @@ EOF
         )
         set +e
         read -r -d '' NOTIFICATION_CMD << EOF
-notify-send 'git wants to sign a commit!' 'Touch your YubiKey after submitting the pin'
+notify-send 'git wants to sign a commit!' 'Touch your YubiKey after submitting the User PIN'
 gpg "\$@"
 if [[ "\$?" -ne 0 ]]; then
     echo "Signing failed, exiting"
@@ -134,7 +134,7 @@ EOF
         )
         set +e
         read -r -d '' NOTIFICATION_CMD << EOF
-notify-send 'git wants to sign a commit!' 'Touch your YubiKey after submitting the pin'
+notify-send 'git wants to sign a commit!' 'Touch your YubiKey after submitting the User PIN'
 gpg "\$@"
 if [[ "\$?" -ne 0 ]]; then
     echo "Signing failed, exiting"
