@@ -206,11 +206,13 @@ On the second computer you need to:
 
 * Install pinentry-mac: `brew install pinentry-mac`
 
-* Add the following in your `~/.gnupg/gpg-agent.conf`:
+* Update your gpg agent configuration
 
 ```
-pinentry-program /usr/local/bin/pinentry-mac
+cat << EOF >> ~/.gnupg/gpg-agent.conf
+pinentry-program $(brew --prefix)/bin/pinentry-mac
 enable-ssh-support
+EOF
 ```
 
 * Add the following in your RC configuration (works with `bash` and `zsh`, if you use another shell like `fish`, you will need to adapt it):

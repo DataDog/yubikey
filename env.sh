@@ -39,7 +39,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         YKMAN=$HOMEBREW_BIN/ykman
         CLIP="pbcopy"
         CLIP_ARGS=""
-        PINENTRY="/usr/local/bin/pinentry-tty"
+        PINENTRY="$HOMEBREW_BIN/pinentry-tty"
         OPEN="open"
         DEPS=(
             "expect"
