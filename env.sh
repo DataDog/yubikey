@@ -58,7 +58,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${HOMEBREW_BIN}/yubinotif"
         SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
@@ -100,7 +100,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${HOMEBREW_BIN}/yubinotif"
         SCDAEMON_CONF=""
         sudo apt-add-repository ppa:yubico/stable
         ;;
@@ -142,7 +142,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="/usr/local/bin/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${HOMEBREW_BIN}/yubinotif"
         # shellcheck disable=SC2034
         SCDAEMON_CONF=""
         ;;
