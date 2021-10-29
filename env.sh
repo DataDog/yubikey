@@ -58,7 +58,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="${HOMEBREW_BIN}/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${DEFAULT_USER_BIN_DIR}/yubinotif"
         SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
@@ -100,7 +100,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="${HOMEBREW_BIN}/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${DEFAULT_USER_BIN_DIR}/yubinotif"
         SCDAEMON_CONF=""
         sudo apt-add-repository ppa:yubico/stable
         ;;
@@ -142,7 +142,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="${HOMEBREW_BIN}/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${DEFAULT_USER_BIN_DIR}/yubinotif"
         # shellcheck disable=SC2034
         SCDAEMON_CONF=""
         ;;
@@ -194,6 +194,7 @@ export DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
 export DEFAULT_GPG_AGENT_CONF=$DEFAULT_GPG_HOMEDIR/gpg-agent.conf
 export DEFAULT_GPG_CONF=$DEFAULT_GPG_HOMEDIR/gpg.conf
 export DEFAULT_GPG_SCDAEMON_CONF=${DEFAULT_GPG_HOMEDIR}/scdaemon.conf
+export DEFAULT_USER_BIN_DIR=${HOME}/bin
 
 # Functions.
 
