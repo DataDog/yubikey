@@ -32,6 +32,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         PKG_CHECK_ARGS="list"
         HOMEBREW_PREFIX=$(brew --prefix)
         HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
+        USER_BIN_DIR=${HOME}/bin
         GIT=$HOMEBREW_BIN/git
         GPG=$HOMEBREW_BIN/gpg
         GPG_AGENT=$HOMEBREW_BIN/gpg-agent
@@ -58,7 +59,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="${DEFAULT_USER_BIN_DIR}/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${USER_BIN_DIR}/yubinotif"
         SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
         ;;
@@ -71,6 +72,7 @@ EOF
         PKG_CHECK="apt"
         PKG_CHECK_ARGS="show"
         BIN_PATH="/usr/bin"
+        USER_BIN_DIR=${HOME}/bin
         GIT="${BIN_PATH}/git"
         GPG="${BIN_PATH}/gpg"
         GPG_AGENT="${BIN_PATH}/gpg-agent"
@@ -100,7 +102,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="${DEFAULT_USER_BIN_DIR}/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${USER_BIN_DIR}/yubinotif"
         SCDAEMON_CONF=""
         sudo apt-add-repository ppa:yubico/stable
         ;;
@@ -113,6 +115,7 @@ EOF
         PKG_CHECK="pacman"
         PKG_CHECK_ARGS="-Qi"
         BIN_PATH="/usr/bin"
+        USER_BIN_DIR=${HOME}/bin
         GIT="${BIN_PATH}/git"
         GPG="${BIN_PATH}/gpg"
         GPG_AGENT="${BIN_PATH}/gpg-agent"
@@ -142,7 +145,7 @@ fi
 echo "Sign completed"
 EOF
         set -e
-        NOTIFICATION_SCRIPT_PATH="${DEFAULT_USER_BIN_DIR}/yubinotif"
+        NOTIFICATION_SCRIPT_PATH="${USER_BIN_DIR}/yubinotif"
         # shellcheck disable=SC2034
         SCDAEMON_CONF=""
         ;;
@@ -169,6 +172,7 @@ export CLIP_ARGS
 export OPEN
 export PINENTRY
 export NOTIFICATION_SCRIPT_PATH
+export USER_BIN_DIR
 
 # Colors galore.
 BOLD=$(tput bold)
@@ -194,7 +198,6 @@ export DEFAULT_GPG_HOMEDIR=$HOME/.gnupg
 export DEFAULT_GPG_AGENT_CONF=$DEFAULT_GPG_HOMEDIR/gpg-agent.conf
 export DEFAULT_GPG_CONF=$DEFAULT_GPG_HOMEDIR/gpg.conf
 export DEFAULT_GPG_SCDAEMON_CONF=${DEFAULT_GPG_HOMEDIR}/scdaemon.conf
-export DEFAULT_USER_BIN_DIR=${HOME}/bin
 
 # Functions.
 

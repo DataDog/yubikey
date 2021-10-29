@@ -114,7 +114,7 @@ mkdir -p "$DEFAULT_GPG_HOMEDIR"
 chmod 700 "$DEFAULT_GPG_HOMEDIR"
 
 # Create a bin directory where user has write access
-mkdir -p "$DEFAULT_USER_BIN_DIR"
+mkdir -p "$USER_BIN_DIR"
 
 # Update scdaemon.conf
 ./scdaemon.sh
