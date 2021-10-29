@@ -89,7 +89,6 @@ You **must** have first set up [GPG](#gpg). Then:
 ```bash
 $ ./ssh.sh
 ```
-```
 
 ## Reset
 
