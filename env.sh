@@ -32,7 +32,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         PKG_CHECK_ARGS="list"
         HOMEBREW_PREFIX=$(brew --prefix)
         HOMEBREW_BIN=$HOMEBREW_PREFIX/bin
-        USER_BIN_DIR=${HOME}/bin
+        USER_BIN_DIR=${HOME}/.local/bin
         GIT=$HOMEBREW_BIN/git
         GPG=$HOMEBREW_BIN/gpg
         GPG_AGENT=$HOMEBREW_BIN/gpg-agent
@@ -72,7 +72,7 @@ EOF
         PKG_CHECK="apt"
         PKG_CHECK_ARGS="show"
         BIN_PATH="/usr/bin"
-        USER_BIN_DIR=${HOME}/bin
+        USER_BIN_DIR=${HOME}/.local/bin
         GIT="${BIN_PATH}/git"
         GPG="${BIN_PATH}/gpg"
         GPG_AGENT="${BIN_PATH}/gpg-agent"
@@ -115,7 +115,7 @@ EOF
         PKG_CHECK="pacman"
         PKG_CHECK_ARGS="-Qi"
         BIN_PATH="/usr/bin"
-        USER_BIN_DIR=${HOME}/bin
+        USER_BIN_DIR=${HOME}/.local/bin
         GIT="${BIN_PATH}/git"
         GPG="${BIN_PATH}/gpg"
         GPG_AGENT="${BIN_PATH}/gpg-agent"
