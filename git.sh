@@ -42,7 +42,7 @@ $GPG --armor --export "$KEYID" | $CLIP $CLIP_ARGS
 echo "It has been copied to your clipboard."
 echo "${YELLOW}You may now add it to GitHub: https://github.com/settings/gpg/new${RESET}"
 echo "${GREEN}Opening GitHub...${RESET}"
-open "https://github.com/settings/gpg/new"
+$OPEN "https://github.com/settings/gpg/new"
 echo
 
 # Turn on notifications.
