@@ -40,7 +40,8 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         YKMAN=$HOMEBREW_BIN/ykman
         CLIP="pbcopy"
         CLIP_ARGS=""
-        PINENTRY="$HOMEBREW_BIN/pinentry-tty"
+        PINENTRY_SETUP="${HOMEBREW_BIN}/pinentry-tty"
+        PINENTRY="${HOMEBREW_BIN}/pinentry-mac"
         OPEN="open"
         DEPS=(
             "expect"
@@ -80,7 +81,8 @@ EOF
         YKMAN="${BIN_PATH}/ykman"
         CLIP="${BIN_PATH}/xclip"
         CLIP_ARGS="-selection clipboard -i"
-        PINENTRY="/usr/bin/pinentry-tty"
+        PINENTRY_SETUP="/usr/bin/pinentry-tty"
+        PINENTRY="/usr/bin/pinentry-gnome3"
         OPEN="xdg-open"
         DEPS=(
             "expect"
@@ -123,6 +125,7 @@ EOF
         YKMAN="${BIN_PATH}/ykman"
         CLIP="${BIN_PATH}/xclip"
         CLIP_ARGS="-selection clipboard -i"
+        PINENTRY_SETUP="/usr/bin/pinentry"
         PINENTRY="/usr/bin/pinentry"
         OPEN="xdg-open"
         # shellcheck disable=SC2034
@@ -170,6 +173,7 @@ export YKMAN
 export CLIP
 export CLIP_ARGS
 export OPEN
+export PINENTRY_SETUP
 export PINENTRY
 export NOTIFICATION_SCRIPT_PATH
 export USER_BIN_DIR

@@ -89,7 +89,7 @@ echo
 # Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering User and Admin PINs.
 GPG_AGENT_CONF=$GPG_HOMEDIR/gpg-agent.conf
 cat << EOF > "$GPG_AGENT_CONF"
-pinentry-program $PINENTRY
+pinentry-program $PINENTRY_SETUP
 EOF
 
 source lib/gpg_conf.sh
