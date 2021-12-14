@@ -13,7 +13,7 @@ You don't need to do anything extra if you have not set up GPG and SSH to your u
 Otherwise, you need to:
 
 1. Write your copy of your GPG public key stored in your password manager to disk.
-1. Run [`./import.sh /path/to/pubkey.asc`](../import.sh).
+2. Run [`./import.sh -p /path/to/pubkey.asc -i key_id`](../import.sh).
 
 ## Signing for different git repositories with different keys
 
@@ -248,39 +248,3 @@ git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag
 With this setup, every time you do `git commit` or `git tag`, the default key
 will be used while `git dd-commit` and `git dd-tag` will use the one in the
 YubiKey.
-
-## Configure another computer to use a configured YubiKey
-
-On the second computer you need to:
-
-* `gpg --import` your copy of your public key stored in your password manager.
-
-* Install pinentry-mac: `brew install pinentry-mac`
-
-* Update your gpg agent configuration
-
-```
-cat << EOF >> ~/.gnupg/gpg-agent.conf
-pinentry-program $(brew --prefix)/bin/pinentry-mac
-enable-ssh-support
-EOF
-```
-
-* Add the following in your RC configuration (works with `bash` and `zsh`, if you use another shell like `fish`, you will need to adapt it):
-
-```
-gpgconf --launch gpg-agent
-export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
-```
-
-* Add the following to your `~/.gitconfig` (you can copy paste from the one the script set up for you):
-```
-[user]
-	email = YOUR EMAIL
-	name = YOUR NAME
-	signingkey = YOUR KEY ID
-[commit]
-	gpgsign = true
-[tag]
-	forceSignAnnotated = true
-```
