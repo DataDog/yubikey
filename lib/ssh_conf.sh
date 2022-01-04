@@ -27,7 +27,7 @@ function configure_shell {
         echo "$RC_SSH_CONF" >> "$config_file"
     fi
     eval "$RC_SSH_CONF"
-    if [[ "$SSH_AUTH_SOCK" != "${HOME}/.gnupg/S.gpg-agent.ssh" ]]; then
+    if [[ "$SSH_AUTH_SOCK" != "$($GPGCONF --list-dirs agent-ssh-socket)" ]]; then
         echo "Failed to configure SSH_AUTH_SOCK in $config_file"
         exit 1
     fi
