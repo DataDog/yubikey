@@ -13,13 +13,15 @@ You don't need to do anything extra if you have not set up GPG and SSH to your u
 Otherwise, you need to:
 
 1. Get a copy of your Yubikey GPG public key, this should be backed up in your 1password personal vault
-2. Get the Yubikey GPG key ID by running `gpg --list-keys`, in the following example the key ID is `4E09860E71D948019BD426D5D099A306DBECDF1B`
-3. Write your copy of your GPG public key stored in your password manager to disk.
-4. Run [`./import.sh -p /path/to/pubkey.asc -i key_id`](../import.sh).
-5. You will be prompted several times:
-  1. for installing dependencies, type yes, and press enter
-  2. to know if you want to configure the Yubikey GPG key for commit signing, type yes or no, and press enter
-  3. to know if you want to configure the Yubikey SSH key for SSH connections, type yes or no, and press enter
+2. Get the Yubikey GPG key ID by running `gpg --list-keys`, in the following example the key ID is `4E09860E71D948019BD426D5D099A306DBECDF1B`  
+![image](https://user-images.githubusercontent.com/4062883/148108677-ab3a04b4-8ef6-4ba0-b78e-ec9c127857e3.png)
+
+4. Write your copy of your GPG public key stored in your password manager to disk.
+5. Run [`./import.sh -p /path/to/pubkey.asc -i key_id`](../import.sh).
+6. You will be prompted several times:
+    1. for installing dependencies, type yes, and press enter
+    2. to know if you want to configure the Yubikey GPG key for commit signing, type yes or no, and press enter
+    3. to know if you want to configure the Yubikey SSH key for SSH connections, type yes or no, and press enter
 
 ## Signing for different git repositories with different keys
 
