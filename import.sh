@@ -88,6 +88,7 @@ read -rp "${YELLOW}Do you also want to use GPG on your YubiKey to sign git commi
 case "$answer" in
     yes|YES|y|Y|Yes)
         echo "Configuring git to use GPG signing subkey..."
+        export SCOPE="--global"
         source lib/git_conf.sh
         ;;
     *)

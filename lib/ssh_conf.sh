@@ -20,16 +20,13 @@ function configure_shell {
     echo "$config_file_basename detected"
     if ! grep -q "gpg-agent.ssh" "$config_file"; then
         if [[ "$config_file_basename" == "config.fish" ]]; then
-            echo "set -gx SSH_AUTH_SOCK ${HOME}/.gnupg/S.gpg-agent.ssh" >> "${config_file}"
+            RC_SSH_CONF="set -gx SSH_AUTH_SOCK \${HOME}/.gnupg/S.gpg-agent.ssh"
         else
-            echo "export \"SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh\"" >> "${config_file}"
+            RC_SSH_CONF="export SSH_AUTH_SOCK=\${HOME}/.gnupg/S.gpg-agent.ssh"
         fi
     fi
-    # put set +e before sourcing the rc file just in case people have things that return 1 in it
-    set +e
-    # shellcheck disable=SC1090
-    source "${config_file}" > /dev/null 2>&1
-    set -e
+    echo "$RC_SSH_CONF" >> "$config_file"
+    eval "$RC_SSH_CONF"
     if [[ "$SSH_AUTH_SOCK" != "${HOME}/.gnupg/S.gpg-agent.ssh" ]]; then
         echo "Failed to configure SSH_AUTH_SOCK in $config_file"
         exit 1
@@ -44,10 +41,12 @@ fi
 # support added above) to maximize odds of picking up SSH key.
 killall ssh-agent || echo "ssh-agent was not running."
 $GPGCONF --kill all
+# put set +e before trying running the gpg agent as it can be already running according to the OS and return != 0
+set +e
 $GPG_AGENT --daemon
+set -e
 if [[ -f "$SSH_ENV" ]]; then
     rm -f "$SSH_ENV"
 fi
 
 configure_shell
-

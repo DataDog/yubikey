@@ -16,6 +16,7 @@ else
     echo "Signing git commits & tags ${GREEN}${BOLD}LOCALLY${RESET}: $1"
     SCOPE="--local"
     cd "$1"
+fi
 
 
 source lib/git_conf.sh
