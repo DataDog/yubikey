@@ -75,6 +75,7 @@ source lib/gpg_agent_conf.sh
 # Configure scdaemon.
 source lib/scdaemon.sh
 echo "YubiKey status:"
+# https://security.stackexchange.com/questions/108190/export-secret-key-after-yubikey-is-plugged-in
 $GPG --card-status
 echo
 
