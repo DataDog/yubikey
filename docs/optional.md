@@ -1,10 +1,69 @@
 # Optional
 
+- [Configure another computer to use a configured YubiKey](#configure-another-computer-to-use-a-configured-yubikey)
+- [Signing for different git repositories with different keys](#signing-for-different-git-repositories-with-different-keys)
 - [Keybase](#keybase)
 - [VMware Fusion](#vmware-fusion)
 - [Docker Content Trust](#docker-content-trust)
-- [Signing for different git repositories with different keys](#signing-for-different-git-repositories-with-different-keys)
-- [Configure another computer to use a configured YubiKey](#configure-another-computer-to-use-a-configured-yubikey)
+
+## Configure another computer to use a configured YubiKey
+
+You don't need to do anything extra if you have not set up GPG and SSH to your use YubiKey.
+
+Otherwise, you need to:
+
+1. Get a copy of your Yubikey GPG public key, this should have been backed up in your password manager
+2. Get the Yubikey GPG key ID by running `gpg --list-keys`, in the following example the key ID is `4E09860E71D948019BD426D5D099A306DBECDF1B`  
+![image](https://user-images.githubusercontent.com/4062883/148108677-ab3a04b4-8ef6-4ba0-b78e-ec9c127857e3.png)
+
+4. Write your copy of your GPG public key stored in your password manager to disk.
+5. Run [`./import.sh -p /path/to/pubkey.asc -i key_id`](../import.sh).
+6. You will be prompted several times:
+    1. To install dependencies (required), type yes, and press enter
+    2. To configure the Yubikey GPG key for commit signing (or not), type yes or no, and press enter
+    3. To use the Yubikey GPG key for SSH connections (or not), type yes or no, and press enter
+
+## Signing for different git repositories with different keys
+
+The script can setup your Git installation so that all your commits and tags
+will be signed by default with the key contained in the YubiKey. We
+**strongly** recommend that you turn on this option. If you have done so,
+please stop reading here.
+
+Otherwise, one reason for declining this option may be that you wish to sign
+for different repositories with different keys. There are a few ways to handle
+this. Perhaps the simplest is to let the script assign the YubiKey to all git
+repositories, and then use `git config --local` to override `user.signingkey`
+for different repositories.
+
+Alternatively, let us say you use your personal key for open source projects,
+and the one in the YubiKey for Datadog proprietary code. One possible
+solution is to setup git aliases. First, make sure signing is turned on
+globally:
+
+```sh
+git config --global commit.gpgsign true
+git config --global tag.forceSignAnnotated true
+```
+
+Then you can tell git to use a specific key by default, depending on which one
+is the one you use the most:
+
+```sh
+git config --global user.signingkey <id_of_the_key_you_want_to_use_by_default>
+```
+
+You can alias the `commit` command to override the default key and use another
+one to sign that specific commit:
+
+```sh
+git config --global alias.dd-commit '-c user.signingkey=<id_of_the_yubikey_key> commit'
+git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag'
+```
+
+With this setup, every time you do `git commit` or `git tag`, the default key
+will be used while `git dd-commit` and `git dd-tag` will use the one in the
+YubiKey.
 
 ## Keybase
 
@@ -197,39 +256,3 @@ git config --global alias.dd-tag '-c user.signingkey=<id_of_the_yubikey_key> tag
 With this setup, every time you do `git commit` or `git tag`, the default key
 will be used while `git dd-commit` and `git dd-tag` will use the one in the
 YubiKey.
-
-## Configure another computer to use a configured YubiKey
-
-On the second computer you need to:
-
-* `gpg --import` your copy of your public key stored in your password manager.
-
-* Install pinentry-mac: `brew install pinentry-mac`
-
-* Update your gpg agent configuration
-
-```
-cat << EOF >> ~/.gnupg/gpg-agent.conf
-pinentry-program $(brew --prefix)/bin/pinentry-mac
-enable-ssh-support
-EOF
-```
-
-* Add the following in your RC configuration (works with `bash` and `zsh`, if you use another shell like `fish`, you will need to adapt it):
-
-```
-gpgconf --launch gpg-agent
-export "SSH_AUTH_SOCK=${HOME}/.gnupg/S.gpg-agent.ssh"
-```
-
-* Add the following to your `~/.gitconfig` (you can copy paste from the one the script set up for you):
-```
-[user]
-	email = YOUR EMAIL
-	name = YOUR NAME
-	signingkey = YOUR KEY ID
-[commit]
-	gpgsign = true
-[tag]
-	forceSignAnnotated = true
-```

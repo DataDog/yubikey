@@ -52,6 +52,7 @@ select serial in all $yubikeys cancel; do
             echo "Cancelled"
             break
             ;;
+        # https://www.linuxjournal.com/content/bash-extended-globbing
         +([0-9]))
             confirm "Are you sure you want to reset $serial ? yes/no" || exit 0
             echo "Reset $serial"

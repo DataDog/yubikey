@@ -5,7 +5,7 @@
 - [git rebase](#git-rebase)
 - [No PyUSB backend detected](#no-pyusb-backend-detected)
 - [Bad substitution](#bad-substitution)
---[Operation-not-supported-by-device-error](#operation-not-supported-by-device-error)
+- [Operation-not-supported-by-device-error](#operation-not-supported-by-device-error)
 
 ## Blocked card
 
@@ -98,4 +98,4 @@ gpg: selecting card failed: Operation not supported by device
 gpg: OpenPGP card not available: Operation not supported by device
 ```
 
-Run [./scdaemon.sh](../scdaemon.sh).
+Run [./lib/scdaemon.sh](../lib/scdaemon.sh).

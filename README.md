@@ -106,7 +106,7 @@ Go [here](docs/troubleshooting.md) for troubleshooting common issues such as unb
 
 ## Optional
 
-Go [here](docs/optional.md) for support on optional bits such as Keybase, VMware Fusion, Docker Content Trust, signing for different git repositories with different keys, and configuring a computer to use an already configured YubiKey.
+Go [here](docs/optional.md) for support on optional bits such as configuring a computer to use an already configured YubiKey, signing for different git repositories with different keys, Keybase, VMware Fusion, and Docker Content Trust.
 
 ## References
 
