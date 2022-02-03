@@ -56,9 +56,6 @@ echo
 
 source lib/tree.sh
 
-# Create a bin directory where user has write access
-mkdir -p "$USER_BIN_DIR"
-
 # Update scdaemon.conf
 source lib/scdaemon.sh
 

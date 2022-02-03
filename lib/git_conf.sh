@@ -16,4 +16,3 @@ $GIT config $SCOPE user.signingkey "$KEYID"
 $GIT config $SCOPE commit.gpgsign true
 $GIT config $SCOPE tag.forceSignAnnotated true
 echo
-

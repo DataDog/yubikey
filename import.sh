@@ -91,6 +91,7 @@ case "$answer" in
         echo "Configuring git to use GPG signing subkey..."
         export SCOPE="--global"
         source lib/git_conf.sh
+        source lib/notifications.sh $SCOPE
         ;;
     *)
         echo "Skipping signing git commits."

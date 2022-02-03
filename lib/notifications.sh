@@ -11,6 +11,9 @@ echo "Turning on notifications for signing git commits & tags ${GREEN}${BOLD}${S
 
 set -e
 
+# Create a bin directory where user has write access
+mkdir -p "$USER_BIN_DIR"
+
 echo "Deploying the notifications script"
 echo -e "$NOTIFICATION_CMD" > "$NOTIFICATION_SCRIPT_PATH"
 chmod u+x "$NOTIFICATION_SCRIPT_PATH"
