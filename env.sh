@@ -106,7 +106,9 @@ EOF
         set -e
         NOTIFICATION_SCRIPT_PATH="${USER_BIN_DIR}/yubinotif"
         SCDAEMON_CONF=""
-        sudo apt-add-repository ppa:yubico/stable
+        if ! grep -rqE '^deb http://ppa.launchpad.net/yubico/stable/ubuntu' /etc/apt/sources.list.d/*.list; then
+            sudo apt-add-repository ppa:yubico/stable
+        fi
         ;;
     arch)
         PKG_MANAGER="pacman"

@@ -99,3 +99,16 @@ gpg: OpenPGP card not available: Operation not supported by device
 ```
 
 Run [./lib/scdaemon.sh](../lib/scdaemon.sh).
+
+## GPG error on maOS M1
+
+If you see the following running gpg related scripts:
+```
+gpg
+dyld[23790]: Library not loaded: /opt/homebrew/opt/libgpg-error/lib/libgpg-error.0.dylib
+  Referenced from: /opt/homebrew/Cellar/gnupg/2.3.4/bin/gpg
+    Reason: tried: '/opt/homebrew/opt/libgpg-error/lib/libgpg-error.0.dylib' (mach-o file, but is an incompatible architecture (have 'x86_64', need 'arm64e')), '/usr/local/lib/libgpg-error.0.dylib' (no such file), '/usr/lib/libgpg-error.0.dylib' (no such file), '/opt/homebrew/Cellar/libgpg-error/1.44/lib/libgpg-error.0.dylib' (mach-o file, but is an incompatible architecture (have 'x86_64', need 'arm64e')), '/usr/local/lib/libgpg-error.0.dylib' (no such file), '/usr/lib/libgpg-error.0.dylib' (no such file)
+    [1]    23790 abort      gpg
+```
+
+Use `brew reinstall` to reinstall all of the GPG dependencies as well as GPG itself.
