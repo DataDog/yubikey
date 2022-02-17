@@ -71,18 +71,6 @@ echo "${YELLOW}RESETTING THE OPENGPG APPLET ON YOUR YUBIKEY!!!"
 $YKMAN openpgp reset
 echo "${RESET}"
 
-# Figure out whether we need to write GPG keys to a tempdir.
-# This is useful when you need to generate keys for someone else w/o adding to your own keystore.
-if [[ -z "$TEMPDIR" ]]
-then
-  GPG_HOMEDIR=$DEFAULT_GPG_HOMEDIR
-  echo "Using *default* GPG homedir: $GPG_HOMEDIR"
-else
-  GPG_HOMEDIR=$(mktemp -d)
-  echo "Using *temp* GPG homedir: $GPG_HOMEDIR"
-fi
-echo
-
 # Whatever our GPG homedir, we replace pinentry-curses with pinentry-tty, so that we can automate entering User and Admin PINs.
 GPG_AGENT_CONF=$GPG_HOMEDIR/gpg-agent.conf
 cat << EOF > "$GPG_AGENT_CONF"

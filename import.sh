@@ -56,19 +56,7 @@ fi
 # shellcheck disable=SC1091
 source env.sh
 source lib/install.sh
-
-# Figure out whether we need to write GPG keys to a tempdir.
-# This is useful when you need to generate keys for someone else w/o adding to your own keystore.
-if [[ -z "$TEMPDIR" ]]
-then
-  GPG_HOMEDIR=$DEFAULT_GPG_HOMEDIR
-  echo "Using *default* GPG homedir: $GPG_HOMEDIR"
-else
-  GPG_HOMEDIR=$(mktemp -d)
-  echo "Using *temp* GPG homedir: $GPG_HOMEDIR"
-fi
-echo
-
+source lib/tree.sh
 source lib/gpg_conf.sh
 source lib/gpg_agent_conf.sh
 
