@@ -19,8 +19,14 @@ else
 fi
 
 
-source lib/git_conf.sh
+source "$OLD_PWD"/lib/git_conf.sh
 cd "$OLD_PWD"
+
+# If scope local, only configure git, and don't try to push the key
+# to github and set up the notifications
+if [[ "${SCOPE}" == "--local" ]]; then
+    exit 0
+fi
 
 # Export GPG public key to GitHub.
 echo "Exporting your GPG public key to GitHub."
