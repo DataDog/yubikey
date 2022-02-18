@@ -26,7 +26,7 @@ SERIAL=$($YKMAN info | grep 'Serial number:' | cut -f2 -d: | tr -d ' ')
 # Set some parameters based on whether FIPS key or not.
 DEVICE_TYPE=$($YKMAN info | grep 'Device type:' | cut -f2 -d: | awk '{$1=$1;print}')
 echo "YubiKey device type: $DEVICE_TYPE"
-if [[ "$DEVICE_TYPE" == *"YubiKey FIPS"* ]]; then
+if [[ "$DEVICE_TYPE" == *"YubiKey"*"FIPS"* ]]; then
   echo "Which appears to be a FIPS key"
   YUBIKEY_FIPS=true
   # YubiKey FIPS supports at most RSA-3072 on-card key generation, which should
