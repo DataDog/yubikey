@@ -19,8 +19,8 @@ COMMENT=${input:-$COMMENT}
 echo
 
 # Generate some information for the user.
-USER_PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
-ADMIN_PIN=$(python -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
+USER_PIN=$(python3 -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
+ADMIN_PIN=$(python3 -S -c "import random; print(random.SystemRandom().randrange(10**7,10**8))")
 SERIAL=$($YKMAN info | grep 'Serial number:' | cut -f2 -d: | tr -d ' ')
 
 # Set some parameters based on whether FIPS key or not.
