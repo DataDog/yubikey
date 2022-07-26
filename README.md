@@ -90,7 +90,7 @@ With this setup, you'll need to enter a PIN to unlock the key every 24 hours and
 key when it blinks (i.e. every time you SSH or push/pull Git). If you don't touch the key, the request will
 timeout and you'll get an unhelpful message.
 
-This is compatible with [Workspaces](https://datadoghq.atlassian.net/wiki/spaces/EEEUSG/pages/2075230476/Workspaces)
+This is compatible with usage on remote machines over SSH
 (it will set up agent forwarding to use the key remotely; touch is required on each action).
 
 You **must** have first set up [GPG](#gpg). Then:
