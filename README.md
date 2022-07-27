@@ -81,8 +81,17 @@ $ ./git.sh
 
 ## SSH
 
-**NOT recommended** unless you plan to use your GPG authentication subkey as
-your only SSH authentication key.
+**NOT recommended** for most users. This script sets up your YubiKey as the holder of your SSH key,
+helping to prevent it from being leaked or stolen. The script will take control of `ssh-agent`, so
+it's not particularly compatible with other SSH keys - you should only run this if you intend to use
+this as your only SSH key on the machine you're using.
+
+With this setup, you'll need to enter a PIN to unlock the key every 24 hours and then physically touch the
+key when it blinks (i.e. every time you SSH or push/pull Git). If you don't touch the key, the request will
+timeout and you'll get an unhelpful message.
+
+This is compatible with usage on remote machines over SSH
+(it will set up agent forwarding to use the key remotely; touch is required on each action).
 
 You **must** have first set up [GPG](#gpg). Then:
 
