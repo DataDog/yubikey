@@ -52,7 +52,7 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
         )
         set +e
         read -r -d '' NOTIFICATION_CMD << EOF
-osascript -e 'display notification "git wants to sign a commit!" with title "Touch your YubiKey after submitting the User PIN"'
+osascript -e 'display notification "Touch your YubiKey after submitting the User PIN" with title "Git wants to sign a commit!"'
 gpg "\$@"
 if [[ "\$?" -ne 0 ]]; then
     echo "Signing failed, exiting"
