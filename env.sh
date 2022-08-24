@@ -89,7 +89,7 @@ EOF
             "git"
             "gpg"
             "pinentry-tty"
-            "python"
+            "python3"
             "scdaemon"
             "yubikey-manager"
             "xclip"
