@@ -15,7 +15,7 @@ set -e
 mkdir -p "$USER_BIN_DIR"
 
 echo "Deploying the notifications script"
-echo -e "$NOTIFICATION_CMD" > "$NOTIFICATION_SCRIPT_PATH"
+sed -E -e 's/^(NOTIFY_OS=).*/\1'"$NOTIFICATION_OS"'/' bin/gpg-sign-notify > "$NOTIFICATION_SCRIPT_PATH"
 chmod u+x "$NOTIFICATION_SCRIPT_PATH"
 echo "${GREEN}The notifications script has been deployed${RESET}"
 
