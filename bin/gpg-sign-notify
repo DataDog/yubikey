@@ -16,21 +16,11 @@ sleep_pid=$!
 # bash >= 4 thing, and the default bash on MacOS is 3, so we prioritise
 # compatibility.
 
-# This will be overwritten by the notifications.sh script
-NOTIFY_OS=macos
-
 notify() {
     local title="$1"; shift;
     local body="$1"; shift;
 
-    case $NOTIFY_OS in
-      macos)
-        osascript -e 'display notification "'"$body"'" with title "'"$title"'"'
-        ;;
-      linux)
-        notify-send "$title" "$body"
-        ;;
-    esac
+    %%NOTIFICATION_NOTIFY%%
 }
 
 reap() {

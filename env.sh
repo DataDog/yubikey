@@ -50,7 +50,9 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
             "pinentry-mac"
             "ykman"
         )
-        NOTIFICATION_OS=macos
+        read -r -d '' NOTIFICATION_NOTIFY << EOF
+osascript -e 'display notification "'"\$body"'" with title "'"\$title"'"'        
+EOF
         NOTIFICATION_SCRIPT_PATH="${USER_BIN_DIR}/yubinotif"
         SCDAEMON_CONF="disable-ccid\nreader-port \"$(pcsctest <<< 01 | grep 'Reader 01' | awk -F ': ' '{print $2}' | head -n1)\""
         export HOMEBREW_NO_AUTO_UPDATE=1
@@ -85,7 +87,9 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
             "yubikey-manager"
             "xclip"
         )
-        NOTIFICATION_OS=linux
+        read -r -d '' NOTIFICATION_NOTIFY << EOF
+notify-send "\$title" "\$body"        
+EOF
         NOTIFICATION_SCRIPT_PATH="${USER_BIN_DIR}/yubinotif"
         SCDAEMON_CONF=""
         if ! grep -rqE '^deb http://ppa.launchpad.net/yubico/stable/ubuntu' /etc/apt/sources.list.d/*.list; then
@@ -123,7 +127,9 @@ case $(echo "$OS" | tr "[:upper:]" "[:lower:]") in
             "pcsclite"
         )
         set +e
-        NOTIFICATION_OS=linux
+        read -r -d '' NOTIFICATION_NOTIFY << EOF
+notify-send "\$title" "\$body"        
+EOF
         NOTIFICATION_SCRIPT_PATH="${USER_BIN_DIR}/yubinotif"
         # shellcheck disable=SC2034
         SCDAEMON_CONF=""
