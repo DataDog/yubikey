@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+# Notifies the user that they need to do something if gpg-sign takes longer than
+# 5 seconds
+
+# The explicit redirection of stdin is required, otherwise (in the absence of
+# job control) bash will bind stdin of the background process to /dev/null,
+# resulting in a bad signature/bad verification for good signatures.
+gpg "$@" </dev/fd/0 &
+gpg_pid=$!
+
+sleep 5 &
+sleep_pid=$!
+
+# The following code would be simplified by `wait -n ...` but the `-n` flag is a
+# bash >= 4 thing, and the default bash on MacOS is 3, so we prioritise
+# compatibility.
+
+notify() {
+    local title="$1"; shift;
+    local body="$1"; shift;
+
+    %%NOTIFICATION_NOTIFY%%
+}
+
+reap() {
+    # Cancel the trap, otherwise it will run again when another child exits
+    trap "" SIGCHLD
+
+    if kill -0 $gpg_pid 2>/dev/null; then
+        # GPG is still running; we assume it's waiting for input
+        notify "Git wants to sign a commit!" "Touch your YubiKey after submitting the User PIN"
+        # Make sure we exit with the gpg status
+        wait $gpg_pid
+    else
+        # GPG is not running; kill the sleep process if it's still there and exit
+        kill $sleep_pid
+        wait $gpg_pid
+        exit_status=$?
+        exit $exit_status
+    fi
+}
+
+# Run reap as soon as _any_ child exits
+trap reap SIGCHLD
+
+# Wait for all children to exit
+wait
