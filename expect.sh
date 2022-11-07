@@ -215,7 +215,7 @@ expect -exact "Enter Admin PIN: "
 stty -echo
 send -- "$ADMIN_PIN\r"
 
-expect -exact "Set touch policy of signature key to $TOUCH_POLICY? \[y/N\]: "
+expect -exact "Set touch policy of SIG key to $TOUCH_POLICY? \[y/N\]: "
 send -- "y\r"
 expect eof
 
@@ -228,7 +228,7 @@ expect -exact "Enter Admin PIN: "
 stty -echo
 send -- "$ADMIN_PIN\r"
 
-expect -exact "Set touch policy of authentication key to on? \[y/N\]: "
+expect -exact "Set touch policy of AUT key to on? \[y/N\]: "
 send -- "y\r"
 expect eof
 
@@ -241,7 +241,7 @@ expect -exact "Enter Admin PIN: "
 stty -echo
 send -- "$ADMIN_PIN\r"
 
-expect -exact "Set touch policy of encryption key to on? \[y/N\]: "
+expect -exact "Set touch policy of ENC key to on? \[y/N\]: "
 send -- "y\r"
 expect eof
 
