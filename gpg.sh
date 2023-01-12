@@ -87,7 +87,7 @@ export LC_ALL=en_US.UTF-8
 $GPGCONF --homedir="$GPG_HOMEDIR" --kill all
 # The script failed to run when GPG_TTY != '' so we ensure it's empty before the expect script.
 # https://gnupg.org/documentation/manuals/gnupg/Common-Problems.html
-GPG_TTY="" ./expect.sh "$TOUCH_POLICY" "$ADMIN_PIN" "$GPG_HOMEDIR" "$USER_PIN" "$KEY_LENGTH" "$REALNAME" "$EMAIL" "$COMMENT"
+GPG_TTY="" ./"expect-${OS}.sh" "$TOUCH_POLICY" "$ADMIN_PIN" "$GPG_HOMEDIR" "$USER_PIN" "$KEY_LENGTH" "$REALNAME" "$EMAIL" "$COMMENT"
 echo
 
 # restore initial locale value
