@@ -12,13 +12,16 @@ You don't need to do anything extra if you have not set up GPG and SSH to your u
 
 Otherwise, you need to:
 
-1. Get a copy of your Yubikey GPG public key, this should have been backed up in your password manager
-2. Get the Yubikey GPG key ID by running `gpg --list-keys`, in the following example the key ID is `4E09860E71D948019BD426D5D099A306DBECDF1B`  
+On your previous computer:
+1. Get the Yubikey GPG key ID by running `gpg --list-keys`, in the following example the key ID is `4E09860E71D948019BD426D5D099A306DBECDF1B`  
 ![image](https://user-images.githubusercontent.com/4062883/148108677-ab3a04b4-8ef6-4ba0-b78e-ec9c127857e3.png)
+2. Get a copy of your Yubikey GPG public key (this might have been backed up in your password manager) by running `gpg --export --armor key_id > /path/to/pubkey.asc`, so in our example it will be `gpg --export --armor 4E09860E71D948019BD426D5D099A306DBECDF1B > pubkey.asc`.
+3. (Optional) Write your copy of your GPG public key stored in your password manager to disk if not already there (e.g., to `/path/to/pubkey.asc`).
 
-4. Write your copy of your GPG public key stored in your password manager to disk.
-5. Run [`./import.sh -p /path/to/pubkey.asc -i key_id`](../import.sh).
-6. You will be prompted several times:
+On the new computer:
+1. Get the pubkey.asc file on the disk by downloading it
+2. Run [`./import.sh -p /path/to/pubkey.asc -i key_id`](../import.sh). In our example, `./import.sh -p ~/pubkey.asc -i 4E09860E71D948019BD426D5D099A306DBECDF1B`
+3. You will be prompted several times:
     1. To install dependencies (required), type yes, and press enter
     2. To configure the Yubikey GPG key for commit signing (or not), type yes or no, and press enter
     3. To use the Yubikey GPG key for SSH connections (or not), type yes or no, and press enter
