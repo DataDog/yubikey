@@ -241,7 +241,7 @@ expect -exact "Enter Admin PIN: "
 stty -echo
 send -- "$ADMIN_PIN\r"
 
-expect -exact "Set touch policy of ENC key to on? \[y/N\]: "
+expect -exact "Set touch policy of DEC key to on? \[y/N\]: "
 send -- "y\r"
 expect eof
 
