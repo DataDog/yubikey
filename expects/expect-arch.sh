@@ -179,13 +179,13 @@ send -- "y\r"
 expect -exact "Real name: "
 send -- "$REALNAME\r"
 
-expect -exact "Email address: "
+expect -exact "E-mail address: "
 send -- "$EMAIL\r"
 
 expect -exact "Comment: "
 send -- "$COMMENT\r"
 
-expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
+expect -exact "Change (N)ame, (C)omment, (E)-mail or (O)kay/(Q)uit? "
 send -- "O\r"
 
 # Send new Admin PIN
