@@ -179,13 +179,13 @@ send -- "y\r"
 expect -exact "Real name: "
 send -- "$REALNAME\r"
 
-expect -exact "E-mail address: "
+expect -exact "Email address: "
 send -- "$EMAIL\r"
 
 expect -exact "Comment: "
 send -- "$COMMENT\r"
 
-expect -exact "Change (N)ame, (C)omment, (E)-mail or (O)kay/(Q)uit? "
+expect -exact "Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? "
 send -- "O\r"
 
 # Send new Admin PIN
@@ -241,7 +241,7 @@ expect -exact "Enter Admin PIN: "
 stty -echo
 send -- "$ADMIN_PIN\r"
 
-expect -exact "Set touch policy of ENC key to on? \[y/N\]: "
+expect -exact "Set touch policy of DEC key to on? \[y/N\]: "
 send -- "y\r"
 expect eof
 
