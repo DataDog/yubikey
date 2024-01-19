@@ -1,3 +1,5 @@
+_OUTDATED: see https://datadoghq.atlassian.net/wiki/spaces/SECENG/pages/2610300092/Project+Iota+Git+Commit+Signing+Setup+Guide for new commit signing setup guide_
+
 # YubiKey at Datadog
 
 - [Summary](#summary)
