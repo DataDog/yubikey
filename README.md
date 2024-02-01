@@ -1,3 +1,8 @@
+# ⚠️ Repository Deprecated ⚠️
+Notice: This code repository is no longer maintained or updated. The content and code are provided as-is, and may no longer be relevant or functional.
+
+For Datadog employee, see the "commit signing setup guide" in Confluence instead_
+
 # YubiKey at Datadog
 
 - [Summary](#summary)
